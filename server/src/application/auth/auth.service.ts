@@ -19,7 +19,7 @@ type AuthOutput = {
 };
 
 type SignInData = {
-    id: number;
+    id: string;
     username: string;
 };
 

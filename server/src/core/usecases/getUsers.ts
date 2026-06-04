@@ -1,52 +1,26 @@
-    type User = {
-        id: number;
-        username: string;
-        email: string;
-        password: string;
-    };
+import { Injectable } from "@nestjs/common";
+import { User } from "../../adapters/prisma/entities/user";
+import { UserRepository } from "../interfaces/user.repository.interface";
 
-    export class GetUsers {
-        async getUserByEmail(email: string) : Promise<User | null> {
-            const user = Users.find((u) => u.email === email);
-            return user || null;
-        }
-        async getUserByUsername(username: string) : Promise<User | null> {
-            const user = Users.find((u) => u.username === username);
-            return user || null;
-        }
-        async getUserById(id: string) : Promise<User | null> {
-            const user = Users.find((u) => u.id === parseInt(id));
-            return user || null;
-        }
-        async getAllUsers() : Promise<User[]> {
-            return Users;
-        }
+@Injectable()
+export class GetUsers {
+
+    constructor(private readonly userRepository: UserRepository) {}
+
+    async getUserByEmail(email: string) : Promise<User | null> {
+        const user = await this.userRepository.findByEmail(email);
+        return user || null;
     }
-
-    const Users : User[] = [
-        {
-            id: 1,
-            username: 'john_doe',
-            email: 'john_doe@gmail.com',
-            password: 'passwordjohn_doe',
-        },
-        {
-            id: 2,
-            username: 'jane_doe',
-            email: 'jane_doe@gmail.com',
-            password: 'passwordjane_doe',
-        },
-        {
-            id: 3,
-            username: 'bob_smith',
-            email: 'bob_smith@gmail.com',
-            password: 'passwordbob_smith',
-        },
-        {
-            id: 4,
-            username: 'alice_jones',
-            email: 'alice_jones@gmail.com',
-            password: 'passwordalice_jones',
-        }
-
-    ]
+    async getUserByUsername(username: string) : Promise<User | null> {
+        const user = await this.userRepository.findByUsername(username);
+        return user || null;
+    }
+    async getUserById(id: string) : Promise<User | null> {
+        const user = await this.userRepository.findById(id);
+        return user || null;
+    }
+    async getAllUsers() : Promise<User[]> {
+        const users = await this.userRepository.findAll();
+        return users;
+    }
+}

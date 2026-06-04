@@ -4,16 +4,18 @@ import { AuthController } from './auth.controller';
 import { GetUsers } from '../../core/usecases/getUsers';
 import { JwtModule } from '@nestjs/jwt';
 import { CreateUsers } from '../../core/usecases/createUser';
+import { UsersModule } from '../user/user.module';
 
 @Module({
-  providers: [AuthService, GetUsers, CreateUsers, JwtModule],
-  controllers: [AuthController],
   imports: [
+    UsersModule,
     JwtModule.register({
       global: true,
       secret: 'secret-key',
       signOptions: { expiresIn: '1d' },
     }),
   ],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
 export class AuthModule {}
