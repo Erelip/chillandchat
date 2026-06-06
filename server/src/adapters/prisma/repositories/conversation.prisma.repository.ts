@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ConversationRepository } from '../../../core/interfaces/conversation.repository.interface';
-import { Conversation } from '../entities/conversation.prisma.entity';
-import { ConversationParticipant } from '../entities/conversation-participant.prisma.entity';
+import { ConversationParticipant } from '../../../core/entities/conversation-participant.entity';
+import { Conversation } from '../../../core/entities/conversation.entity';
 import { ConversationMapper } from '../../../core/mappers/conversation.mapper';
 import { ConversationType } from '../../../core/enum/conversation.enum';
 import { ConversationType as ConversationPrismaType } from '../generated/enums';
+import { Message } from '../../../core/entities/message.entity';
 
 @Injectable()
 export class ConversationPrismaRepository
@@ -22,16 +23,19 @@ export class ConversationPrismaRepository
       },
       include: {
         participants: true,
+        messages: true
       },
     });
-		return ConversationMapper.toDomain(new Conversation(
+		return ConversationMapper.toDomain(
       createdConversation.id,
       createdConversation.participants.map(
-        (p) => new ConversationParticipant(p.conversationId, p.userId, p.joinedAt, p.id)),
-      new Array(),
+        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      createdConversation.messages.map(
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+      ),
       createdConversation.createdAt,
-      createdConversation.type
-    ));
+      createdConversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
+    );
 	}
 
   async findAll(): Promise<Conversation[]> {
@@ -41,15 +45,17 @@ export class ConversationPrismaRepository
         messages: true,
       },
     });
-    console.log('Found conversations:', conversations);
-    return conversations.map((conversation) => ConversationMapper.toDomain({
-      id: conversation.id,
-      participants: conversation.participants.map(
-        (p) => new ConversationParticipant(p.conversationId, p.userId, p.joinedAt, p.id)),
-      messages: conversation.messages,
-      createdAt: conversation.createdAt,
-      type: conversation.type,
-    }));
+
+    return conversations.map((conversation) => ConversationMapper.toDomain(
+      conversation.id,
+      conversation.participants.map(
+        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      conversation.messages.map(
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+      ),
+      conversation.createdAt,
+      conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
+    ));
   }
 
   async findById(id: string): Promise<Conversation | null> {
@@ -63,14 +69,17 @@ export class ConversationPrismaRepository
       },
     });
     if (!conversation) return null;
-    return ConversationMapper.toDomain({
-      id: conversation.id,
-      participants: conversation.participants.map(
-        (p) => new ConversationParticipant(p.conversationId, p.userId, p.joinedAt, p.id)),
-      messages: conversation.messages,
-      createdAt: conversation.createdAt,
-      type: conversation.type,
-    });
+
+    return ConversationMapper.toDomain(
+      conversation.id,
+      conversation.participants.map(
+        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      conversation.messages.map(
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+      ),
+      conversation.createdAt,
+      conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
+    );
   }
 
   async findByParticipantId(participantId: string): Promise<Conversation[]> {
@@ -87,13 +96,16 @@ export class ConversationPrismaRepository
         messages: true,
       },
     });
-    return conversations.map((conversation) => ConversationMapper.toDomain({
-      id: conversation.id,
-      participants: conversation.participants.map(
-        (p) => new ConversationParticipant(p.conversationId, p.userId, p.joinedAt, p.id)),
-      messages: conversation.messages,
-      createdAt: conversation.createdAt,
-      type: conversation.type,
-    }));
+
+    return conversations.map((conversation) => ConversationMapper.toDomain(
+      conversation.id,
+      conversation.participants.map(
+        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      conversation.messages.map(
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+      ),
+      conversation.createdAt,
+      conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
+    ));
   }
 }

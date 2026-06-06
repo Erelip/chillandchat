@@ -15,6 +15,6 @@ import { GetUsers } from "../../core/usecases/get-users";
       useClass: PrismaUserRepository,
     },
   ],
-  exports: [GetUsers, CreateUsers, UserRepository], // both must be exported
+  exports: [GetUsers, CreateUsers, UserRepository],
 })
 export class UsersModule {}

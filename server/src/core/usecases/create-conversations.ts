@@ -3,7 +3,7 @@ import { UserRepository } from "../interfaces/user.repository.interface";
 import { ConversationRepository } from "../interfaces/conversation.repository.interface";
 import { ConversationType } from "../enum/conversation.enum";
 import { ConversationParticipantRepository } from "../interfaces/conversation-participant.repository.interface";
-import { ConversationParticipant } from "../../adapters/prisma/entities/conversation-participant.prisma.entity";
+import { ConversationParticipant } from "../entities/conversation-participant.entity";
 import { User } from "../entities/users.entity";
 import { MessageRepository } from "../interfaces/message.repository.interface";
 
@@ -31,9 +31,10 @@ export class CreateConversations {
 
   async addParticipants(conversationId: string, users: User[]): Promise<void> {
     const conversationParticipants = users.map((user) => (new ConversationParticipant(
-        conversationId,
-        user.id!,
-        new Date()
+      "",
+      conversationId,
+      user.id,
+      new Date()
     )));
 
     await this.conversationParticipantRepository.saveMany(conversationParticipants);

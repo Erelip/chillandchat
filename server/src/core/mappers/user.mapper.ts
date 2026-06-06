@@ -9,16 +9,16 @@ export class UserMapper {
     password: string;
   }): User {
     return new User(
+      data.id,
       data.username,
       data.email,
-      data.password,
-      data.id
+      data.password
     );
   }
 
   static toDTO(user: User): UserDTO {
     return {
-      id: user.id!,
+      id: user.id,
       username: user.username,
       email: user.email,
     };

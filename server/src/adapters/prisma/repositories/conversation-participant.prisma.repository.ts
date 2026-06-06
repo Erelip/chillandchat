@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { ConversationRepository } from '../../../core/interfaces/conversation.repository.interface';
-import { Conversation } from '../entities/conversation.prisma.entity';
-import { ConversationParticipant } from '../entities/conversation-participant.prisma.entity';
-import { ConversationMapper } from '../../../core/mappers/conversation.mapper';
-import { ConversationType } from '../../../core/enum/conversation.enum';
-import { ConversationType as ConversationPrismaType } from '../generated/enums';
+import { ConversationParticipant } from '../../../core/entities/conversation-participant.entity';
 import { ConversationParticipantRepository } from '../../../core/interfaces/conversation-participant.repository.interface';
 
 @Injectable()
@@ -25,10 +20,10 @@ export class ConversationParticipantPrismaRepository
 			},
 		});
 		return new ConversationParticipant(
+			createdParticipant.id,
 			createdParticipant.conversationId,
 			createdParticipant.userId,
 			createdParticipant.joinedAt,
-			createdParticipant.id,
 		);
 	}
 
@@ -45,10 +40,10 @@ export class ConversationParticipantPrismaRepository
   async findAll(): Promise<ConversationParticipant[]> {
     const participants = await this.prisma.conversationParticipant.findMany();
     return participants.map((p) => new ConversationParticipant(
+      p.id,
       p.conversationId,
       p.userId,
       p.joinedAt,
-      p.id,
     ));
   }
 
@@ -60,10 +55,10 @@ export class ConversationParticipantPrismaRepository
     });
     if (!participant) return null;
     return new ConversationParticipant(
+      participant.id,
       participant.conversationId,
       participant.userId,
       participant.joinedAt,
-      participant.id,
     );
   }
 
@@ -74,10 +69,10 @@ export class ConversationParticipantPrismaRepository
       },
     });
     return participants.map((p) => new ConversationParticipant(
+      p.id,
       p.conversationId,
       p.userId,
       p.joinedAt,
-      p.id,
     ));
   }
 }

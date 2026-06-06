@@ -1,6 +1,4 @@
-import { Conversation } from "../../adapters/prisma/entities/conversation.prisma.entity";
-import { ConversationParticipant } from "../../adapters/prisma/entities/conversation-participant.prisma.entity";
-import { Message } from "../../adapters/prisma/entities/message.prisma.entity";
+import { Conversation } from "../../core/entities/conversation.entity";
 import { ConversationType } from "../enum/conversation.enum";
 
 export abstract class ConversationRepository {

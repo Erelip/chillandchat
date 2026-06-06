@@ -1,7 +1,4 @@
-import { Conversation } from "../../adapters/prisma/entities/conversation.prisma.entity";
-import { ConversationParticipant } from "../../adapters/prisma/entities/conversation-participant.prisma.entity";
-import { Message } from "../../adapters/prisma/entities/message.prisma.entity";
-import { ConversationType } from "../enum/conversation.enum";
+import { ConversationParticipant } from "../../core/entities/conversation-participant.entity";
 
 export abstract class ConversationParticipantRepository {
   abstract save(participant: ConversationParticipant): Promise<ConversationParticipant>;

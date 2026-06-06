@@ -1,17 +1,17 @@
 export class User {
-  private _id?: string;
+  private _id: string;
   private _username: string;
   private _email: string;
   private _password: string;
 
-  constructor(username: string, email: string, password: string, id?: string) {
+  constructor(id: string, username: string, email: string, password: string) {
     this._id = id;
     this._username = username;
     this._email = email;
     this._password = password;
   }
 
-  get id(): string | undefined {
+  get id(): string {
     return this._id;
   }
 

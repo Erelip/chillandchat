@@ -1,4 +1,4 @@
-import { Message } from "../../adapters/prisma/entities/message.prisma.entity";
+import { Message } from "../entities/message.entity";
 
 export abstract class MessageRepository {
   abstract save(conversationId: string, senderId: string, content: string): Promise<Message>;

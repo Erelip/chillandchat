@@ -1,4 +1,4 @@
-import { ConversationParticipant } from "../../adapters/prisma/entities/conversation-participant.prisma.entity";
+import { ConversationParticipant } from "../../core/entities/conversation-participant.entity";
 import { ConversationType } from "../../core/enum/conversation.enum";
 
 export class ConversationDTO {
