@@ -1,9 +1,5 @@
 import { Conversation } from '../entities/conversation.entity';
 import { ConversationParticipant } from '../entities/conversation-participant.entity';
-import { Message } from '../entities/message.entity';
-import { ConversationDTO } from '../../application/dto/conversation.dto';
-import { ConversationType } from '../enum/conversation.enum';
-import { cpSync } from 'fs';
 
 export class ConversationParticipationMapper {
   static toDomain(id: string, conversationId: string, userId: string, joinedAt: Date): ConversationParticipant {

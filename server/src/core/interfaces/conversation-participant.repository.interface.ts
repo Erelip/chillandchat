@@ -1,4 +1,4 @@
-import { ConversationParticipant } from "../../core/entities/conversation-participant.entity";
+import { ConversationParticipant } from "../entities/conversation-participant.entity";
 
 export abstract class ConversationParticipantRepository {
   abstract save(participant: ConversationParticipant): Promise<ConversationParticipant>;
