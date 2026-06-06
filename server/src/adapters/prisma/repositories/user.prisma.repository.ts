@@ -2,86 +2,61 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 
 import { UserRepository } from '../../../core/interfaces/user.repository.interface';
-import { User } from '../entities/user';
+import { User } from '../../../core/entities/users.entity';
+import { UserMapper } from '../../../core/mappers/user.mapper';
 
 @Injectable()
 export class PrismaUserRepository
-  extends UserRepository {
+  implements UserRepository {
 
   constructor(
     private readonly prisma: PrismaService,
-  ) {
-    super();
-  }
+  ) {}
 
-	async save(username: string, email: string, password: string): Promise<User> {
-		const createdUser = await this.prisma.user.create({
+	async save(username: string, email: string, hashedPassword: string): Promise<User> {
+		const userPrismaEntity = await this.prisma.user.create({
 				data: {
-					username,
-					email,
-					password,
-				},
+          username: username,
+          email: email,
+          password: hashedPassword
+        },
 		});
-		return new User(
-      createdUser.id,
-      createdUser.username,
-      createdUser.email,
-      createdUser.password,
-    );
+    const domain = UserMapper.toDomain(userPrismaEntity)
+    return domain;
 	}
 
   async findAll(): Promise<User[]> {
-    const createdUser = await this.prisma.user.findMany();
-    return createdUser.map((user) => new User(
-      user.id,
-      user.username,
-      user.email,
-      user.password,
-    ));
+    const userPrismaEntities = await this.prisma.user.findMany();
+    return userPrismaEntities.map((user) => UserMapper.toDomain(user));
   }
 
   async findById(id: string): Promise<User | null> {
-    const createdUser = await this.prisma.user.findUnique({
+    const userPrismaEntity = await this.prisma.user.findUnique({
       where: {
         id,
       },
     });
-    if (!createdUser) return null;
-    return new User(
-      createdUser.id,
-      createdUser.username,
-      createdUser.email,
-      createdUser.password,
-    );
+    if (!userPrismaEntity) return null;
+    return UserMapper.toDomain(userPrismaEntity);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const createdUser = await this.prisma.user.findUnique({
+    const userPrismaEntity = await this.prisma.user.findUnique({
       where: {
         email,
       },
     });
-    if (!createdUser) return null;
-    return new User(
-      createdUser.id,
-      createdUser.username,
-      createdUser.email,
-      createdUser.password,
-    );
+    if (!userPrismaEntity) return null;
+    return UserMapper.toDomain(userPrismaEntity);
   }
 
   async findByUsername(username: string): Promise<User | null> {
-    const createdUser = await this.prisma.user.findUnique({
+    const userPrismaEntity = await this.prisma.user.findUnique({
       where: {
         username,
       },
     });
-    if (!createdUser) return null;
-    return new User(
-      createdUser.id,
-      createdUser.username,
-      createdUser.email,
-      createdUser.password,
-    );
+    if (!userPrismaEntity) return null;
+    return UserMapper.toDomain(userPrismaEntity);
   }
 }

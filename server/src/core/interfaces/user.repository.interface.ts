@@ -1,7 +1,7 @@
-import { User } from "../../adapters/prisma/entities/user";
+import { User } from "../entities/users.entity";
 
 export abstract class UserRepository {
-  abstract save(username: string, email: string, password: string): Promise<User>;
+  abstract save(username: string, email: string, hashedPassword: string): Promise<User>;
 
   abstract findAll(): Promise<User[]>;
 
