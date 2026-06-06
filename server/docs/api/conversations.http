@@ -1,0 +1,19 @@
+GET http://localhost:3000/conversations/65de45eb-8eca-434d-b268-d6f871eb050e
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fd2ljayIsInN1YiI6IjUyYzYwYzcxLTcxOWMtNGU0ZS04ZTBlLTQzNjM5ZjZlYzM2ZSIsImlhdCI6MTc4MDc3NjIxNSwiZXhwIjoxNzgwODYyNjE1fQ.bfzZXAhhd5EJzf6TFLVEl4-crQcXkA6Bbvai-Ooe9tI
+
+{
+    "username": "john_wick",
+    "email": "john_wick@gmail.com",
+    "password": "john_wick"
+}
+
+###
+
+POST http://localhost:3000/conversations/65de45eb-8eca-434d-b268-d6f871eb050e/messages
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fd2ljayIsInN1YiI6IjUyYzYwYzcxLTcxOWMtNGU0ZS04ZTBlLTQzNjM5ZjZlYzM2ZSIsImlhdCI6MTc4MDc3NjIxNSwiZXhwIjoxNzgwODYyNjE1fQ.bfzZXAhhd5EJzf6TFLVEl4-crQcXkA6Bbvai-Ooe9tI
+
+{
+    "content": "Hello Kylian"
+}

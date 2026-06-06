@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { GetUsers } from '../../core/usecases/getUsers';
+import { GetUsers } from '../../core/usecases/get-users';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUsers } from '../../core/usecases/createUser';
+import { CreateUsers } from '../../core/usecases/create-user';
 import { comparePassword } from '../../core/utils/password';
 
 type LoginInput = {
@@ -20,7 +20,7 @@ type AuthOutput = {
 };
 
 type SignInData = {
-    id: string;
+    id?: string;
     username: string;
 };
 
