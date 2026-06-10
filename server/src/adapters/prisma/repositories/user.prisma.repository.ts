@@ -59,4 +59,15 @@ export class PrismaUserRepository
     if (!userPrismaEntity) return null;
     return UserMapper.toDomain(userPrismaEntity);
   }
+
+  async findAllButMe(id: string): Promise<User[]> {
+    const userPrismaEntities = await this.prisma.user.findMany({
+      where: {
+        NOT: {
+          id: id
+        },
+      },
+    });
+    return userPrismaEntities.map((user) => UserMapper.toDomain(user));
+  }
 }

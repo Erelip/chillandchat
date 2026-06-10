@@ -27,6 +27,7 @@ export class ConversationMapper {
     return {
       id: conversation.id,
       participants: conversation.participants,
+      messages: conversation.messages,
       type: conversation.type
     };
   }

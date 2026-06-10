@@ -3,6 +3,7 @@ import { PrismaUserRepository } from "../../adapters/prisma/repositories/user.pr
 import { UserRepository } from "../../core/interfaces/user.repository.interface";
 import { CreateUsers } from "../../core/usecases/create-user";
 import { GetUsers } from "../../core/usecases/get-users";
+import { UserController } from "./user.consoller";
 
 @Module({
   providers: [
@@ -14,5 +15,6 @@ import { GetUsers } from "../../core/usecases/get-users";
     },
   ],
   exports: [GetUsers, CreateUsers, UserRepository],
+  controllers: [UserController]
 })
 export class UsersModule {}

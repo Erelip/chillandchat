@@ -14,15 +14,15 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token format');
     }
 
-		try {
-			const tokenPayload = await this.jwtService.verify(token);
-			request.user = {
-				id: tokenPayload.sub,
-				username: tokenPayload.username,
-			};
-			return true;
-		} catch (error) {
-			throw new UnauthorizedException('Invalid token');
-		}
+	try {
+		const tokenPayload = await this.jwtService.verify(token);
+		request.user = {
+			id: tokenPayload.sub,
+			username: tokenPayload.username,
+		};
+		return true;
+	} catch (error) {
+		throw new UnauthorizedException('Invalid token');
+	}
   }
 }
