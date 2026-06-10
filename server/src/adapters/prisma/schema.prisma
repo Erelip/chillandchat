@@ -30,6 +30,7 @@ model Conversation {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  name          String?
   type          ConversationType @default(DIRECT)
   participants  ConversationParticipant[]
   messages      Message[]

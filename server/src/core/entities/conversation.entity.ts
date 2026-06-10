@@ -5,6 +5,7 @@ import { ConversationType } from "../enum/conversation.enum"
 export class Conversation {
   private _id: string;
   private _participants: ConversationParticipant[];
+  private _name: string | null;
   private _messages: Message[];
   private _createdAt: Date;
   private _type: ConversationType;
@@ -12,12 +13,14 @@ export class Conversation {
   constructor(
     id: string,
     participants: ConversationParticipant[],
+    name: string | null,
     messages: Message[] = [],
     createdAt: Date,
     type: ConversationType = ConversationType.DIRECT,
   ) {
     this._id = id;
     this._participants = participants;
+    this._name = name;
     this._messages = messages;
     this._createdAt = createdAt;
     this._type = type;
@@ -29,6 +32,10 @@ export class Conversation {
 
   get participants(): ConversationParticipant[] {
     return this._participants;
+  }
+
+  get name(): string | null {
+    return this._name;
   }
 
   get messages(): Message[] {

@@ -5,10 +5,11 @@ import { ConversationDTO } from '../../application/dto/conversation.dto';
 import { ConversationType } from '../enum/conversation.enum';
 
 export class ConversationMapper {
-  static toDomain(id: string, conversationParticipant: ConversationParticipant[], messages: Message[], createdAt: Date, type : ConversationType): Conversation {
+  static toDomain(id: string, conversationParticipant: ConversationParticipant[], name: string | null, messages: Message[], createdAt: Date, type : ConversationType): Conversation {
     return new Conversation(
       id,
       conversationParticipant,
+      name,
       messages,
       createdAt,
       type
@@ -19,6 +20,7 @@ export class ConversationMapper {
     return {
       id: conversation.id,
       participants: conversation.participants,
+      name: conversation.name,
       type: conversation.type,
     };
   }
@@ -27,6 +29,7 @@ export class ConversationMapper {
     return {
       id: conversation.id,
       participants: conversation.participants,
+      name: conversation.name,
       messages: conversation.messages,
       type: conversation.type
     };

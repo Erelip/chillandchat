@@ -30,6 +30,7 @@ export class ConversationPrismaRepository
       createdConversation.id,
       createdConversation.participants.map(
         (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      createdConversation.name,
       createdConversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
       ),
@@ -50,6 +51,7 @@ export class ConversationPrismaRepository
       conversation.id,
       conversation.participants.map(
         (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      conversation.name,
       conversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
       ),
@@ -74,6 +76,7 @@ export class ConversationPrismaRepository
       conversation.id,
       conversation.participants.map(
         (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      conversation.name,
       conversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
       ),
@@ -101,6 +104,7 @@ export class ConversationPrismaRepository
       conversation.id,
       conversation.participants.map(
         (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+      conversation.name,
       conversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
       ),
