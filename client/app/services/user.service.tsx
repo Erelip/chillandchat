@@ -31,6 +31,10 @@ export class UserService {
     return response.data;
   }
 
+  public logout() {
+    localStorage.removeItem('token');
+  }
+
   async getUser() {
     return await api.get('/users/me');
   }

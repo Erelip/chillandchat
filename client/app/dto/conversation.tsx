@@ -20,6 +20,7 @@ export interface Message {
 export interface Conversation {
     _id: string;
     _participants: Participant[];
+    _name: string | null;
     _messages: Message[];
     _type: ConversationType;
 }
