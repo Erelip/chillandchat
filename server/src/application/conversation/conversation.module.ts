@@ -8,6 +8,8 @@ import { ConversationParticipantRepository } from '../../core/interfaces/convers
 import { ConversationParticipantPrismaRepository } from '../../adapters/prisma/repositories/conversation-participant.prisma.repository';
 import { MessageRepository } from '../../core/interfaces/message.repository.interface';
 import { MessagePrismaRepository } from '../../adapters/prisma/repositories/message.prisma.repository';
+import { SendMessage } from '../../core/usecases/send-messages';
+import { ChatGateway } from '../../adapters/websocket/chat.gateway';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { MessagePrismaRepository } from '../../adapters/prisma/repositories/mess
   controllers: [ConversationController],
   providers: [
     CreateConversations,
+    SendMessage,
+    ChatGateway,
     {
       provide: ConversationRepository,
       useClass: ConversationPrismaRepository,

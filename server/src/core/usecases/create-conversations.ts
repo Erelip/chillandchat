@@ -48,6 +48,10 @@ export class CreateConversations {
     return await this.conversationRepository.findById(conversationId);
   }
 
+  async getMessagesByConversationId(conversationId: string) {
+    return await this.messageRepository.findByConversationId(conversationId);
+  }
+
   async getConversations() {
     return await this.conversationRepository.findAll();
   }

@@ -1,12 +1,14 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, NotImplementedException, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateConversations } from '../../core/usecases/create-conversations';
+import { SendMessage } from '../../core/usecases/send-messages';
 
 @Controller('conversations')
 export class ConversationController {
 
     constructor(
         private readonly createConversations: CreateConversations,
+        private readonly sendMessage: SendMessage
     ) {}
 
     @HttpCode(HttpStatus.OK)
@@ -27,9 +29,17 @@ export class ConversationController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Post('/:conversationId/messages')
-    sendMessage(@Request() request, @Param('conversationId') conversationId: string, @Body() body: { content: string }) {
-        return this.createConversations.sendMessage(conversationId, request.user.id, body.content);
+    createMessage(@Request() request, @Param('conversationId') conversationId: string, @Body() body: { content: string }) {
+        return this.sendMessage.sendMessage(conversationId, request.user.id, body.content);
     }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    @Get('/:conversationId/messages')
+    getMessagesByConversationId(@Param('conversationId') conversationId: string) {
+        return this.createConversations.getMessagesByConversationId(conversationId);
+    }
+
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
