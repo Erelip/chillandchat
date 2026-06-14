@@ -13,10 +13,9 @@ export class ConversationController {
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    @Post('create')
+    @Post('/')
     createConversation(@Body() input: { participantIds: string[] }, @Request() request) {
-        this.createConversations.createConversations(request.user.id, input.participantIds);
-        return { message: 'Conversation created successfully' };
+        return this.createConversations.createConversations(request.user.id, input.participantIds);
     }
 
     @HttpCode(HttpStatus.OK)

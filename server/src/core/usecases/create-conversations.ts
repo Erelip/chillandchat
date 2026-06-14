@@ -6,6 +6,7 @@ import { ConversationParticipantRepository } from "../interfaces/conversation-pa
 import { ConversationParticipant } from "../entities/conversation-participant.entity";
 import { User } from "../entities/users.entity";
 import { MessageRepository } from "../interfaces/message.repository.interface";
+import { Conversation } from "../entities/conversation.entity";
 
 @Injectable()
 export class CreateConversations {
@@ -16,7 +17,7 @@ export class CreateConversations {
     private messageRepository: MessageRepository,
   ) {}
 
-  async createConversations(me: string, ids: string[]): Promise<void> {
+  async createConversations(me: string, ids: string[]): Promise<Conversation> {
     const participantIds = [me, ...ids];
 
     if (participantIds.length < 2) {
@@ -27,6 +28,7 @@ export class CreateConversations {
     
     const conversation = await this.conversationRepository.save(participantIds.length > 2 ? ConversationType.GROUP : ConversationType.DIRECT);
     this.addParticipants(conversation.id, users as User[]);
+    return conversation;
   }
 
   async addParticipants(conversationId: string, users: User[]): Promise<void> {
