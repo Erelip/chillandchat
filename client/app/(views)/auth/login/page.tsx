@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     try {
       userService.login(username, password).then(() => {
-        router.push('/views/dashboard');
+        router.push('/dashboard');
       });
     } catch (err) {
       console.error(err);
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
       <div className="text-blue-500 text-sm mt-3">
         <p>
-          <a href="/views/auth/register">Se créer un compte</a>
+          <a href="/auth/register">Se créer un compte</a>
         </p>
       </div>
     </div>

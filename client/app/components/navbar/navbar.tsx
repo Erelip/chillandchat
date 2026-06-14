@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/views/chats', label: 'Conversations', icon: MessageCircleMore },
-  { href: '/views/users', label: 'Utilisateurs', icon: Users },
-  { href: '/views/auth/logout', label: 'Déconnexion', icon: LogOut },
+  { href: '/chats', label: 'Conversations', icon: MessageCircleMore },
+  { href: '/users', label: 'Utilisateurs', icon: Users },
+  { href: '/auth/logout', label: 'Déconnexion', icon: LogOut },
 ];
 
 export default function Sidebar() {
@@ -18,7 +18,7 @@ export default function Sidebar() {
   return (
     <div className="h-screen w-32 bg-gray-900 text-white flex flex-col">
       <div className="p-6 text-xl font-bold border-b border-gray-700">
-        MyApp
+        C&C
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {

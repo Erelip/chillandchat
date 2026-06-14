@@ -1,3 +1,4 @@
+import { Conversation } from '../dto/conversation';
 import { api } from '../lib/api';
 
 export class ConversationService {
@@ -11,6 +12,12 @@ export class ConversationService {
 
   async getConversations() : Promise<any> {
     return await api.get('/conversations');
+  }
+
+  async createConversations(ids: string[]) : Promise<Conversation> {
+    return await api.post('/conversations', {
+      participantIds: ids
+    });
   }
 
   async getMessages(id: string) : Promise<any> {

@@ -11,7 +11,7 @@ export default function LoginPage() {
 
   userService.logout();
   
-  router.push('/views/auth/login');
+  router.push('/auth/login');
 
   return;
 }

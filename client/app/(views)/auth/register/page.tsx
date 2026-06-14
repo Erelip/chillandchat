@@ -24,7 +24,7 @@ export default function RegisterPage() {
 
     try {
       userService.register(username, email, password).then(() => {
-        router.push('/views/dashboard');
+        router.push('/dashboard');
       });
     } catch (err) {
       console.error(err);
@@ -110,7 +110,7 @@ export default function RegisterPage() {
 
       <div className="text-blue-500 text-sm mt-3">
         <p>
-          <a href="/views/auth/login">Revenir à la page de connexion</a>
+          <a href="/auth/login">Revenir à la page de connexion</a>
         </p>
       </div>
     </div>

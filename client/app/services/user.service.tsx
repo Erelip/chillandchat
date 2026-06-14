@@ -39,7 +39,7 @@ export class UserService {
     return await api.get('/users/me');
   }
 
-  async getAllUsersButMe(id: string) {
+  async getAllUsersButMe() {
     return await api.get('/users');
   }
 }

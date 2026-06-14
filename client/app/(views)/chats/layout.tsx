@@ -36,11 +36,11 @@ export default function ChatsLayout({
           <div
             key={conv._id}
             onClick={() =>
-              router.push(`/views/chats/${conv._id}`)
+              router.push(`/chats/${conv._id}`)
             }
             className="p-2 rounded hover:bg-gray-100 cursor-pointer"
           >
-            {conv._messages[conv._messages.length - 1]._content}
+            {conv._messages.length == 0 ? '...' : conv._messages[conv._messages.length - 1]._content}
           </div>
         ))}
       </aside>
