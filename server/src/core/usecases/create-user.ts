@@ -4,17 +4,25 @@ import { UserRepository } from "../interfaces/user.repository.interface";
 import { hashPassword } from '../utils/password';
 import { UserDTO } from "../../application/dto/user.dto";
 import { UserMapper } from "../mappers/user.mapper";
+import { RegisterInput } from "../../application/dto/auth.dto";
 
 @Injectable()
 export class CreateUsers {
     constructor(private userRepository: UserRepository) {}
 
-    async createUser(registerInput: { username: string; email: string; password: string }) : Promise<UserDTO | null> {
+    async createUser(registerInput: RegisterInput) : Promise<UserDTO | null> {
         const user = await this.userRepository.findByEmail(registerInput.email);
         if (user) return null;
 
         const hashedPassword = await hashPassword(registerInput.password);
-        const domain = await this.userRepository.save(registerInput.username, registerInput.email, hashedPassword);
+        const domain = await this.userRepository.save(
+            registerInput.username,
+            registerInput.email,
+            hashedPassword,
+            registerInput.firstname,
+            registerInput.lastname,
+            registerInput.phoneNumber
+        );
         const dto = UserMapper.toDTO(domain)
         return dto;
     }

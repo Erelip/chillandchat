@@ -3,12 +3,18 @@ export class User {
   private _username: string;
   private _email: string;
   private _password: string;
+  private _firstname: string;
+  private _lastname: string;
+  private _phoneNumber: string;
 
-  constructor(id: string, username: string, email: string, password: string) {
+  constructor(id: string, username: string, email: string, password: string, firstname: string, lastname: string, phoneNumber: string) {
     this._id = id;
     this._username = username;
     this._email = email;
     this._password = password;
+    this._firstname = firstname
+    this._lastname = lastname
+    this._phoneNumber = phoneNumber
   }
 
   get id(): string {
@@ -27,6 +33,18 @@ export class User {
     return this._password;
   }
 
+  get firstname(): string {
+    return this._firstname;
+  }
+
+  get lastname(): string {
+    return this._lastname;
+  }
+
+  get phoneNumber(): string {
+    return this._phoneNumber;
+  }
+
   set id(id: string) {
     this._id = id;
   }
@@ -41,5 +59,17 @@ export class User {
 
   set password(password: string) {
     this._password = password;
+  }
+
+  set firstname(firstname: string) {
+    this._firstname = firstname;
+  }
+
+  set lastname(lastname: string) {
+    this._lastname = lastname;
+  }
+
+  set phoneNumber(phoneNumber: string) {
+    this._phoneNumber = phoneNumber;
   }
 }

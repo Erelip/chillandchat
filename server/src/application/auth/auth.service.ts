@@ -3,17 +3,10 @@ import { GetUsers } from '../../core/usecases/get-users';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUsers } from '../../core/usecases/create-user';
 import { comparePassword } from '../../core/utils/password';
-
-type LoginInput = {
-    username: string;
-    password: string;
-};
-
-type RegisterInput = {
-    username: string;
-    email: string;
-    password: string;
-};
+import {
+    RegisterInput,
+    LoginInput
+} from '../dto/auth.dto'
 
 type AuthOutput = {
     accessToken: string;

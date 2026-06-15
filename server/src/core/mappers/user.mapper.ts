@@ -7,12 +7,18 @@ export class UserMapper {
     username: string;
     email: string;
     password: string;
+    firstname: string;
+    lastname: string;
+    phoneNumber: string;
   }): User {
     return new User(
       data.id,
       data.username,
       data.email,
-      data.password
+      data.password,
+      data.firstname,
+      data.lastname,
+      data.phoneNumber,
     );
   }
 
@@ -21,6 +27,9 @@ export class UserMapper {
       id: user.id,
       username: user.username,
       email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      phoneNumber: user.phoneNumber
     };
   }
 }
