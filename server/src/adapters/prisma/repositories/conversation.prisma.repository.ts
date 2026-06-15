@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ConversationRepository } from '../../../core/interfaces/conversation.repository.interface';
-import { ConversationParticipant } from '../../../core/entities/conversation-participant.entity';
 import { Conversation } from '../../../core/entities/conversation.entity';
 import { ConversationMapper } from '../../../core/mappers/conversation.mapper';
 import { ConversationType } from '../../../core/enum/conversation.enum';
 import { ConversationType as ConversationPrismaType } from '../generated/enums';
 import { Message } from '../../../core/entities/message.entity';
+import { User } from '../../../core/entities/users.entity';
 
 @Injectable()
 export class ConversationPrismaRepository
@@ -22,14 +22,18 @@ export class ConversationPrismaRepository
         type: type === ConversationType.GROUP ? ConversationPrismaType.GROUP : ConversationPrismaType.DIRECT,
       },
       include: {
-        participants: true,
+        participants: {
+          include: {
+            user: true
+          }
+        },
         messages: true
       },
     });
 		return ConversationMapper.toDomain(
       createdConversation.id,
       createdConversation.participants.map(
-        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       createdConversation.name,
       createdConversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
@@ -42,7 +46,11 @@ export class ConversationPrismaRepository
   async findAll(): Promise<Conversation[]> {
     const conversations = await this.prisma.conversation.findMany({
       include: {
-        participants: true,
+        participants: {
+          include: {
+            user: true
+          }
+        },
         messages: true,
       },
     });
@@ -50,7 +58,7 @@ export class ConversationPrismaRepository
     return conversations.map((conversation) => ConversationMapper.toDomain(
       conversation.id,
       conversation.participants.map(
-        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       conversation.name,
       conversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
@@ -66,7 +74,11 @@ export class ConversationPrismaRepository
         id,
       },
       include: {
-        participants: true,
+        participants: {
+          include: {
+            user: true
+          }
+        },
         messages: true,
       },
     });
@@ -75,7 +87,7 @@ export class ConversationPrismaRepository
     return ConversationMapper.toDomain(
       conversation.id,
       conversation.participants.map(
-        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       conversation.name,
       conversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
@@ -95,7 +107,11 @@ export class ConversationPrismaRepository
         },
       },
       include: {
-        participants: true,
+        participants: {
+          include : {
+            user: true
+          }
+        },
         messages: true,
       },
     });
@@ -103,7 +119,7 @@ export class ConversationPrismaRepository
     return conversations.map((conversation) => ConversationMapper.toDomain(
       conversation.id,
       conversation.participants.map(
-        (p) => new ConversationParticipant(p.id, p.conversationId, p.userId, p.joinedAt)),
+        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       conversation.name,
       conversation.messages.map(
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content)

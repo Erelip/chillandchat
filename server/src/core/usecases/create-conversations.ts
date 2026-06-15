@@ -7,6 +7,7 @@ import { ConversationParticipant } from "../entities/conversation-participant.en
 import { User } from "../entities/users.entity";
 import { MessageRepository } from "../interfaces/message.repository.interface";
 import { Conversation } from "../entities/conversation.entity";
+import { ConversationMapper } from "../mappers/conversation.mapper";
 
 @Injectable()
 export class CreateConversations {
@@ -43,7 +44,11 @@ export class CreateConversations {
   }
 
   async getConversationsByUserId(userId: string) {
-    return await this.conversationRepository.findByParticipantId(userId);
+    const conversations = await this.conversationRepository.findByParticipantId(userId);
+
+    return conversations.map((c: Conversation) =>
+      ConversationMapper.toDTO(c)
+    )
   }
 
   async getConversationById(conversationId: string) {

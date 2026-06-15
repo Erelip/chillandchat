@@ -1,4 +1,4 @@
-import { Conversation } from "..//entities/conversation.entity";
+import { Conversation } from "../entities/conversation.entity";
 import { ConversationType } from "../enum/conversation.enum";
 
 export abstract class ConversationRepository {

@@ -3,9 +3,11 @@ import { ConversationParticipant } from '../entities/conversation-participant.en
 import { Message } from '../entities/message.entity';
 import { ConversationDTO } from '../../application/dto/conversation.dto';
 import { ConversationType } from '../enum/conversation.enum';
+import { User } from '../entities/users.entity';
+import { UserMapper } from './user.mapper';
 
 export class ConversationMapper {
-  static toDomain(id: string, conversationParticipant: ConversationParticipant[], name: string | null, messages: Message[], createdAt: Date, type : ConversationType): Conversation {
+  static toDomain(id: string, conversationParticipant: User[], name: string | null, messages: Message[], createdAt: Date, type : ConversationType): Conversation {
     return new Conversation(
       id,
       conversationParticipant,
@@ -26,12 +28,8 @@ export class ConversationMapper {
   }
 
   static toDTO(conversation: Conversation): ConversationDTO {
-    return {
-      id: conversation.id,
-      participants: conversation.participants,
-      name: conversation.name,
-      messages: conversation.messages,
-      type: conversation.type
-    };
+    const message = conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1] : null;
+
+    return new ConversationDTO(conversation.id, conversation.participants.map((p) => UserMapper.toDTO(p)), conversation.name, message, conversation.createdAt, conversation.type);
   }
 }

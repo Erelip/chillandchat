@@ -1,10 +1,11 @@
 import { Message } from "./message.entity";
 import { ConversationParticipant } from "./conversation-participant.entity";
 import { ConversationType } from "../enum/conversation.enum"
+import { User } from "./users.entity";
 
 export class Conversation {
   private _id: string;
-  private _participants: ConversationParticipant[];
+  private _participants: User[];
   private _name: string | null;
   private _messages: Message[];
   private _createdAt: Date;
@@ -12,7 +13,7 @@ export class Conversation {
 
   constructor(
     id: string,
-    participants: ConversationParticipant[],
+    participants: User[],
     name: string | null,
     messages: Message[] = [],
     createdAt: Date,
@@ -30,7 +31,7 @@ export class Conversation {
     return this._id;
   }
 
-  get participants(): ConversationParticipant[] {
+  get participants(): User[] {
     return this._participants;
   }
 
@@ -54,7 +55,7 @@ export class Conversation {
     this._id = id;
   }
 
-  set participants(participants: ConversationParticipant[]) {
+  set participants(participants: User[]) {
     this._participants = participants;
   }
 
@@ -71,6 +72,6 @@ export class Conversation {
   }
 
   hasParticipant(userId: string): boolean {
-    return this._participants.some((p) => p.userId === userId);
+    return this._participants.some((p) => p.id === userId);
   }
 }
