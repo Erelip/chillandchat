@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ConversationService } from '@/app/services/conversation.service';
-import { Conversation } from '@/app/dto/conversation';
 import { UserService } from '@/app/services/user.service';
 import { User } from '@/app/dto/user';
 
@@ -18,7 +17,6 @@ export default function UsersPage() {
   useEffect(() => {
     async function load() {
       const res = await userService.getAllUsersButMe();
-      console.log(res.data)
       setUsers(res.data);
     }
     load();
@@ -34,7 +32,7 @@ export default function UsersPage() {
 
   async function create() {
     const conversation = await conversationService.createConversations(selectedUsers);
-    router.push(`/chats/${conversation._id}`);
+    router.push(`/chats/${conversation.id}`);
     
   }
 
@@ -42,27 +40,27 @@ export default function UsersPage() {
   <div className="p-3 space-y-3">
     {users.map((user: User) => (
       <div
-        onClick={() => toggleUser(user._id)}
+        onClick={() => toggleUser(user.id)}
         className={`
           p-4 rounded border cursor-pointer
           ${
-            selectedUsers.includes(user._id)
+            selectedUsers.includes(user.id)
               ? 'border-blue-500 bg-blue-50'
               : 'border-gray-200'
           }
         `}
-        key={user._id}
+        key={user.id}
       >
         <h2 className="font-semibold">
-          {user._username}
+          {user.firstname} {user.lastname}
         </h2>
 
         <p className="text-gray-600">
-          {user._email}
+          {user.email}
         </p>
 
         <p className="text-gray-600">
-          +33
+          {user.phoneNumber}
         </p>
       </div>
     ))}

@@ -47,7 +47,7 @@ export default function DashboardPage() {
       {conversations.length === 0 && (
         <p>No conversations yet</p>
       )}
-
+{/* 
       <div className="space-y-2">
         {conversations.map((conv : Conversation) => (
           <div
@@ -61,14 +61,14 @@ export default function DashboardPage() {
               {conv._type == ConversationType.DIRECT ? 'DIRECT' : 'GROUPE'}
             </p>
 
-            {conv._messages.length > 0 && (
+            {conv._messages && (
               <p className="text-sm text-gray-500">
-                {conv._messages[0]._content}
+                {conv._messages._content}
               </p>
             )}
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

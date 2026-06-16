@@ -4,23 +4,24 @@ export enum ConversationType {
 }
 
 export interface Participant {
-    _id: string;
-    _conversationId: string;
-    _userId: string;
-    _joinedAt: Date;
+    id: string;
+    firstname: string;
+    lastname: string;
+    joinedAt: Date;
 }
 
 export interface Message {
-    _id: string;
-    _conversationId: string;
-    _senderId: string;
-    _content: string;
+    id: string;
+    conversationId: string;
+    senderId: string;
+    content: string;
+    createdAt: Date;
 }
 
 export interface Conversation {
-    _id: string;
-    _participants: Participant[];
-    _name: string | null;
-    _messages: Message[];
-    _type: ConversationType;
+    id: string;
+    participants: Participant[];
+    name: string | null;
+    message: Message;
+    type: ConversationType;
 }

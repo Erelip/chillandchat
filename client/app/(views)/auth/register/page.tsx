@@ -12,9 +12,12 @@ export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const isInvalid = !username || !email || !password;
+  const isInvalid = !username || !email || !password || !firstname || !lastname || !phoneNumber;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,7 +26,7 @@ export default function RegisterPage() {
     if (isInvalid) return;
 
     try {
-      userService.register(username, email, password).then(() => {
+      userService.register(username, email, password, firstname, lastname, phoneNumber).then(() => {
         router.push('/dashboard');
       });
     } catch (err) {
@@ -67,6 +70,42 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
+            }
+            className="w-full border p-2 rounded mb-1"
+          />
+        </div>
+
+        <div className="mb-3">
+          <input
+            placeholder="Prénom"
+            type="text"
+            value={firstname}
+            onChange={(e) =>
+              setFirstname(e.target.value)
+            }
+            className="w-full border p-2 rounded mb-1"
+          />
+        </div>
+
+        <div className="mb-3">
+          <input
+            placeholder="Nom de famille"
+            type="text"
+            value={lastname}
+            onChange={(e) =>
+              setLastname(e.target.value)
+            }
+            className="w-full border p-2 rounded mb-1"
+          />
+        </div>
+
+        <div className="mb-3">
+          <input
+            placeholder="Numéro de téléphone"
+            type="text"
+            value={phoneNumber}
+            onChange={(e) =>
+              setPhoneNumber(e.target.value)
             }
             className="w-full border p-2 rounded mb-1"
           />

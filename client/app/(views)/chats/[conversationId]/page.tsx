@@ -83,51 +83,67 @@ export default function MessagesPage() {
   
   if (loading) {
     return (
-      <div className="p-4"> Loading messages... </div>
+      <div className="flex h-screen items-center justify-center text-gray-500">
+        Loading messages...
+      </div>
     );
   }
-  
+
   return (
-    <div className="flex flex-col h-screen">
-      
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
-        {messages.length === 0 && (
-          <p className="text-gray-500">
-            No messages yet
-          </p>
-        )}
-
-        {messages.map((msg) => (
-          <div
-            key={msg._id}
-            className="p-2 rounded bg-gray-100 max-w-md"
-          >
-            {msg._content}
-          </div>
-        ))}
-
-        <div />
+    <div className="flex h-screen flex-col bg-gray-50">
+      {/* Header */}
+      <div className="border-b bg-white px-6 py-4 shadow-sm">
+        <h1 className="text-lg font-semibold text-gray-900">
+          Conversation
+        </h1>
+        <p className="text-sm text-gray-500">
+          {messages.length} message{messages.length > 1 ? 's' : ''}
+        </p>
       </div>
 
-      <div className="border-t p-3 flex gap-2 shrink-0">
-        <input
-          value={newMessage}
-          onChange={(e) =>
-            setNewMessage(e.target.value)
-          }
-          className="flex-1 border rounded px-3 py-2"
-          placeholder="Écrivez un message..."
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') sendMessage();
-          }}
-        />
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        {messages.length === 0 ? (
+          <div className="flex h-full items-center justify-center">
+            <p className="rounded-full bg-white px-4 py-2 text-sm text-gray-500 shadow-sm">
+              No messages yet. Start the conversation 👋
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {messages.map((msg) => (
+              <div
+                key={msg._id}
+                className="max-w-[70%] rounded-2xl bg-white px-4 py-2 text-sm text-gray-800 shadow-sm"
+              >
+                {msg._content}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-        <button
-          onClick={sendMessage}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          Envoyer
-        </button>
+      {/* Input */}
+      <div className="border-t bg-white px-4 py-3">
+        <div className="flex items-center gap-3 rounded-full border bg-gray-50 px-4 py-2 focus-within:ring-2 focus-within:ring-black/10">
+          <input
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Écrivez un message..."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') sendMessage();
+            }}
+            className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-gray-400"
+          />
+
+          <button
+            onClick={sendMessage}
+            disabled={!newMessage.trim()}
+            className="rounded-full bg-black px-5 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+          >
+            Envoyer
+          </button>
+        </div>
       </div>
     </div>
   );

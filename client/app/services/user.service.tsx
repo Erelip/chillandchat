@@ -2,13 +2,16 @@ import { api } from '../lib/api';
 
 export class UserService {
 
-  async register(username: string, email: string, password: string) {
+  async register(username: string, email: string, password: string, firstname: string, lastname: string, phoneNumber: string) {
     const response = await api.post(
       '/auth/register',
       {
-        username,
-        email,
-        password,
+        username: username,
+        email: email,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        phoneNumber: phoneNumber
       },
     );
 
@@ -21,8 +24,8 @@ export class UserService {
     const response = await api.post(
       '/auth/login',
       {
-        username,
-        password,
+        username: username,
+        password: password,
       },
     );
 
