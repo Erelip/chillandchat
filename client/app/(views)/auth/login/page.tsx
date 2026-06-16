@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     try {
       userService.login(username, password).then(() => {
-        router.push('/dashboard');
+        router.push('/chats');
       });
     } catch (err) {
       console.error(err);

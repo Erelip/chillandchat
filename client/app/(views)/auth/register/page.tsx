@@ -27,7 +27,7 @@ export default function RegisterPage() {
 
     try {
       userService.register(username, email, password, firstname, lastname, phoneNumber).then(() => {
-        router.push('/dashboard');
+        router.push('/chats');
       });
     } catch (err) {
       console.error(err);
