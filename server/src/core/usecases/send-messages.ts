@@ -28,9 +28,9 @@ export class SendMessage {
     this.chatGateway.server
         .to(conversationId)
             .emit('messageCreated', {
-                _id: createdMessage.id,
-                _content: createdMessage.content,
-                _senderId: createdMessage.senderId,
+                id: createdMessage.id,
+                content: createdMessage.content,
+                senderId: createdMessage.senderId,
             });
     return createdMessage;
   }

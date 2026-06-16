@@ -2,6 +2,8 @@ import { Body, Controller, Get, HttpCode, HttpStatus, NotImplementedException, P
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateConversations } from '../../core/usecases/create-conversations';
 import { SendMessage } from '../../core/usecases/send-messages';
+import { Message } from '../../core/entities/message.entity';
+import { MessageMapper } from '../../core/mappers/message.mapper';
 
 @Controller('conversations')
 export class ConversationController {
@@ -35,8 +37,10 @@ export class ConversationController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Get('/:conversationId/messages')
-    getMessagesByConversationId(@Param('conversationId') conversationId: string) {
-        return this.createConversations.getMessagesByConversationId(conversationId);
+    async getMessagesByConversationId(@Param('conversationId') conversationId: string) {
+        const messages = await this.createConversations.getMessagesByConversationId(conversationId);
+
+        return messages.map((m : Message) => MessageMapper.toDTO(m));
     }
 
 
