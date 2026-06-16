@@ -5,7 +5,7 @@ export class MessageMapper {
   static toDTO(message: Message): MessageDTO {
     return new MessageDTO(
       message.id,
-      message.conversationId,
+      message.senderId,
       message.content,
       message.createdAt
     );
