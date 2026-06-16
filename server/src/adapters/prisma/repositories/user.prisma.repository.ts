@@ -13,15 +13,15 @@ export class PrismaUserRepository
     private readonly prisma: PrismaService,
   ) {}
 
-	async save(username: string, email: string, hashedPassword: string, firstname: string, lastname: string, phoneNumber: string): Promise<User> {
+	async save(user: User): Promise<User> {
 		const userPrismaEntity = await this.prisma.user.create({
 				data: {
-          username: username,
-          email: email,
-          password: hashedPassword,
-          firstname: firstname,
-          lastname: lastname,
-          phoneNumber: phoneNumber,
+          username: user.username,
+          email: user.email,
+          password: user.password,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          phoneNumber: user.phoneNumber,
         },
 		});
     const domain = UserMapper.toDomain(userPrismaEntity)

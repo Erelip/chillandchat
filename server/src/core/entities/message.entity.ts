@@ -3,12 +3,14 @@ export class Message {
   private _conversationId: string;
   private _senderId: string;
   private _content: string;
+  private _createdAt: Date;
 
-  constructor(id: string, conversationId: string, senderId: string, content: string) {
+  constructor(id: string, conversationId: string, senderId: string, content: string, createdAt: Date) {
     this._id = id;
     this._conversationId = conversationId;
     this._senderId = senderId;
     this._content = content;
+    this._createdAt = createdAt;
   }
 
   get id(): string {
@@ -27,6 +29,10 @@ export class Message {
     return this._content;
   }
 
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
   set id(id: string) {
     this._id = id;
   }
@@ -42,4 +48,9 @@ export class Message {
   set content(content: string) {
     this._content = content;
   }
+
+  set createdAt(createdAt: Date) {
+    this._createdAt = createdAt;
+  }
+
 }

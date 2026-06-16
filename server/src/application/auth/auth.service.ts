@@ -7,14 +7,10 @@ import {
     RegisterInput,
     LoginInput
 } from '../dto/auth.dto'
+import { User } from '../../core/entities/users.entity';
 
 type AuthOutput = {
     accessToken: string;
-};
-
-type SignInData = {
-    id?: string;
-    username: string;
 };
 
 @Injectable()
@@ -36,20 +32,17 @@ export class AuthService {
         return this.signIn(user);
     }
 
-    async validateUser(input: LoginInput) : Promise<SignInData | null> {
+    async validateUser(input: LoginInput) : Promise<User | null> {
         const user = await this.getUsers.getUserByUsername(input.username);
         if (!user) return null;
 
         const isValid = await comparePassword(input.password, user.password);
         if (!isValid) return null;
 
-        return {
-            id: user.id,
-            username: user.username,
-        };
+        return user;
     }
 
-    async signIn(user: SignInData) : Promise<AuthOutput> {
+    async signIn(user: User) : Promise<AuthOutput> {
         const payload = { username: user.username, sub: user.id };
         return {
             accessToken: await this.jwtService.signAsync(payload),

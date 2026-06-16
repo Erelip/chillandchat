@@ -1,7 +1,7 @@
 import { User } from "../entities/users.entity";
 
 export abstract class UserRepository {
-  abstract save(username: string, email: string, hashedPassword: string, firstname: string, lastname: string, phoneNumber: string): Promise<User>;
+  abstract save(user: User): Promise<User>;
 
   abstract findAll(): Promise<User[]>;
 

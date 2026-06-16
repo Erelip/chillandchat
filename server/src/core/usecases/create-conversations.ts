@@ -8,6 +8,7 @@ import { User } from "../entities/users.entity";
 import { MessageRepository } from "../interfaces/message.repository.interface";
 import { Conversation } from "../entities/conversation.entity";
 import { ConversationMapper } from "../mappers/conversation.mapper";
+import { UserDTO } from "../../application/dto/user.dto";
 
 @Injectable()
 export class CreateConversations {
@@ -36,7 +37,7 @@ export class CreateConversations {
     const conversationParticipants = users.map((user) => (new ConversationParticipant(
       "",
       conversationId,
-      user.id,
+      user.id!,
       new Date()
     )));
 
@@ -46,9 +47,11 @@ export class CreateConversations {
   async getConversationsByUserId(userId: string) {
     const conversations = await this.conversationRepository.findByParticipantId(userId);
 
-    return conversations.map((c: Conversation) =>
-      ConversationMapper.toDTO(c)
-    )
+    return conversations.map((c: Conversation) => {
+        const dto = ConversationMapper.toDTO(c);
+        dto.participants = dto.participants.filter((user: UserDTO) => user.id !== userId)
+        return dto;
+    })
   }
 
   async getConversationById(conversationId: string) {
@@ -71,7 +74,6 @@ export class CreateConversations {
     if (!user) throw new Error("User not found.");
   
     return await this.messageRepository.save(conversationId, senderId, content);
-
   }
 
 }

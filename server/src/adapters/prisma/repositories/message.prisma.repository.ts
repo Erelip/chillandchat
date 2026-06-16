@@ -24,6 +24,7 @@ export class MessagePrismaRepository
       createdMessage.conversationId,
       createdMessage.senderId,
       createdMessage.content,
+      createdMessage.createdAt
     );
 	}
 
@@ -63,6 +64,7 @@ export class MessagePrismaRepository
       message.conversationId,
       message.senderId,
       message.content,
+      message.createdAt
     ));
   }
 

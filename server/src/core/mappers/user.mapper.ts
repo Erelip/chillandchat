@@ -23,13 +23,12 @@ export class UserMapper {
   }
 
   static toDTO(user: User): UserDTO {
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      phoneNumber: user.phoneNumber
-    };
+    return new UserDTO(
+      user.id!,
+      user.email,
+      user.firstname,
+      user.lastname,
+      user.phoneNumber
+    );
   }
 }

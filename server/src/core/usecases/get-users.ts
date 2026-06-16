@@ -23,8 +23,7 @@ export class GetUsers {
         const users = await this.userRepository.findAll();
         return users;
     }
-    async getAllUsersButMe(id: string) : Promise<User[]> {
-        const users = await this.userRepository.findAllButMe(id);
-        return users;
+    async getAllUsersButMe(id: string) {
+        return await this.userRepository.findAllButMe(id);
     }
 }

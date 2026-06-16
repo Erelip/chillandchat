@@ -10,20 +10,23 @@ import { RegisterInput } from "../../application/dto/auth.dto";
 export class CreateUsers {
     constructor(private userRepository: UserRepository) {}
 
-    async createUser(registerInput: RegisterInput) : Promise<UserDTO | null> {
+    async createUser(registerInput: RegisterInput) : Promise<User | null> {
         const user = await this.userRepository.findByEmail(registerInput.email);
         if (user) return null;
 
         const hashedPassword = await hashPassword(registerInput.password);
-        const domain = await this.userRepository.save(
+
+        const createdUser = new User(
+            null,
             registerInput.username,
             registerInput.email,
             hashedPassword,
             registerInput.firstname,
             registerInput.lastname,
             registerInput.phoneNumber
-        );
-        const dto = UserMapper.toDTO(domain)
-        return dto;
+        )
+
+        const domain = await this.userRepository.save(createdUser);
+        return domain;
     }
 }

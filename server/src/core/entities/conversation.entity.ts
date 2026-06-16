@@ -18,6 +18,7 @@ export class Conversation {
     messages: Message[] = [],
     createdAt: Date,
     type: ConversationType = ConversationType.DIRECT,
+
   ) {
     this._id = id;
     this._participants = participants;

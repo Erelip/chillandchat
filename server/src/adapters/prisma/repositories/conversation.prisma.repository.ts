@@ -36,7 +36,7 @@ export class ConversationPrismaRepository
         (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       createdConversation.name,
       createdConversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       createdConversation.createdAt,
       createdConversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
@@ -61,7 +61,7 @@ export class ConversationPrismaRepository
         (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       conversation.name,
       conversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       conversation.createdAt,
       conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
@@ -90,7 +90,7 @@ export class ConversationPrismaRepository
         (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       conversation.name,
       conversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       conversation.createdAt,
       conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
@@ -122,7 +122,7 @@ export class ConversationPrismaRepository
         (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
       conversation.name,
       conversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content)
+        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       conversation.createdAt,
       conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
