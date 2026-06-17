@@ -11,14 +11,6 @@ export class ConversationParticipationMapper {
     );
   }
 
-  static toPersistence(conversation: Conversation) {
-    return {
-      id: conversation.id,
-      participants: conversation.participants,
-      type: conversation.type,
-    };
-  }
-
   static toDTO(conversationParticipant: ConversationParticipant): ConversationParticipant {
     return new ConversationParticipant(
       conversationParticipant.id,

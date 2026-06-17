@@ -25,6 +25,8 @@ export class SendMessage {
     if (!user) throw new Error("User not found.");
   
     const createdMessage = await this.messageRepository.save(conversationId, senderId, content);
+    conversation.updatedAt = new Date();
+    await this.conversationRepository.update(conversation);
     this.chatGateway.server
         .to(conversationId)
             .emit('messageCreated', {

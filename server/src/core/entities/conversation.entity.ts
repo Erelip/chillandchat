@@ -9,6 +9,7 @@ export class Conversation {
   private _name: string | null;
   private _messages: Message[];
   private _createdAt: Date;
+  private _updatedAt: Date;
   private _type: ConversationType;
 
   constructor(
@@ -17,6 +18,7 @@ export class Conversation {
     name: string | null,
     messages: Message[] = [],
     createdAt: Date,
+    updatedAt: Date,
     type: ConversationType = ConversationType.DIRECT,
 
   ) {
@@ -25,6 +27,7 @@ export class Conversation {
     this._name = name;
     this._messages = messages;
     this._createdAt = createdAt;
+    this._updatedAt = updatedAt;
     this._type = type;
   }
 
@@ -48,6 +51,10 @@ export class Conversation {
     return this._createdAt;
   }
 
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
   get type(): ConversationType {
     return this._type;
   }
@@ -67,6 +74,11 @@ export class Conversation {
   set createdAt(createdAt: Date) {
     this._createdAt = createdAt;
   }
+
+  set updatedAt(updatedAt: Date) {
+    this._updatedAt = updatedAt;
+  }
+
 
   set type(type: ConversationType) {
     this._type = type;

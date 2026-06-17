@@ -30,6 +30,7 @@ export class ConversationPrismaRepository
         messages: true
       },
     });
+
 		return ConversationMapper.toDomain(
       createdConversation.id,
       createdConversation.participants.map(
@@ -39,9 +40,20 @@ export class ConversationPrismaRepository
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       createdConversation.createdAt,
+      createdConversation.updatedAt,
       createdConversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
     );
 	}
+
+  async update(conversation: Conversation): Promise<void> {
+    const entity = ConversationMapper.toPersistence(conversation);
+    await this.prisma.conversation.update({
+      where: {
+        id: conversation.id,
+      },
+      data: entity,
+    });
+  }
 
   async findAll(): Promise<Conversation[]> {
     const conversations = await this.prisma.conversation.findMany({
@@ -64,6 +76,7 @@ export class ConversationPrismaRepository
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       conversation.createdAt,
+      conversation.updatedAt,
       conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
     ));
   }
@@ -93,6 +106,7 @@ export class ConversationPrismaRepository
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       conversation.createdAt,
+      conversation.updatedAt,
       conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
     );
   }
@@ -114,6 +128,9 @@ export class ConversationPrismaRepository
         },
         messages: true,
       },
+      orderBy: {
+        updatedAt: 'desc'
+      }
     });
 
     return conversations.map((conversation) => ConversationMapper.toDomain(
@@ -125,6 +142,7 @@ export class ConversationPrismaRepository
         (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
       ),
       conversation.createdAt,
+      conversation.updatedAt,
       conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
     ));
   }

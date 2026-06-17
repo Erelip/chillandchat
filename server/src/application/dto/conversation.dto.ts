@@ -11,14 +11,16 @@ export class ConversationDTO {
   name: string | null;
   message: MessageDTO | null;
   createdAt: Date;
+  updatedAt: Date;
   type: ConversationType;
 
-  constructor(id: string, participants: UserDTO[], name: string | null, message: MessageDTO | null, createdAt: Date, type: ConversationType) {
+  constructor(id: string, participants: UserDTO[], name: string | null, message: MessageDTO | null, createdAt: Date, updatedAt: Date, type: ConversationType) {
     this.id = id;
     this.participants = participants;
     this.name = name;
     this.message = message;
     this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
     this.type = type;
   }
 }

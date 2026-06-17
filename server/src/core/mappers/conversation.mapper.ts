@@ -5,15 +5,17 @@ import { ConversationType } from '../enum/conversation.enum';
 import { User } from '../entities/users.entity';
 import { UserMapper } from './user.mapper';
 import { MessageMapper } from './message.mapper';
+import { ConversationType as ConversationPrismaType} from '../../adapters/prisma/generated/client';
 
 export class ConversationMapper {
-  static toDomain(id: string, conversationParticipant: User[], name: string | null, messages: Message[], createdAt: Date, type : ConversationType): Conversation {
+  static toDomain(id: string, conversationParticipant: User[], name: string | null, messages: Message[], createdAt: Date, updatedAt: Date, type : ConversationType): Conversation {
     return new Conversation(
       id,
       conversationParticipant,
       name,
       messages,
       createdAt,
+      updatedAt,
       type
     );
   }
@@ -21,9 +23,10 @@ export class ConversationMapper {
   static toPersistence(conversation: Conversation) {
     return {
       id: conversation.id,
-      participants: conversation.participants,
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt,
+      type: conversation.type == ConversationType.DIRECT ? ConversationPrismaType.DIRECT : ConversationPrismaType.GROUP,
       name: conversation.name,
-      type: conversation.type,
     };
   }
 
@@ -36,6 +39,7 @@ export class ConversationMapper {
       conversation.name,
       message,
       conversation.createdAt,
+      conversation.updatedAt,
       conversation.type
     );
   }
