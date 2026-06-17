@@ -24,4 +24,6 @@ export interface Conversation {
     name: string | null;
     message: Message;
     type: ConversationType;
+    createdAt: Date;
+    updatedAt: Date;
 }
