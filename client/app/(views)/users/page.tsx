@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ConversationService } from '@/app/services/conversation.service';
 import { UserService } from '@/app/services/user.service';
-import { User } from '@/app/dto/user';
+import { User } from '@/app/dto/conversation';
 
 export default function UsersPage() {
   const router = useRouter();

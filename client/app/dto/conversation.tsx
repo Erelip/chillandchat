@@ -3,10 +3,17 @@ export enum ConversationType {
     GROUP,
 }
 
-export interface Participant {
+export interface User {
     id: string;
+    email: string;
+    phoneNumber: string
     firstname: string;
     lastname: string;
+}
+
+export interface Participant {
+    id: string;
+    user: User;
     joinedAt: Date;
 }
 

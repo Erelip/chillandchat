@@ -30,7 +30,7 @@ export default function ChatsLayout({
     if (conversation.name != null) return conversation.name;
 
     const names = conversation.participants.map(
-      (user) => `${user.firstname} ${user.lastname}`,
+      (p) => `${p.user.firstname} ${p.user.lastname}`,
     );
 
     if (names.length <= 2) {

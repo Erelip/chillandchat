@@ -3,7 +3,7 @@ import { ConversationService } from '@/app/services/conversation.service';
 import { UserService } from '@/app/services/user.service';
 import { socketService } from '@/app/services/socket.service';
 import { Message } from '@/app/dto/conversation';
-import { User } from '@/app/dto/user';
+import { User } from '@/app/dto/conversation';
 
 const conversationService = new ConversationService();
 const userService = new UserService();

@@ -1,5 +1,5 @@
 import { Message } from '@/app/dto/conversation';
-import { User } from '@/app/dto/user';
+import { User } from '@/app/dto/conversation';
 
 export function ChatMessages({
   messages,
