@@ -11,55 +11,15 @@ import { ConversationMapper } from "../mappers/conversation.mapper";
 import { UserDTO } from "../../application/dto/user.dto";
 import { ConversationParticipantDTO } from "../../application/dto/conversation-participant.dto";
 import { ConversationParticipationMapper } from "../mappers/conversation-participation.mapper";
-import { IdGenerator } from "../interfaces/uuid-generator.interface";
 
 @Injectable()
-export class CreateConversations {
+export class GetConversations {
   constructor(
     private userRepository: UserRepository,
     private conversationRepository: ConversationRepository,
     private conversationParticipantRepository: ConversationParticipantRepository,
     private messageRepository: MessageRepository,
-    private idGenerator: IdGenerator
   ) {}
-
-  async createConversations(me: string, ids: string[]): Promise<Conversation> {
-    const participantIds = [me, ...ids];
-
-    if (participantIds.length < 2) {
-        throw new Error("At least two user IDs are required to create a conversation.");
-    }
-
-    const users = await Promise.all(participantIds.map(id => this.userRepository.findById(id)));
-
-    const newConversation = new Conversation(
-      this.idGenerator.generate(),
-      null,
-      participantIds.length > 2 ? ConversationType.GROUP : ConversationType.DIRECT,
-      [],
-      [],
-      new Date(),
-      new Date()
-    )
-
-    await this.conversationRepository.save(newConversation);
-    this.addParticipants(newConversation, users as User[]);
-    return newConversation;
-  }
-
-  async addParticipants(conversation: Conversation, users: User[]): Promise<void> {
-    const conversationParticipants = users.map((user) => {
-      const participant = new ConversationParticipant(
-        this.idGenerator.generate(),
-        conversation.id,
-        user,
-        new Date()
-      )
-      return participant;
-    });
-    conversation.addParticipants(conversationParticipants);
-    await this.conversationParticipantRepository.saveMany(conversationParticipants);
-  }
 
   async getConversationsByUserId(userId: string) {
     const conversations = await this.conversationRepository.findByParticipantId(userId);
@@ -81,16 +41,6 @@ export class CreateConversations {
 
   async getConversations() {
     return await this.conversationRepository.findAll();
-  }
-
-  async sendMessage(conversationId: string, senderId: string, content: string) {
-    const conversation = await this.conversationRepository.findById(conversationId);
-    const user = await this.userRepository.findById(senderId);
-
-    if (!conversation) throw new Error("Conversation not found.");
-    if (!user) throw new Error("User not found.");
-  
-    return await this.messageRepository.save(conversationId, senderId, content);
   }
 
 }

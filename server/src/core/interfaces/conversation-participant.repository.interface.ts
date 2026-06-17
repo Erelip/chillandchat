@@ -1,7 +1,7 @@
 import { ConversationParticipant } from "../entities/conversation-participant.entity";
 
 export abstract class ConversationParticipantRepository {
-  abstract save(participant: ConversationParticipant): Promise<ConversationParticipant>;
+  abstract save(participant: ConversationParticipant): Promise<void>;
 
   abstract saveMany(participants: ConversationParticipant[]): Promise<void>;
 

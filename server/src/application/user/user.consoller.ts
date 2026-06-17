@@ -21,9 +21,6 @@ export class UserController {
     @Get('')
     async getAllUsers(@Request() request) {
         const users = await this.getUsers.getAllUsersButMe(request.user.id);
-
-        return users.map(
-            (user: User) => UserMapper.toDTO(user)
-        );
+        return users.map((u: User) => UserMapper.toDTO(u));
     }
 }

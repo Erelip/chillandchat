@@ -10,6 +10,9 @@ import { MessageRepository } from '../../core/interfaces/message.repository.inte
 import { MessagePrismaRepository } from '../../adapters/prisma/repositories/message.prisma.repository';
 import { SendMessage } from '../../core/usecases/send-messages';
 import { ChatGateway } from '../../adapters/websocket/chat.gateway';
+import { GetConversations } from '../../core/usecases/get-conversations';
+import { IdGenerator } from '../../core/interfaces/uuid-generator.interface';
+import { UuidGenerator } from '../../adapters/generator/uuid.generator';
 
 @Module({
   imports: [
@@ -17,9 +20,10 @@ import { ChatGateway } from '../../adapters/websocket/chat.gateway';
   ],
   controllers: [ConversationController],
   providers: [
-    CreateConversations,
     SendMessage,
     ChatGateway,
+    GetConversations,
+    CreateConversations,
     {
       provide: ConversationRepository,
       useClass: ConversationPrismaRepository,
@@ -31,6 +35,10 @@ import { ChatGateway } from '../../adapters/websocket/chat.gateway';
     {
       provide: MessageRepository,
       useClass: MessagePrismaRepository,
+    },
+    {
+      provide: IdGenerator,
+      useClass: UuidGenerator,
     },
 
   ],

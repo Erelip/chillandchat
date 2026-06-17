@@ -4,12 +4,14 @@ import { CreateConversations } from '../../core/usecases/create-conversations';
 import { SendMessage } from '../../core/usecases/send-messages';
 import { Message } from '../../core/entities/message.entity';
 import { MessageMapper } from '../../core/mappers/message.mapper';
+import { GetConversations } from '../../core/usecases/get-conversations';
 
 @Controller('conversations')
 export class ConversationController {
 
     constructor(
         private readonly createConversations: CreateConversations,
+        private readonly getConversations: GetConversations,
         private readonly sendMessage: SendMessage
     ) {}
 
@@ -42,7 +44,6 @@ export class ConversationController {
 
         return messages.map((m : Message) => MessageMapper.toDTO(m));
     }
-
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)

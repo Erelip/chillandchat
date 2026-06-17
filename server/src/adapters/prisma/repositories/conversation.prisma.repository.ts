@@ -3,10 +3,6 @@ import { PrismaService } from '../prisma.service';
 import { ConversationRepository } from '../../../core/interfaces/conversation.repository.interface';
 import { Conversation } from '../../../core/entities/conversation.entity';
 import { ConversationMapper } from '../../../core/mappers/conversation.mapper';
-import { ConversationType } from '../../../core/enum/conversation.enum';
-import { ConversationType as ConversationPrismaType } from '../generated/enums';
-import { Message } from '../../../core/entities/message.entity';
-import { User } from '../../../core/entities/users.entity';
 
 @Injectable()
 export class ConversationPrismaRepository
@@ -16,40 +12,19 @@ export class ConversationPrismaRepository
     private readonly prisma: PrismaService,
   ) {}
 
-	async save(type: ConversationType): Promise<Conversation> {
-		const createdConversation = await this.prisma.conversation.create({
-    data: {
-        type: type === ConversationType.GROUP ? ConversationPrismaType.GROUP : ConversationPrismaType.DIRECT,
-      },
-      include: {
-        participants: {
-          include: {
-            user: true
-          }
-        },
-        messages: true
-      },
-    });
+	async save(conversation: Conversation): Promise<void> {
+    const conversationEntity = ConversationMapper.toPersistence(conversation);
 
-		return ConversationMapper.toDomain(
-      createdConversation.id,
-      createdConversation.participants.map(
-        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
-      createdConversation.name,
-      createdConversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
-      ),
-      createdConversation.createdAt,
-      createdConversation.updatedAt,
-      createdConversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
-    );
+    await this.prisma.conversation.create({
+      data: conversationEntity
+    });
 	}
 
   async update(conversation: Conversation): Promise<void> {
     const entity = ConversationMapper.toPersistence(conversation);
     await this.prisma.conversation.update({
       where: {
-        id: conversation.id,
+        id: conversation.id!,
       },
       data: entity,
     });
@@ -67,18 +42,7 @@ export class ConversationPrismaRepository
       },
     });
 
-    return conversations.map((conversation) => ConversationMapper.toDomain(
-      conversation.id,
-      conversation.participants.map(
-        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
-      conversation.name,
-      conversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
-      ),
-      conversation.createdAt,
-      conversation.updatedAt,
-      conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
-    ));
+    return conversations.map((c) => ConversationMapper.toDomain(c))
   }
 
   async findById(id: string): Promise<Conversation | null> {
@@ -97,18 +61,7 @@ export class ConversationPrismaRepository
     });
     if (!conversation) return null;
 
-    return ConversationMapper.toDomain(
-      conversation.id,
-      conversation.participants.map(
-        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
-      conversation.name,
-      conversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
-      ),
-      conversation.createdAt,
-      conversation.updatedAt,
-      conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
-    );
+    return ConversationMapper.toDomain(conversation);
   }
 
   async findByParticipantId(participantId: string): Promise<Conversation[]> {
@@ -133,17 +86,6 @@ export class ConversationPrismaRepository
       }
     });
 
-    return conversations.map((conversation) => ConversationMapper.toDomain(
-      conversation.id,
-      conversation.participants.map(
-        (p) => new User(p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber)),
-      conversation.name,
-      conversation.messages.map(
-        (p) => new Message(p.id, p.conversationId, p.senderId, p.content, p.createdAt)
-      ),
-      conversation.createdAt,
-      conversation.updatedAt,
-      conversation.type == ConversationPrismaType.GROUP ? ConversationType.GROUP : ConversationType.DIRECT
-    ));
+    return conversations.map((c) => ConversationMapper.toDomain(c))
   }
 }

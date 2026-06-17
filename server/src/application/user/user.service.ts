@@ -8,8 +8,4 @@ export class AuthService {
 
     constructor(private readonly getUsers: GetUsers) {}
 
-    async getAllUsers() : Promise<User[] | null> {
-        return await this.getUsers.getAllUsers();
-    }
-
 }

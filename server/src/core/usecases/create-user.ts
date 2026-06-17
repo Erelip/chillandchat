@@ -5,10 +5,11 @@ import { hashPassword } from '../utils/password';
 import { UserDTO } from "../../application/dto/user.dto";
 import { UserMapper } from "../mappers/user.mapper";
 import { RegisterInput } from "../../application/dto/auth.dto";
+import { IdGenerator } from "../interfaces/uuid-generator.interface";
 
 @Injectable()
 export class CreateUsers {
-    constructor(private userRepository: UserRepository) {}
+    constructor(private userRepository: UserRepository, private generator: IdGenerator) {}
 
     async createUser(registerInput: RegisterInput) : Promise<User | null> {
         const user = await this.userRepository.findByEmail(registerInput.email);
@@ -17,7 +18,7 @@ export class CreateUsers {
         const hashedPassword = await hashPassword(registerInput.password);
 
         const createdUser = new User(
-            null,
+            this.generator.generate(),
             registerInput.username,
             registerInput.email,
             hashedPassword,

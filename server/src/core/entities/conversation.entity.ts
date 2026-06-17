@@ -1,90 +1,20 @@
 import { Message } from "./message.entity";
-import { ConversationParticipant } from "./conversation-participant.entity";
 import { ConversationType } from "../enum/conversation.enum"
-import { User } from "./users.entity";
+import { ConversationParticipant } from "./conversation-participant.entity";
 
 export class Conversation {
-  private _id: string;
-  private _participants: User[];
-  private _name: string | null;
-  private _messages: Message[];
-  private _createdAt: Date;
-  private _updatedAt: Date;
-  private _type: ConversationType;
-
   constructor(
-    id: string,
-    participants: User[],
-    name: string | null,
-    messages: Message[] = [],
-    createdAt: Date,
-    updatedAt: Date,
-    type: ConversationType = ConversationType.DIRECT,
+    public readonly id: string,
+    public readonly name: string | null,
+    public readonly type: ConversationType,
+    public readonly participant: ConversationParticipant[],
+    public readonly messages: Message[],
+    public readonly createdAt: Date,
+    public updatedAt: Date,
+  ) {}
 
-  ) {
-    this._id = id;
-    this._participants = participants;
-    this._name = name;
-    this._messages = messages;
-    this._createdAt = createdAt;
-    this._updatedAt = updatedAt;
-    this._type = type;
-  }
-
-  get id(): string {
-    return this._id;
-  }
-
-  get participants(): User[] {
-    return this._participants;
-  }
-
-  get name(): string | null {
-    return this._name;
-  }
-
-  get messages(): Message[] {
-    return this._messages;
-  }
-
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
-  get type(): ConversationType {
-    return this._type;
-  }
-
-  set id(id: string) {
-    this._id = id;
-  }
-
-  set participants(participants: User[]) {
-    this._participants = participants;
-  }
-
-  set messages(messages: Message[]) {
-    this._messages = messages;
-  }
-
-  set createdAt(createdAt: Date) {
-    this._createdAt = createdAt;
-  }
-
-  set updatedAt(updatedAt: Date) {
-    this._updatedAt = updatedAt;
-  }
-
-
-  set type(type: ConversationType) {
-    this._type = type;
-  }
-
-  hasParticipant(userId: string): boolean {
-    return this._participants.some((p) => p.id === userId);
+  public addParticipants(participants : ConversationParticipant[]) {
+    this.participant.push(...participants);
+    return this.participant;
   }
 }
