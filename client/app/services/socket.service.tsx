@@ -12,6 +12,10 @@ class SocketService {
   getSocket() {
     return this.socket;
   }
+
+  disconnect() {
+    return this.socket.disconnect();
+  }
 }
 
 export const socketService =

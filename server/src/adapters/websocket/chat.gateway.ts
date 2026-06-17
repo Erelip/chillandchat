@@ -24,4 +24,26 @@ export class ChatGateway {
   ) {
     client.join(conversationId);
   }
+
+  @SubscribeMessage('typing')
+  handleTyping(
+    @MessageBody() data: { conversationId: string; userId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.to(data.conversationId).emit('userTyping', {
+      conversationId: data.conversationId,
+      userId: data.userId,
+    });
+  }
+
+  @SubscribeMessage('stopTyping')
+  handleStopTyping(
+    @MessageBody() data: { conversationId: string; userId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.to(data.conversationId).emit('userStopTyping', {
+      conversationId: data.conversationId,
+      userId: data.userId,
+    });
+  }
 }
