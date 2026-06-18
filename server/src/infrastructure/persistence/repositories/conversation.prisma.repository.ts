@@ -14,19 +14,42 @@ export class ConversationPrismaRepository
 
 	async save(conversation: Conversation): Promise<void> {
     const conversationEntity = ConversationPrismaMapper.toPersistence(conversation);
+    const participants =
+      conversation.participants.map((participant) => ({
+        ...(participant.id ? { id: participant.id } : {}),
+        joinedAt: participant.joinedAt,
+        user: {
+          connect: {
+            id: participant.user.id,
+          },
+        },
+      }));
 
     await this.prisma.conversation.create({
-      data: conversationEntity
+      data: {
+        id: conversationEntity.id,
+        createdAt: conversationEntity.createdAt,
+        updatedAt: conversationEntity.updatedAt,
+        name: conversationEntity.name,
+        participants: {
+          create: participants
+        },
+        type: conversationEntity.type
+      },
     });
 	}
 
   async update(conversation: Conversation): Promise<void> {
     const entity = ConversationPrismaMapper.toPersistence(conversation);
+
     await this.prisma.conversation.update({
       where: {
         id: conversation.id!,
       },
-      data: entity,
+      data: {
+        name: entity.name,
+        updatedAt: entity.updatedAt,
+      },
     });
   }
 

@@ -48,13 +48,7 @@ export class ConversationPrismaMapper {
       id: conversation.id,
       createdAt: conversation.createdAt,
       updatedAt: conversation.updatedAt,
-      participants: {
-        create: conversation.participants.map((p : ConversationParticipant) => {
-          return {
-            userId : p.user.id
-          }
-        }),
-      },
+      participants: conversation.participants,
       name: conversation.name,
       type: ConversationTypePrismaMapper.toPersistence(conversation.type),
     };
