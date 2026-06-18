@@ -18,16 +18,16 @@ export class SendMessage {
     if (!conversation) throw new Error("Conversation not found.");
     if (!user) throw new Error("User not found.");
   
-    const createdMessage = await this.messageRepository.save(conversationId, senderId, content);
+    const createdMessage = await this.messageRepository.save(conversation.id, senderId, content);
     conversation.updatedAt = new Date();
     await this.conversationRepository.update(conversation);
-    this.chatGateway.server
-        .to(conversationId)
-            .emit('messageCreated', {
-                id: createdMessage.id,
-                content: createdMessage.content,
-                senderId: createdMessage.senderId,
-            });
+
+    this.chatGateway.emitMessageCreated(conversation.id, {
+      id: createdMessage.id,
+      content: createdMessage.content,
+      senderId: createdMessage.senderId,
+    })
+
     return createdMessage;
   }
 

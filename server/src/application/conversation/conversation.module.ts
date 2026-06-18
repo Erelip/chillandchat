@@ -13,9 +13,10 @@ import { MessageRepository } from '../../core/interfaces/message.repository.inte
 import { UserRepository } from '../../core/interfaces/user.repository.interface';
 import { ConversationParticipantRepository } from '../../core/interfaces/conversation-participant.repository.interface';
 import { IdGenerator } from '../../core/interfaces/uuid-generator.interface';
+import { ChatModule } from '../../infrastructure/websocket/chat.module';
 
 @Module({
-  imports: [SharedModule, UsersModule, PersistenceModule],
+  imports: [SharedModule, UsersModule, PersistenceModule, ChatModule],
   controllers: [ConversationController],
   providers: [
     {
@@ -60,15 +61,9 @@ import { IdGenerator } from '../../core/interfaces/uuid-generator.interface';
         return new GetMessages(messageRepository);
       },
       inject: [MessageRepository],
-    },
-    {
-      provide: ChatGateway,
-      useFactory: () => {
-        return new ChatGateway();
-      },
-    },
+    }
   ],
-  exports: [GetConversations, CreateConversations, SendMessage, GetMessages, ChatGateway],
+  exports: [GetConversations, CreateConversations, SendMessage, GetMessages],
 })  
 
 export class ConversationModule {}

@@ -14,35 +14,51 @@ import { Server, Socket } from 'socket.io';
 })
 export class ChatGateway {
   @WebSocketServer()
-  server!: Server;
+  private server!: Server;
 
   @SubscribeMessage('joinConversation')
-  handleJoin(
+  joinConversation(
     @MessageBody() conversationId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    client.join(conversationId);
+    if (!conversationId) return;
+    client.join(`conversation:${conversationId}`);
+  }
+
+  @SubscribeMessage('leaveConversation')
+  leaveConversation(
+    @MessageBody() conversationId: string,
+    @ConnectedSocket() client: Socket,
+  ) {
+    if (!conversationId) return;
+    client.leave(`conversation:${conversationId}`);
   }
 
   @SubscribeMessage('typing')
-  handleTyping(
+  typing(
     @MessageBody() data: { conversationId: string; userId: string },
     @ConnectedSocket() client: Socket,
   ) {
-    client.to(data.conversationId).emit('userTyping', {
+    client.to(`conversation:${data.conversationId}`).emit('userTyping', {
       conversationId: data.conversationId,
       userId: data.userId,
     });
   }
 
   @SubscribeMessage('stopTyping')
-  handleStopTyping(
+  stopTyping(
     @MessageBody() data: { conversationId: string; userId: string },
     @ConnectedSocket() client: Socket,
   ) {
-    client.to(data.conversationId).emit('userStopTyping', {
+    client.to(`conversation:${data.conversationId}`).emit('userStopTyping', {
       conversationId: data.conversationId,
       userId: data.userId,
     });
+  }
+
+  emitMessageCreated(conversationId: string, message: unknown) {
+    this.server
+      .to(`conversation:${conversationId}`)
+      .emit('messageCreated', message);
   }
 }
