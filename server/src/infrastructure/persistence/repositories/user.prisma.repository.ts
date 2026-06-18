@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-
 import { UserRepository } from '../../../core/interfaces/user.repository.interface';
 import { User } from '../../../core/entities/users.entity';
-import { UserMapper } from '../../../core/mappers/user.mapper';
+import { UserPrismaMapper } from '../mappers/user.prisma.mapper';
 
 @Injectable()
 export class PrismaUserRepository
@@ -24,13 +23,13 @@ export class PrismaUserRepository
           phoneNumber: user.phoneNumber,
         },
 		});
-    const domain = UserMapper.toDomain(userPrismaEntity)
+    const domain = UserPrismaMapper.toDomain(userPrismaEntity)
     return domain;
 	}
 
   async findAll(): Promise<User[]> {
     const userPrismaEntities = await this.prisma.user.findMany();
-    return userPrismaEntities.map((user) => UserMapper.toDomain(user));
+    return userPrismaEntities.map((user) => UserPrismaMapper.toDomain(user));
   }
 
   async findById(id: string): Promise<User | null> {
@@ -40,7 +39,7 @@ export class PrismaUserRepository
       },
     });
     if (!userPrismaEntity) return null;
-    return UserMapper.toDomain(userPrismaEntity);
+    return UserPrismaMapper.toDomain(userPrismaEntity);
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -50,7 +49,7 @@ export class PrismaUserRepository
       },
     });
     if (!userPrismaEntity) return null;
-    return UserMapper.toDomain(userPrismaEntity);
+    return UserPrismaMapper.toDomain(userPrismaEntity);
   }
 
   async findByUsername(username: string): Promise<User | null> {
@@ -60,7 +59,7 @@ export class PrismaUserRepository
       },
     });
     if (!userPrismaEntity) return null;
-    return UserMapper.toDomain(userPrismaEntity);
+    return UserPrismaMapper.toDomain(userPrismaEntity);
   }
 
   async findAllButMe(id: string): Promise<User[]> {
@@ -71,6 +70,6 @@ export class PrismaUserRepository
         },
       },
     });
-    return userPrismaEntities.map((user) => UserMapper.toDomain(user));
+    return userPrismaEntities.map((user) => UserPrismaMapper.toDomain(user));
   }
 }

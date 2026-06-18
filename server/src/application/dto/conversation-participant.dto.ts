@@ -8,7 +8,8 @@ export class ConversationParticipantDTO {
   constructor(
     id: string,
     user: UserDTO,
-    joinedAt: Date) {
+    joinedAt: Date
+  ) {
     this.id = id;
     this.user = user;
     this.joinedAt = joinedAt;

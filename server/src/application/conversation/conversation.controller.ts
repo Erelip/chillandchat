@@ -1,10 +1,13 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, NotImplementedException, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateConversations } from '../../core/usecases/create-conversations';
 import { SendMessage } from '../../core/usecases/send-messages';
 import { Message } from '../../core/entities/message.entity';
-import { MessageMapper } from '../../core/mappers/message.mapper';
 import { GetConversations } from '../../core/usecases/get-conversations';
+import { GetMessages } from '../../core/usecases/get-messages';
+import { MessageMapper } from '../mappers/message.mapper';
+import { ConversationMapper } from '../mappers/conversation.mapper';
+import { Conversation } from '../../core/entities/conversation.entity';
 
 @Controller('conversations')
 export class ConversationController {
@@ -12,21 +15,26 @@ export class ConversationController {
     constructor(
         private readonly createConversations: CreateConversations,
         private readonly getConversations: GetConversations,
+        private readonly getMessages: GetMessages,
         private readonly sendMessage: SendMessage
     ) {}
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Post('/')
-    createConversation(@Body() input: { participantIds: string[] }, @Request() request) {
-        return this.createConversations.createConversations(request.user.id, input.participantIds);
+    async createConversation(@Body() input: { participantIds: string[] }, @Request() request) {
+        const conversation = await this.createConversations.createConversations(request.user.id, input.participantIds);
+
+        return ConversationMapper.toDTO(conversation);
     }
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Get('/')
-    getConversationsByUserId(@Request() request) {
-        return this.createConversations.getConversationsByUserId(request.user.id);
+    async getConversationsByUserId(@Request() request) {
+        const conversations = await this.getConversations.getConversationsByUserId(request.user.id);
+
+        return conversations.map((c: Conversation) => ConversationMapper.toDTO(c))
     }
 
     @HttpCode(HttpStatus.OK)
@@ -40,7 +48,7 @@ export class ConversationController {
     @UseGuards(AuthGuard)
     @Get('/:conversationId/messages')
     async getMessagesByConversationId(@Param('conversationId') conversationId: string) {
-        const messages = await this.createConversations.getMessagesByConversationId(conversationId);
+        const messages = await this.getMessages.getMessagesByConversationId(conversationId);
 
         return messages.map((m : Message) => MessageMapper.toDTO(m));
     }
@@ -48,7 +56,10 @@ export class ConversationController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Get('/:conversationId')
-    getConversationById(@Request() request, @Param('conversationId') conversationId: string) {
-        return this.createConversations.getConversationById(conversationId);
+    async getConversationById(@Request() request, @Param('conversationId') conversationId: string) {
+        const conversation = await this.getConversations.getConversationById(conversationId);
+        if (conversation == null) throw new UnauthorizedException("Not found");
+
+        return ConversationMapper.toDTO(conversation);
     }
 }

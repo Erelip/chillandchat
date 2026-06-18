@@ -1,14 +1,8 @@
-import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { ConversationRepository } from "../interfaces/conversation.repository.interface";
-import { ConversationType } from "../enum/conversation.enum";
-import { ConversationParticipantRepository } from "../interfaces/conversation-participant.repository.interface";
-import { ConversationParticipant } from "../entities/conversation-participant.entity";
-import { User } from "../entities/users.entity";
 import { MessageRepository } from "../interfaces/message.repository.interface";
-import { ChatGateway } from "../../adapters/websocket/chat.gateway";
+import { ChatGateway } from "../../infrastructure/websocket/chat.gateway";
 
-@Injectable()
 export class SendMessage {
   constructor(
     private userRepository: UserRepository,

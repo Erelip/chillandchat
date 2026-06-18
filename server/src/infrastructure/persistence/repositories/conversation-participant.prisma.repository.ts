@@ -13,7 +13,7 @@ export class ConversationParticipantPrismaRepository
   ) {}
 
 	async save(participant: ConversationParticipant): Promise<void> {
-		const createdParticipant = await this.prisma.conversationParticipant.create({
+		await this.prisma.conversationParticipant.create({
 			data: {
 				conversationId: participant.conversationId,
 				userId: participant.user.id,

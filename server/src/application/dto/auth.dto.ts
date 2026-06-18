@@ -10,7 +10,6 @@ export type RegisterInput = {
     firstname: string;
     lastname: string;
     phoneNumber: string;
-    
 };
 
 export type AuthOutput = {

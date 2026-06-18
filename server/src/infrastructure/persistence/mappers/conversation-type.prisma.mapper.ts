@@ -1,7 +1,7 @@
-import { ConversationType } from '../enum/conversation.enum';
-import { ConversationType as ConversationPrismaType} from '../../adapters/prisma/generated/client';
+import { ConversationType } from '../../../core/enum/conversation.enum';
+import { ConversationType as ConversationPrismaType} from '../generated/client';
 
-export class ConversationTypeMapper {
+export class ConversationTypePrismaMapper {
   static toDomain(type : ConversationPrismaType): ConversationType {
     return type == ConversationPrismaType.DIRECT ? ConversationType.DIRECT : ConversationType.GROUP;
   }

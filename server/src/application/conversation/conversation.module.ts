@@ -2,45 +2,73 @@ import { Module } from '@nestjs/common';
 import { CreateConversations } from '../../core/usecases/create-conversations';
 import { UsersModule } from '../user/user.module';
 import { ConversationController } from './conversation.controller';
-import { ConversationRepository } from '../../core/interfaces/conversation.repository.interface';
-import { ConversationPrismaRepository } from '../../adapters/prisma/repositories/conversation.prisma.repository';
-import { ConversationParticipantRepository } from '../../core/interfaces/conversation-participant.repository.interface';
-import { ConversationParticipantPrismaRepository } from '../../adapters/prisma/repositories/conversation-participant.prisma.repository';
-import { MessageRepository } from '../../core/interfaces/message.repository.interface';
-import { MessagePrismaRepository } from '../../adapters/prisma/repositories/message.prisma.repository';
 import { SendMessage } from '../../core/usecases/send-messages';
-import { ChatGateway } from '../../adapters/websocket/chat.gateway';
+import { ChatGateway } from '../../infrastructure/websocket/chat.gateway';
 import { GetConversations } from '../../core/usecases/get-conversations';
+import { GetMessages } from '../../core/usecases/get-messages';
+import { SharedModule } from '../modules/shared.module';
+import { PersistenceModule } from '../modules/persistence.module';
+import { ConversationRepository } from '../../core/interfaces/conversation.repository.interface';
+import { MessageRepository } from '../../core/interfaces/message.repository.interface';
+import { UserRepository } from '../../core/interfaces/user.repository.interface';
+import { ConversationParticipantRepository } from '../../core/interfaces/conversation-participant.repository.interface';
 import { IdGenerator } from '../../core/interfaces/uuid-generator.interface';
-import { UuidGenerator } from '../../adapters/generator/uuid.generator';
 
 @Module({
-  imports: [
-    UsersModule,
-  ],
+  imports: [SharedModule, UsersModule, PersistenceModule],
   controllers: [ConversationController],
   providers: [
-    SendMessage,
-    ChatGateway,
-    GetConversations,
-    CreateConversations,
     {
-      provide: ConversationRepository,
-      useClass: ConversationPrismaRepository,
+      provide: GetConversations,
+      useFactory: (
+        conversationRepository: ConversationRepository,
+        messageRepository: MessageRepository
+      ) => {
+        return new GetConversations(conversationRepository, messageRepository);
+      },
+      inject: [ConversationRepository, MessageRepository],
     },
     {
-      provide: ConversationParticipantRepository,
-      useClass: ConversationParticipantPrismaRepository,
+      provide: CreateConversations,
+      useFactory: (
+        userRepository: UserRepository,
+        conversationRepository: ConversationRepository,
+        conversationParticipantRepository: ConversationParticipantRepository,
+        generator: IdGenerator,
+      ) => {
+        return new CreateConversations(userRepository, conversationRepository, conversationParticipantRepository, generator);
+      },
+      inject: [UserRepository, ConversationRepository, ConversationParticipantRepository, IdGenerator],
     },
     {
-      provide: MessageRepository,
-      useClass: MessagePrismaRepository,
+      provide: SendMessage,
+      useFactory: (
+        userRepository: UserRepository,
+        conversationRepository: ConversationRepository,
+        messageRepository: MessageRepository,
+        chatGateway: ChatGateway,
+      ) => {
+        return new SendMessage(userRepository, conversationRepository, messageRepository, chatGateway);
+      },
+      inject: [UserRepository, ConversationRepository, MessageRepository, ChatGateway],
     },
     {
-      provide: IdGenerator,
-      useClass: UuidGenerator,
+      provide: GetMessages,
+      useFactory: (
+        messageRepository: MessageRepository,
+      ) => {
+        return new GetMessages(messageRepository);
+      },
+      inject: [MessageRepository],
     },
-
+    {
+      provide: ChatGateway,
+      useFactory: () => {
+        return new ChatGateway();
+      },
+    },
   ],
-})
+  exports: [GetConversations, CreateConversations, SendMessage, GetMessages, ChatGateway],
+})  
+
 export class ConversationModule {}

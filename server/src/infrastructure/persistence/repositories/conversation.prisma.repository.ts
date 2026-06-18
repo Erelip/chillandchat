@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ConversationRepository } from '../../../core/interfaces/conversation.repository.interface';
 import { Conversation } from '../../../core/entities/conversation.entity';
-import { ConversationMapper } from '../../../core/mappers/conversation.mapper';
+import { ConversationPrismaMapper } from '../mappers/conversation.prisma.mapper';
 
 @Injectable()
 export class ConversationPrismaRepository
@@ -13,7 +13,7 @@ export class ConversationPrismaRepository
   ) {}
 
 	async save(conversation: Conversation): Promise<void> {
-    const conversationEntity = ConversationMapper.toPersistence(conversation);
+    const conversationEntity = ConversationPrismaMapper.toPersistence(conversation);
 
     await this.prisma.conversation.create({
       data: conversationEntity
@@ -21,7 +21,7 @@ export class ConversationPrismaRepository
 	}
 
   async update(conversation: Conversation): Promise<void> {
-    const entity = ConversationMapper.toPersistence(conversation);
+    const entity = ConversationPrismaMapper.toPersistence(conversation);
     await this.prisma.conversation.update({
       where: {
         id: conversation.id!,
@@ -42,7 +42,7 @@ export class ConversationPrismaRepository
       },
     });
 
-    return conversations.map((c) => ConversationMapper.toDomain(c))
+    return conversations.map((c) => ConversationPrismaMapper.toDomain(c))
   }
 
   async findById(id: string): Promise<Conversation | null> {
@@ -61,7 +61,7 @@ export class ConversationPrismaRepository
     });
     if (!conversation) return null;
 
-    return ConversationMapper.toDomain(conversation);
+    return ConversationPrismaMapper.toDomain(conversation);
   }
 
   async findByParticipantId(participantId: string): Promise<Conversation[]> {
@@ -86,6 +86,6 @@ export class ConversationPrismaRepository
       }
     });
 
-    return conversations.map((c) => ConversationMapper.toDomain(c))
+    return conversations.map((c) => ConversationPrismaMapper.toDomain(c))
   }
 }

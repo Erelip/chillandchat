@@ -7,14 +7,14 @@ export class Conversation {
     public readonly id: string,
     public readonly name: string | null,
     public readonly type: ConversationType,
-    public readonly participant: ConversationParticipant[],
+    public participants: ConversationParticipant[],
     public readonly messages: Message[],
     public readonly createdAt: Date,
     public updatedAt: Date,
   ) {}
 
   public addParticipants(participants : ConversationParticipant[]) {
-    this.participant.push(...participants);
-    return this.participant;
+    this.participants.push(...participants);
+    return this.participants;
   }
 }

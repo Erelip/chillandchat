@@ -1,10 +1,6 @@
-import { Injectable } from "@nestjs/common";
 import { User } from "../entities/users.entity";
 import { UserRepository } from "../interfaces/user.repository.interface";
-import { UserMapper } from "../mappers/user.mapper";
-import { UserDTO } from "../../application/dto/user.dto";
 
-@Injectable()
 export class GetUsers {
 
     constructor(private readonly userRepository: UserRepository) {}

@@ -1,8 +1,8 @@
 import { Controller, Get, HttpCode, HttpStatus, NotImplementedException, Post, Request, UseGuards } from '@nestjs/common';
 import { GetUsers } from '../../core/usecases/get-users';
 import { AuthGuard } from '../auth/auth.guard';
-import { UserMapper } from '../../core/mappers/user.mapper';
 import { User } from '../../core/entities/users.entity';
+import { UserMapper } from '../mappers/user.mapper';
 
 @Controller('users')
 export class UserController {
@@ -19,7 +19,7 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Get('')
-    async getAllUsers(@Request() request) {
+    async getAllUsersButMe(@Request() request) {
         const users = await this.getUsers.getAllUsersButMe(request.user.id);
         return users.map((u: User) => UserMapper.toDTO(u));
     }
