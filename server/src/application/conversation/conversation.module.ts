@@ -44,14 +44,13 @@ import { ChatModule } from '../../infrastructure/websocket/chat.module';
     {
       provide: SendMessage,
       useFactory: (
-        userRepository: UserRepository,
         conversationRepository: ConversationRepository,
         messageRepository: MessageRepository,
         chatGateway: ChatGateway,
       ) => {
-        return new SendMessage(userRepository, conversationRepository, messageRepository, chatGateway);
+        return new SendMessage(conversationRepository, messageRepository, chatGateway);
       },
-      inject: [UserRepository, ConversationRepository, MessageRepository, ChatGateway],
+      inject: [ConversationRepository, MessageRepository, ChatGateway],
     },
     {
       provide: GetMessages,
