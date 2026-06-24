@@ -10,6 +10,7 @@ export default function MessagesPage() {
   const { conversationId } = useParams<{ conversationId: string }>();
 
   const {
+    conversation,
     messages,
     newMessage,
     loading,
@@ -22,14 +23,14 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center text-gray-500">
-        Loading messages...
+        Chargement des messages...
       </div>
     );
   }
 
   return (
     <div className="flex h-screen flex-col bg-gray-50">
-      <ChatHeader messages={messages} />
+      <ChatHeader me={me} conversation={conversation} />
 
       <div className="flex-1 overflow-y-auto px-6 py-4">
         <ChatMessages messages={messages} me={me} />

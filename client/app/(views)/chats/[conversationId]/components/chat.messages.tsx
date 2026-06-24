@@ -12,7 +12,7 @@ export function ChatMessages({
     return (
       <div className="flex h-full items-center justify-center">
         <p className="rounded-full bg-white px-4 py-2 text-sm text-gray-500 shadow-sm">
-          No messages yet. Start the conversation 👋
+          Début de la conversation 👋
         </p>
       </div>
     );

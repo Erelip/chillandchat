@@ -81,7 +81,7 @@ export default function ChatsSidebar() {
 
                 <p className="text-sm text-gray-500 truncate">
                   {conv.message?.content ??
-                    'No messages yet'}
+                    ''}
                 </p>
               </div>
             </div>

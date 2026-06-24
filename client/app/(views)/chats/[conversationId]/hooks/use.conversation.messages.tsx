@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ConversationService } from '@/app/services/conversation.service';
 import { UserService } from '@/app/services/user.service';
 import { socketService } from '@/app/services/socket.service';
-import { Message } from '@/app/dto/conversation';
+import { Conversation, Message } from '@/app/dto/conversation';
 import { User } from '@/app/dto/conversation';
 
 const conversationService = new ConversationService();
@@ -13,8 +13,17 @@ export function useConversationMessages(conversationId?: string) {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [me, setMe] = useState<User>();
+  const [conversation, setConversation] = useState<Conversation>();
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!conversationId) return;
+  
+    conversationService
+      .getConversation(conversationId)
+      .then((res) => setConversation(res.data));
+  }, [conversationId]);
 
   useEffect(() => {
     userService.getUser().then((res) => setMe(res.data));
@@ -110,6 +119,7 @@ export function useConversationMessages(conversationId?: string) {
   }
 
   return {
+    conversation,
     messages,
     newMessage,
     loading,

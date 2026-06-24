@@ -14,6 +14,10 @@ export class ConversationService {
     return await api.get('/conversations');
   }
 
+  async getConversation(conversationId: string) : Promise<any> {
+    return await api.get(`/conversations/${conversationId}`);
+  }
+
   async createConversations(ids: string[]) : Promise<any> {
     return await api.post('/conversations', {
       participantIds: ids
