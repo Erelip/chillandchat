@@ -1,11 +1,12 @@
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../environments/environment.dev';
 
 class SocketService {
   private socket!: Socket;
 
   connect() {
     this.socket = io(
-      'http://localhost:3000',
+      `${environment.BACKEND_PROTOCOL}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}`,
     );
   }
 

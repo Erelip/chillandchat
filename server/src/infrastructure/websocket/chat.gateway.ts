@@ -6,10 +6,11 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { environment } from '../../../environments/environment.dev';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:8000',
+    origin: environment.CORS_ORIGIN,
   },
 })
 export class ChatGateway {

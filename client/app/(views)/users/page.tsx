@@ -32,7 +32,7 @@ export default function UsersPage() {
 
   async function create() {
     const conversation = await conversationService.createConversations(selectedUsers);
-    router.push(`/chats/${conversation.id}`);
+    router.push(`/chats/${conversation.data.id}`);
     
   }
 

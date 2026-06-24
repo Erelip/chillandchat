@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { environment } from '../environments/environment.dev';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: `${environment.BACKEND_PROTOCOL}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}`,
 });
 
 api.interceptors.request.use((config) => {

@@ -14,7 +14,7 @@ export class ConversationService {
     return await api.get('/conversations');
   }
 
-  async createConversations(ids: string[]) : Promise<Conversation> {
+  async createConversations(ids: string[]) : Promise<any> {
     return await api.post('/conversations', {
       participantIds: ids
     });

@@ -1,0 +1,5 @@
+export const environment = {
+    BACKEND_PROTOCOL: process.env.NEXT_PUBLIC_BACKEND_PROTOCOL,
+    BACKEND_HOST: process.env.NEXT_PUBLIC_BACKEND_HOST,
+    BACKEND_PORT: process.env.NEXT_PUBLIC_BACKEND_PORT,
+};

@@ -1,0 +1,7 @@
+export const environment = {
+    BACKEND_PORT: process.env.BACKEND_PORT,
+    FRONTEND_PORT: process.env.FRONTEND_PORT,
+    DATABASE_URL: process.env.DATABASE_URL,
+    CORS_ORIGIN: `${process.env.FRONTEND_PROTOCOL}://${process.env.FRONTEND_HOST}:${process.env.FRONTEND_PORT}`,
+    SECRET_KEY: process.env.SECRET_KEY,
+};
