@@ -34,3 +34,8 @@ export interface Conversation {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface ConversationDTO {
+    participantIdsToRemove: string[];
+    name: string | null;
+}

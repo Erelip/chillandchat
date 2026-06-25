@@ -1,4 +1,4 @@
-import { Conversation } from '../dto/conversation';
+import { Conversation, ConversationDTO } from '../dto/conversation';
 import { api } from '../lib/api';
 
 export class ConversationService {
@@ -37,6 +37,12 @@ export class ConversationService {
       {
         content: content
       }
+    );
+  }
+
+  async editConversation(id: string, body: ConversationDTO) : Promise<any> {
+    return await api.patch(`/conversations/${id}`,
+      body
     );
   }
 

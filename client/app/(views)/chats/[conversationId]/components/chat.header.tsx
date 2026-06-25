@@ -1,43 +1,49 @@
-import { Conversation, ConversationType, Message, Participant, User } from '@/app/dto/conversation';
+import { Conversation, User } from '@/app/dto/conversation';
+import { CircleEllipsis } from 'lucide-react';
+import { useState } from 'react';
+import { ChatHeaderModal } from './chat-header.modal';
+import { getConversationDisplayName } from '@/app/helpers/conversation.helper';
 
-export function ChatHeader({ me, conversation }: { me: User|undefined, conversation: Conversation|undefined }) {
-  
-  function formatParticipantsName(participants: Participant[]) {
-    const names = participants.map(
-      (p) => `${p.user.firstname} ${p.user.lastname}`,
-    );
+interface ChatHeaderProps {
+  me?: User;
+  conversation?: Conversation;
+  onConversationUpdated: (conversation: Conversation) => void;
+}
 
-    if (names.length <= 2) {
-      return names.join(', ');
-    }
+export function ChatHeader({
+  me,
+  conversation,
+  onConversationUpdated,
+}: ChatHeaderProps) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
-    return `${names[0]}, ${names[1]} +${names.length - 2}`;
-  }
-
-  function getHeaderName() {
-    if (!conversation) return;
-    if (!me) return;
-
-      const user = conversation.participants.filter(p => p.user.id != me.id);
-
-      if (conversation.type == ConversationType.DIRECT) {
-      return `${user[0].user.firstname} ${user[0].user.lastname}`
-    }
-
-    if (conversation.type == ConversationType.GROUP) {
-      if (conversation.name) return conversation.name;
-      
-      return formatParticipantsName(user)
-    }
-  }
+  if (!conversation || !me) return null;
 
   return (
-    <div className="border-b bg-white px-6 py-4 shadow-sm">
-      <h1 className="text-lg font-semibold text-gray-900">
-        {getHeaderName()}
-      </h1>
-      <p className="text-sm text-gray-500">
-      </p>
-    </div>
+    <>
+      <div className="border-b bg-white px-6 py-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-900">
+            {getConversationDisplayName(conversation, me)}
+          </h1>
+
+          <button
+            type="button"
+            onClick={() => setIsEditOpen(true)}
+            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          >
+            <CircleEllipsis className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <ChatHeaderModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        me={me}
+        conversation={conversation}
+        onConversationUpdated={onConversationUpdated}
+      />
+    </>
   );
 }

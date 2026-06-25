@@ -5,19 +5,19 @@ import { useConversationMessages } from './hooks/use.conversation.messages';
 import { ChatHeader } from './components/chat.header';
 import { ChatMessages } from './components/chat.messages';
 import { ChatInput } from './components/chat.input';
+import { useChats } from '../contexts/chat.context';
 
 export default function MessagesPage() {
   const { conversationId } = useParams<{ conversationId: string }>();
-
+  const { updateConversation } = useChats();
   const {
     conversation,
+    setConversation,
     messages,
-    newMessage,
+    
     loading,
     me,
-    typingUsers,
-    handleTyping,
-    sendMessage,
+    typingUsers
   } = useConversationMessages(conversationId);
 
   if (loading) {
@@ -30,17 +30,23 @@ export default function MessagesPage() {
 
   return (
     <div className="flex h-screen flex-col bg-gray-50">
-      <ChatHeader me={me} conversation={conversation} />
+      <ChatHeader
+        me={me}
+        conversation={conversation}
+        onConversationUpdated={(updatedConversation) => {
+          setConversation(updatedConversation);
+          updateConversation(updatedConversation);
+        }}
+      />
 
       <div className="flex-1 overflow-y-auto px-6 py-4">
         <ChatMessages messages={messages} me={me} />
       </div>
 
       <ChatInput
-        value={newMessage}
+        conversationId={conversationId}
+        me={me}
         typingUsersCount={typingUsers.length}
-        onChange={handleTyping}
-        onSend={sendMessage}
       />
     </div>
   );

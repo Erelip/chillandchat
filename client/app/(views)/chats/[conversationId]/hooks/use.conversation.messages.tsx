@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ConversationService } from '@/app/services/conversation.service';
 import { UserService } from '@/app/services/user.service';
 import { socketService } from '@/app/services/socket.service';
-import { Conversation, Message } from '@/app/dto/conversation';
+import { Conversation, Message, Participant } from '@/app/dto/conversation';
 import { User } from '@/app/dto/conversation';
 
 const conversationService = new ConversationService();
@@ -10,24 +10,25 @@ const userService = new UserService();
 
 export function useConversationMessages(conversationId?: string) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [me, setMe] = useState<User>();
   const [conversation, setConversation] = useState<Conversation>();
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
-  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!conversationId) return;
-  
-    conversationService
-      .getConversation(conversationId)
-      .then((res) => setConversation(res.data));
-  }, [conversationId]);
 
-  useEffect(() => {
-    userService.getUser().then((res) => setMe(res.data));
-  }, []);
+    Promise.all([
+      userService.getUser(),
+      conversationService.getConversation(conversationId),
+    ]).then(([userRes, convRes]) => {
+      const me = userRes.data;
+      const conversation = convRes.data;
+
+      setMe(me);
+      setConversation(conversation);
+    });
+  }, [conversationId]);
 
   useEffect(() => {
     if (!conversationId) return;
@@ -87,45 +88,12 @@ export function useConversationMessages(conversationId?: string) {
     };
   }, [conversationId, me?.id]);
 
-  function handleTyping(value: string) {
-    setNewMessage(value);
-
-    if (!conversationId || !me?.id) return;
-
-    const socket = socketService.getSocket();
-
-    socket.emit('typing', {
-      conversationId,
-      userId: me.id,
-    });
-
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
-    typingTimeoutRef.current = setTimeout(() => {
-      socket.emit('stopTyping', {
-        conversationId,
-        userId: me.id,
-      });
-    }, 1000);
-  }
-
-  async function sendMessage() {
-    if (!conversationId || !newMessage.trim()) return;
-
-    await conversationService.sendMessage(conversationId, newMessage);
-    setNewMessage('');
-  }
-
   return {
     conversation,
+    setConversation,
     messages,
-    newMessage,
     loading,
     me,
-    typingUsers,
-    handleTyping,
-    sendMessage,
+    typingUsers
   };
 }

@@ -1,6 +1,5 @@
-// app/(views)/chats/layout.tsx
-
-import ChatsSidebar from '../../components/chats/chats-sidebar';
+import ChatsSidebar from './sidebar/chats-sidebar';
+import { ChatsProvider } from './contexts/chat.context';
 
 export default function ChatsLayout({
   children,
@@ -8,9 +7,9 @@ export default function ChatsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <ChatsSidebar />
-      <main className="flex-1">{children}</main>
-    </>
+    <ChatsProvider>
+        <ChatsSidebar />
+        <main className="min-w-0 flex-1">{children}</main>
+    </ChatsProvider>
   );
 }
