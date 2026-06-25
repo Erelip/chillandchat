@@ -10,4 +10,6 @@ export abstract class ConversationParticipantRepository {
   abstract findById(id: string): Promise<ConversationParticipant | null>;
 
   abstract findByParticipantId(participantId: string): Promise<ConversationParticipant[]>;
+
+  abstract removeById(participantId: string): Promise<void>;
 }

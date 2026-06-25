@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateConversations } from '../../core/usecases/create-conversations';
 import { SendMessage } from '../../core/usecases/send-messages';
@@ -8,6 +8,9 @@ import { GetMessages } from '../../core/usecases/get-messages';
 import { MessageMapper } from '../mappers/message.mapper';
 import { ConversationMapper } from '../mappers/conversation.mapper';
 import { Conversation } from '../../core/entities/conversation.entity';
+import { EditConversations } from '../../core/usecases/edit-conversation';
+import { ConversationParticipant } from '../../core/entities/conversation-participant.entity';
+import { EditConversationDto } from '../dto/edit-conversation.dto';
 
 @Controller('conversations')
 export class ConversationController {
@@ -15,6 +18,7 @@ export class ConversationController {
     constructor(
         private readonly createConversations: CreateConversations,
         private readonly getConversations: GetConversations,
+        private readonly editConversations: EditConversations,
         private readonly getMessages: GetMessages,
         private readonly sendMessage: SendMessage
     ) {}
@@ -59,6 +63,18 @@ export class ConversationController {
     async getConversationById(@Request() request, @Param('conversationId') conversationId: string) {
         const conversation = await this.getConversations.getConversationById(conversationId);
         if (conversation == null) throw new UnauthorizedException("Not found");
+
+        return ConversationMapper.toDTO(conversation);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    @Patch('/:conversationId')
+    async editNameConversationById(@Request() request, @Param('conversationId') conversationId: string, @Body() body: EditConversationDto) {
+        const conversation = await this.editConversations.editConversation(
+            conversationId,
+            body,
+        );
 
         return ConversationMapper.toDTO(conversation);
     }

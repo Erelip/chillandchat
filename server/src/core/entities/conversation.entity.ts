@@ -5,7 +5,7 @@ import { ConversationParticipant } from "./conversation-participant.entity";
 export class Conversation {
   constructor(
     public readonly id: string,
-    public readonly name: string | null,
+    public name: string | null,
     public readonly type: ConversationType,
     public participants: ConversationParticipant[],
     public readonly messages: Message[],

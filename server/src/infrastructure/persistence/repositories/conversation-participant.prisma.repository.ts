@@ -90,4 +90,12 @@ export class ConversationParticipantPrismaRepository
       p.joinedAt,
     ));
   }
+
+  async removeById(participantId: string): Promise<void> {
+    await this.prisma.conversationParticipant.delete({
+      where: {
+        id: participantId
+      }
+    })
+  }
 }
