@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { UserRepository } from "../../core/interfaces/user.repository.interface";
 import { CreateUsers } from "../../core/usecases/create-user";
 import { GetUsers } from "../../core/usecases/get-users";
-import { UserController } from "./user.consoller";
+import { UserController } from "./user.controller";
 import { SharedModule } from "../modules/shared.module";
 import { PersistenceModule } from "../modules/persistence.module";
 import { IdGenerator } from "../../core/interfaces/uuid-generator.interface";
