@@ -9,7 +9,6 @@ import { UserService } from '@/app/services/user.service';
 import { User } from '@/app/dto/conversation';
 import { useChats } from '../contexts/chat.context';
 
-const conversationService = new ConversationService();
 const userService = new UserService();
 
 export default function ChatsSidebar() {

@@ -11,6 +11,7 @@ import { Conversation } from '../../core/entities/conversation.entity';
 import { EditConversations } from '../../core/usecases/edit-conversation';
 import { ConversationParticipant } from '../../core/entities/conversation-participant.entity';
 import { EditConversationDto } from '../dto/edit-conversation.dto';
+import { ConversationParticipationMapper } from '../mappers/conversation-participation.mapper';
 
 @Controller('conversations')
 export class ConversationController {
@@ -77,5 +78,17 @@ export class ConversationController {
         );
 
         return ConversationMapper.toDTO(conversation);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    @Post('/:conversationId/participants')
+    async addParticipantsToConversation(@Request() request, @Param('conversationId') conversationId: string, @Body() body: { participantsToAdd: string}) {
+        const participant = await this.editConversations.addParticipants(
+            conversationId,
+            body.participantsToAdd,
+        );
+
+        return ConversationParticipationMapper.toDTO(participant);
     }
 }

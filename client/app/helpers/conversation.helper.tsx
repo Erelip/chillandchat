@@ -46,5 +46,41 @@ export function getConversationSubtitle(
     return otherParticipants[0]?.user.phoneNumber ?? '';
   }
 
-  return `Groupe ・ ${conversation.participants.length} membres`;
+  return `${conversation.participants.length} membres`;
+}
+
+export function MemberRow({
+  firstname,
+  lastname,
+  phoneNumber,
+  isMe = false,
+}: {
+  firstname: string;
+  lastname: string;
+  phoneNumber: string;
+  isMe?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-lg border p-3">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 font-semibold">
+        {firstname.charAt(0)}
+      </div>
+
+      <div className="flex-1">
+        <p className="font-medium">
+          {firstname} {lastname}
+        </p>
+
+        <p className="text-sm text-gray-500">
+          {phoneNumber}
+        </p>
+      </div>
+
+      {isMe && (
+        <span className="text-xs text-gray-400">
+          Vous
+        </span>
+      )}
+    </div>
+  );
 }

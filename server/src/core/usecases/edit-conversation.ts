@@ -1,15 +1,18 @@
 import { ConversationRepository } from "../interfaces/conversation.repository.interface";
-import { MessageRepository } from "../interfaces/message.repository.interface";
 import { Conversation } from "../entities/conversation.entity";
 import { ConversationParticipant } from "../entities/conversation-participant.entity";
 import { ConversationParticipantRepository } from "../interfaces/conversation-participant.repository.interface";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { EditConversationDto } from "../../application/dto/edit-conversation.dto";
+import { IdGenerator } from "../interfaces/uuid-generator.interface";
+import { UserRepository } from "../interfaces/user.repository.interface";
 
 export class EditConversations {
   constructor(
     private conversationRepository: ConversationRepository,
-    private participantRepository: ConversationParticipantRepository
+    private participantRepository: ConversationParticipantRepository,
+    private userRepository: UserRepository,
+    private idGenerator: IdGenerator
   ) {}
 
   async editConversation(
@@ -54,6 +57,23 @@ export class EditConversations {
     conversation.updatedAt = new Date();
     await this.conversationRepository.update(conversation);
     return conversation;
+  }
+
+  public async addParticipants(conversationId: string, participantIds: string): Promise<ConversationParticipant> {
+
+    const conversation = await this.conversationRepository.findById(conversationId);
+    const user = await this.userRepository.findById(participantIds);
+    if (!conversation) throw new NotFoundException("Conversation not found");
+    if (!user) throw new NotFoundException("User not found");
+
+    const participant = new ConversationParticipant(
+      this.idGenerator.generate(), conversationId, user, new Date()
+    )
+    conversation.updatedAt = new Date();
+    await this.participantRepository.save(participant);
+    await this.conversationRepository.update(conversation);
+
+    return participant;
   }
 
 }

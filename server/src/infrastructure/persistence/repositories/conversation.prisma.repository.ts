@@ -102,7 +102,12 @@ export class ConversationPrismaRepository
             user: true
           }
         },
-        messages: true,
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+        },
       },
       orderBy: {
         updatedAt: 'desc'

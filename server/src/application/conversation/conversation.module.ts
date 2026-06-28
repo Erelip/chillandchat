@@ -67,10 +67,12 @@ import { EditConversations } from '../../core/usecases/edit-conversation';
       useFactory: (
         conversationRepository: ConversationRepository,
         participantRepository: ConversationParticipantRepository,
+        userRepository: UserRepository,
+        idGenerator: IdGenerator
       ) => {
-        return new EditConversations(conversationRepository, participantRepository);
+        return new EditConversations(conversationRepository, participantRepository, userRepository, idGenerator);
       },
-      inject: [ConversationRepository, ConversationParticipantRepository],
+      inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, IdGenerator],
     }
   ],
   exports: [GetConversations, CreateConversations, SendMessage, GetMessages],
