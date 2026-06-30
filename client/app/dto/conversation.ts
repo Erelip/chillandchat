@@ -3,6 +3,13 @@ export enum ConversationType {
     GROUP,
 }
 
+export enum ConversationModalType {
+    EDIT,
+    MEMBERS,
+    INFO,
+    CLOSE
+}
+
 export interface User {
     id: string;
     email: string;

@@ -14,7 +14,6 @@ export default function MessagesPage() {
     conversation,
     setConversation,
     messages,
-    
     loading,
     me,
     typingUsers
