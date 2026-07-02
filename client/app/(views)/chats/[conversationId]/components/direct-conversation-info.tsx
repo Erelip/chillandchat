@@ -1,6 +1,5 @@
 import { Conversation, User } from '@/app/dto/conversation';
-import { useEffect, useState } from 'react';
-import { getConversationDisplayName } from '@/app/helpers/conversation.helper';
+import { Avatar, getConversationDisplayName } from '@/app/helpers/conversation.helper';
 
 interface DirectConversationInfoProps {
   conversation: Conversation;
@@ -37,13 +36,5 @@ export function DirectConversationInfo({
         </div>
       </div>
     </>
-  );
-}
-
-function Avatar({ letter }: { letter: string }) {
-  return (
-    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700">
-      {letter}
-    </div>
   );
 }

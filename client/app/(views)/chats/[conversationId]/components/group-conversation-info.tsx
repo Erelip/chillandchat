@@ -1,7 +1,7 @@
 import { Conversation, ConversationModalType, User } from '@/app/dto/conversation';
 import { SquarePen } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getConversationDisplayName, getConversationSubtitle, MemberRow } from '@/app/helpers/conversation.helper';
+import { Avatar, getConversationDisplayName, getConversationSubtitle, MemberRow } from '@/app/helpers/conversation.helper';
 
 interface GroupConversationInfoProps {
   conversation: Conversation;
@@ -23,10 +23,6 @@ export function GroupConversationInfo({
   useEffect(() => {
     setName(displayName);
   }, [displayName]);
-
-  function handleClose() {
-    onEdit(ConversationModalType.CLOSE);
-  }
 
   return (
     <>
@@ -61,13 +57,5 @@ export function GroupConversationInfo({
             </div>
         </div>
     </>
-  );
-}
-
-function Avatar({ letter }: { letter: string }) {
-  return (
-    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700">
-      {letter}
-    </div>
   );
 }

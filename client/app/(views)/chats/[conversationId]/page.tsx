@@ -9,7 +9,7 @@ import { useChats } from '../contexts/chat.context';
 
 export default function MessagesPage() {
   const { conversationId } = useParams<{ conversationId: string }>();
-  const { updateConversation } = useChats();
+  const { updateConversation, updateParticipants } = useChats();
   const {
     conversation,
     setConversation,
@@ -35,6 +35,17 @@ export default function MessagesPage() {
         onConversationUpdated={(updatedConversation) => {
           setConversation(updatedConversation);
           updateConversation(updatedConversation);
+        }}
+        onParticipantUpdated={(conversationId, participant) => {
+          setConversation((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  participants: [...prev.participants, participant],
+                }
+              : prev
+          );
+          updateParticipants(conversationId, participant);
         }}
       />
 

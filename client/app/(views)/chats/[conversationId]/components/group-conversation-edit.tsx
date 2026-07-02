@@ -1,7 +1,7 @@
 import { Conversation, ConversationModalType, User } from '@/app/dto/conversation';
 import { Camera, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { getConversationDisplayName, getConversationSubtitle } from '@/app/helpers/conversation.helper';
+import { Avatar, getConversationDisplayName, getConversationSubtitle } from '@/app/helpers/conversation.helper';
 
 interface GroupConversationEditProps {
   conversation: Conversation;
@@ -70,13 +70,5 @@ export function GroupConversationEdit({
         </div>
       </div>
     </>
-  );
-}
-
-function Avatar({ letter }: { letter: string }) {
-  return (
-    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700">
-      {letter}
-    </div>
   );
 }

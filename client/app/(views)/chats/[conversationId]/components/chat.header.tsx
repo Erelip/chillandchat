@@ -1,4 +1,4 @@
-import { Conversation, User } from '@/app/dto/conversation';
+import { Conversation, Participant, User } from '@/app/dto/conversation';
 import { CircleEllipsis } from 'lucide-react';
 import { useState } from 'react';
 import { ChatHeaderModal } from './chat-header.modal';
@@ -8,12 +8,14 @@ interface ChatHeaderProps {
   me?: User;
   conversation?: Conversation;
   onConversationUpdated: (conversation: Conversation) => void;
+  onParticipantUpdated: (conversationId: string, participant: Participant) => void;
 }
 
 export function ChatHeader({
   me,
   conversation,
   onConversationUpdated,
+  onParticipantUpdated,
 }: ChatHeaderProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -43,6 +45,7 @@ export function ChatHeader({
         me={me}
         conversation={conversation}
         onConversationUpdated={onConversationUpdated}
+        onParticipantUpdated={onParticipantUpdated}
       />
     </>
   );

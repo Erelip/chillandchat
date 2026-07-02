@@ -48,8 +48,8 @@ export class ConversationService {
 
   async addParticipants(userId: string, conversationId: string) : Promise<any> {
     return await api.post(`/conversations/${conversationId}/participants`, {
-        participantsToAdd: userId
-      }
+      participantsToAdd: userId
+    }
     );
   }
 

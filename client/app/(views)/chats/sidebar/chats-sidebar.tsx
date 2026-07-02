@@ -13,10 +13,8 @@ const userService = new UserService();
 
 export default function ChatsSidebar() {
   const { conversations } = useChats();
-
   const router = useRouter();
   const { conversationId } = useParams<{ conversationId?: string }>();
-
   const [me, setMe] = useState<User>();
 
   useEffect(() => {

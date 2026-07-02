@@ -34,6 +34,11 @@ export function getConversationDisplayName(
   return conversation.name || formatParticipantsName(otherParticipants);
 }
 
+export const isUserAlreadyInConversation = (conversation: Conversation, userId: string) =>
+  conversation.participants.some(
+    (participant) => participant.user.id === userId
+  );
+
 export function getConversationSubtitle(
   conversation?: Conversation,
   me?: User,
@@ -47,6 +52,14 @@ export function getConversationSubtitle(
   }
 
   return `${conversation.participants.length} membres`;
+}
+
+export function Avatar({ letter }: { letter: string }) {
+  return (
+    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700">
+      {letter}
+    </div>
+  );
 }
 
 export function MemberRow({

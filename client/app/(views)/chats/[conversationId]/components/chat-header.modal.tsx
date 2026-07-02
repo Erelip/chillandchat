@@ -1,4 +1,4 @@
-import { Conversation, ConversationModalType, ConversationType, User } from '@/app/dto/conversation';
+import { Conversation, ConversationModalType, ConversationType, Participant, User } from '@/app/dto/conversation';
 import { useEffect, useState } from 'react';
 import { getConversationDisplayName } from '@/app/helpers/conversation.helper';
 import { DirectConversationInfo } from './direct-conversation-info';
@@ -12,6 +12,7 @@ interface ChatHeaderModalProps {
   me: User;
   conversation: Conversation;
   onConversationUpdated: (conversation: Conversation) => void;
+  onParticipantUpdated: (conversationId: string, participant: Participant) => void;
 }
 
 export function ChatHeaderModal({
@@ -20,6 +21,7 @@ export function ChatHeaderModal({
   me,
   conversation,
   onConversationUpdated,
+  onParticipantUpdated
 }: ChatHeaderModalProps) {
   const [modalType, setModalType] = useState<ConversationModalType>(ConversationModalType.INFO);
   const displayName = getConversationDisplayName(conversation, me);
@@ -62,7 +64,7 @@ export function ChatHeaderModal({
               conversation={conversation}
               me={me}
               onEdit={onEdit}
-              onConversationUpdated={onConversationUpdated}
+              onParticipantUpdated={onParticipantUpdated}
             />
           ) : conversation.type === ConversationType.DIRECT ? (
             <DirectConversationInfo

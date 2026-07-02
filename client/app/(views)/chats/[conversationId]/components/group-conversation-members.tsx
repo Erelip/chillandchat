@@ -1,7 +1,7 @@
-import { Conversation, ConversationModalType, User } from '@/app/dto/conversation';
+import { Conversation, ConversationModalType, Participant, User } from '@/app/dto/conversation';
 import { Plus, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getConversationDisplayName, MemberRow } from '@/app/helpers/conversation.helper';
+import { getConversationDisplayName, isUserAlreadyInConversation, MemberRow } from '@/app/helpers/conversation.helper';
 import { UserService } from '@/app/services/user.service';
 import { ConversationService } from '@/app/services/conversation.service';
 
@@ -12,13 +12,14 @@ interface GroupConversationMembersProps {
   conversation: Conversation;
   me: User;
   onEdit: (modalType: ConversationModalType) => void;
-  onConversationUpdated: (conversation: Conversation) => void;
+  onParticipantUpdated: (conversationId: string, participant: Participant) => void;
 }
 
 export function GroupConversationMembers({
   conversation,
   me,
   onEdit,
+  onParticipantUpdated
 }: GroupConversationMembersProps) {
   const displayName = getConversationDisplayName(conversation, me);
   const [users, setUsers] = useState<User[]>([]);
@@ -28,7 +29,7 @@ export function GroupConversationMembers({
     setIsAddingMembers((value) => !value);
 
     const res = await conversationService.addParticipants(userId, conversation.id);
-    setUsers(res.data);
+    onParticipantUpdated(conversation.id, res.data)
   }
 
   async function handleToggleAddMembers() {
@@ -62,28 +63,44 @@ export function GroupConversationMembers({
 
             {isAddingMembers && (
               <div className="absolute right-0 top-full z-10 mt-2 w-72 max-h-48 overflow-y-auto rounded-md border bg-white shadow-lg">
-                {users.map((user) => (
-                  <button
-                    key={user.id}
-                    type="button"
-                    onClick={() => addMembers(user.id)}
-                    className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-gray-100"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 font-semibold">
-                      {user.firstname.charAt(0).toUpperCase()}
-                    </div>
+                {users.map((user) =>  {
+                  const isAlreadyMember = isUserAlreadyInConversation(conversation, user.id);
+                  return (
+                    <button
+                      key={user.id}
+                      type="button"
+                      disabled={isAlreadyMember}
+                      onClick={() => addMembers(user.id)}
+                      className={`
+                        flex w-full items-center gap-3 px-3 py-2 text-left
+                        ${
+                          isAlreadyMember
+                            ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                            : 'hover:bg-gray-100'
+                        }
+                      `}                    
+                    >
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 font-semibold">
+                        {user.firstname.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">
+                          {user.firstname} {user.lastname}
+                        </p>
 
-                    <div className="flex-1">
-                      <p className="font-medium">
-                        {user.firstname} {user.lastname}
-                      </p>
-
-                      <p className="text-sm text-gray-500">
-                        {user.phoneNumber}
-                      </p>
-                    </div>
-                  </button>
-                ))}
+                        <p
+                          className={`text-sm ${
+                            isAlreadyMember ? 'text-gray-400 italic' : 'text-gray-500'
+                          }`}
+                        >
+                          {isAlreadyMember
+                            ? 'Déjà dans le groupe'
+                            : user.phoneNumber}
+                        </p>
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
             )}
             <button

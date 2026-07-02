@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Conversation } from '@/app/dto/conversation';
+import { Conversation, Participant } from '@/app/dto/conversation';
 import { ConversationService } from '@/app/services/conversation.service';
 
 const conversationService = new ConversationService();
@@ -10,6 +10,7 @@ interface ChatsContextValue {
   conversations: Conversation[];
   setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
   updateConversation: (conversation: Conversation) => void;
+  updateParticipants: (conversationId: string, participant: Participant) => void;
 }
 
 const ChatsContext = createContext<ChatsContextValue | null>(null);
@@ -33,12 +34,36 @@ export function ChatsProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
+  function updateParticipants(conversationId: string, participant: Participant) {
+    setConversations((prev) =>
+      prev.map((conversation) => {
+        if (conversation.id !== conversationId) {
+          return conversation;
+        }
+
+        const alreadyExists = conversation.participants.some(
+          (p) => p.user.id === participant.user.id,
+        );
+
+        if (alreadyExists) {
+          return conversation;
+        }
+
+        return {
+          ...conversation,
+          participants: [...conversation.participants, participant],
+        };
+      }),
+    );
+  }
+
   return (
     <ChatsContext.Provider
       value={{
         conversations,
         setConversations,
         updateConversation,
+        updateParticipants,
       }}
     >
       {children}
