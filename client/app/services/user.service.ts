@@ -47,7 +47,6 @@ export class UserService {
   }
 
   async uploadAvatar(formData: FormData) {
-    console.log(formData)
     return await api.patch('/users/me/avatar', formData);
   }
 

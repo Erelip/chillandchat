@@ -40,6 +40,7 @@ export class ConversationPrismaMapper {
       ),
       raw.createdAt,
       raw.updatedAt,
+      raw.avatar
     );
   }
 
@@ -51,6 +52,7 @@ export class ConversationPrismaMapper {
       participants: conversation.participants,
       name: conversation.name,
       type: ConversationTypePrismaMapper.toPersistence(conversation.type),
+      avatar: conversation.avatar
     };
   }
 

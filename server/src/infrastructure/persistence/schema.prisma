@@ -35,6 +35,7 @@ model Conversation {
   updatedAt     DateTime @updatedAt
 
   name          String?
+  avatar        String?
   type          ConversationType @default(DIRECT)
   participants  ConversationParticipant[]
   messages      Message[]

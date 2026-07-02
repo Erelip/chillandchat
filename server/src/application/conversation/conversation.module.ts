@@ -15,6 +15,7 @@ import { ConversationParticipantRepository } from '../../core/interfaces/convers
 import { IdGenerator } from '../../core/interfaces/uuid-generator.interface';
 import { ChatModule } from '../../infrastructure/websocket/chat.module';
 import { EditConversations } from '../../core/usecases/edit-conversation';
+import { FileStorage } from '../../core/interfaces/file-storage.interface';
 
 @Module({
   imports: [SharedModule, UsersModule, PersistenceModule, ChatModule],
@@ -68,11 +69,12 @@ import { EditConversations } from '../../core/usecases/edit-conversation';
         conversationRepository: ConversationRepository,
         participantRepository: ConversationParticipantRepository,
         userRepository: UserRepository,
+        fileStorage: FileStorage,
         idGenerator: IdGenerator
       ) => {
-        return new EditConversations(conversationRepository, participantRepository, userRepository, idGenerator);
+        return new EditConversations(conversationRepository, participantRepository, userRepository, fileStorage, idGenerator);
       },
-      inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, IdGenerator],
+      inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, FileStorage, IdGenerator],
     }
   ],
   exports: [GetConversations, CreateConversations, SendMessage, GetMessages],

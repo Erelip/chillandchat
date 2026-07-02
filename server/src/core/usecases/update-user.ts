@@ -39,7 +39,7 @@ export class UpdateUsers {
         if (!user) return null;
 
         const filename = `${this.generator.generate()}_${file.originalname}`
-        const avatarUrl = this.fileStorage.storeFile(file, filename);
+        const avatarUrl = await this.fileStorage.storeFile(file, filename);
 
         const updatedUser = new User(
             user.id,

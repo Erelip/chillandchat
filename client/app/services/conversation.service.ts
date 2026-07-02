@@ -46,6 +46,12 @@ export class ConversationService {
     );
   }
 
+  async uploadAvatar(id: string, body: FormData) : Promise<any> {
+    return await api.patch(`/conversations/${id}/avatar`,
+      body
+    );
+  }
+
   async addParticipants(userId: string, conversationId: string) : Promise<any> {
     return await api.post(`/conversations/${conversationId}/participants`, {
         participantsToAdd: userId

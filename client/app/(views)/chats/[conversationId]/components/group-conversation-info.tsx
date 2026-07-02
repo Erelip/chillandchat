@@ -42,7 +42,17 @@ export function GroupConversationInfo({
         <div className="flex flex-1 flex-col justify-between pt-6">
             <div className="flex flex-col items-center gap-4">
                 <div className="flex flex-1 flex-col items-center justify-center text-center">
-                    <Avatar letter={avatarLetter} />
+                    <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-gray-200">
+                        {conversation.avatar ? (
+                            <img
+                            src={conversation.avatar}
+                            alt={displayName}
+                            className="h-full w-full object-cover"
+                            />
+                        ) : (
+                            <Avatar letter={avatarLetter} />
+                        )}
+                        </div>
                     
                     <div className="mt-4 font-bold text-gray-900">
                         <label className="mb-1 block text-sm font-medium text-gray-700">

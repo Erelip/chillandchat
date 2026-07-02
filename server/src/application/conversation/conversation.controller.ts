@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateConversations } from '../../core/usecases/create-conversations';
 import { SendMessage } from '../../core/usecases/send-messages';
@@ -12,6 +12,9 @@ import { EditConversations } from '../../core/usecases/edit-conversation';
 import { ConversationParticipant } from '../../core/entities/conversation-participant.entity';
 import { EditConversationDto } from '../dto/edit-conversation.dto';
 import { ConversationParticipationMapper } from '../mappers/conversation-participation.mapper';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { File } from '../dto/file.dto';
+import { environment } from '../../../environments/environment.dev';
 
 @Controller('conversations')
 export class ConversationController {
@@ -90,5 +93,14 @@ export class ConversationController {
         );
 
         return ConversationParticipationMapper.toDTO(participant);
+    }
+    
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    @UseInterceptors(FileInterceptor('avatar'))
+    @Patch('/:conversationId/avatar')
+    async updateAvatar(@Param('conversationId') conversationId: string ,@UploadedFile() file: File) {
+        const avatarUrl = await this.editConversations.updateAvatar(conversationId, file);
+        return `${environment.APP_URL}/${avatarUrl}`;
     }
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ConversationService } from '@/app/services/conversation.service';
-import { Conversation } from '@/app/dto/conversation';
+import { Conversation, ConversationType } from '@/app/dto/conversation';
 import { getConversationDisplayName } from '@/app/helpers/conversation.helper';
 import { UserService } from '@/app/services/user.service';
 import { User } from '@/app/dto/conversation';
@@ -43,6 +43,14 @@ export default function ChatsSidebar() {
           const name = me
             ? getConversationDisplayName(conversation, me)
             : '';
+          const otherUser =
+            conversation.participants.find((p) => p.user.id !== me?.id)?.user;
+
+          const avatarUrl =
+            conversation.avatar ??
+            (conversation.type === ConversationType.DIRECT
+              ? otherUser?.avatar
+              : undefined);
 
           const isActive = conversation.id === conversationId;
 
@@ -57,8 +65,18 @@ export default function ChatsSidebar() {
                 ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'}
               `}
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700">
-                {name.charAt(0).toUpperCase()}
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm font-semibold text-gray-700">
+                    {name.charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
 
               <div className="min-w-0 flex-1">

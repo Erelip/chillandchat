@@ -53,7 +53,6 @@ export default function SettingsPage() {
         formData.append('avatar', avatarFile);
 
         const avatarRes = await userService.uploadAvatar(formData);
-        console.log(avatarRes)
         avatarUrl = avatarRes.data.avatarUrl;
       }
 
@@ -66,8 +65,6 @@ export default function SettingsPage() {
 
       // setMe(res.data);
       setAvatarFile(null);
-    } catch(e) {
-      console.log(e)
     } finally {
       setIsSaving(false);
     }

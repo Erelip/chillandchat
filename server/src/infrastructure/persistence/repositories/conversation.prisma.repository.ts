@@ -34,7 +34,8 @@ export class ConversationPrismaRepository
         participants: {
           create: participants
         },
-        type: conversationEntity.type
+        type: conversationEntity.type,
+        avatar: conversationEntity.avatar
       },
     });
 	}
@@ -49,6 +50,7 @@ export class ConversationPrismaRepository
       data: {
         name: entity.name,
         updatedAt: entity.updatedAt,
+        avatar: entity.avatar
       },
     });
   }

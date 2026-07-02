@@ -11,6 +11,7 @@ export class Conversation {
     public readonly messages: Message[],
     public readonly createdAt: Date,
     public updatedAt: Date,
+    public avatar: string|null
   ) {}
 
   public addParticipants(participants : ConversationParticipant[]) {

@@ -6,12 +6,15 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { EditConversationDto } from "../../application/dto/edit-conversation.dto";
 import { IdGenerator } from "../interfaces/uuid-generator.interface";
 import { UserRepository } from "../interfaces/user.repository.interface";
+import { File } from "../../application/dto/file.dto";
+import { FileStorage } from "../interfaces/file-storage.interface";
 
 export class EditConversations {
   constructor(
     private conversationRepository: ConversationRepository,
     private participantRepository: ConversationParticipantRepository,
     private userRepository: UserRepository,
+    private fileStorage: FileStorage,
     private idGenerator: IdGenerator
   ) {}
 
@@ -74,6 +77,21 @@ export class EditConversations {
     await this.conversationRepository.update(conversation);
 
     return participant;
+  }
+
+  public async updateAvatar(conversationId: string, file: File): Promise<string|null> {
+    const conversation = await this.conversationRepository.findById(conversationId);
+    if (!conversation) return null;
+
+    const filename = `${this.idGenerator.generate()}_${file.originalname}`
+    const avatarUrl = await this.fileStorage.storeFile(file, filename);
+
+    conversation.avatar = filename;
+    conversation.updatedAt = new Date();
+
+    this.conversationRepository.update(conversation)
+
+    return avatarUrl;
   }
 
 }

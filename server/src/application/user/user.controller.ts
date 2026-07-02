@@ -37,7 +37,6 @@ export class UserController {
     @UseInterceptors(FileInterceptor('avatar'))
     @Patch('me/avatar')
     async updateAvatar(@Request() request, @UploadedFile() file: File) {
-        console.log(file)
         const avatarUrl = await this.updateUsers.updateAvatar(request.user.id, file);
         return avatarUrl;
     }

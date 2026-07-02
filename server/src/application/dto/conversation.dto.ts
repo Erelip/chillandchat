@@ -10,6 +10,7 @@ export class ConversationDTO {
   createdAt: Date;
   updatedAt: Date;
   type: ConversationType;
+  avatar: string|null;
 
   constructor(id: string,
     participants: ConversationParticipantDTO[],
@@ -17,7 +18,8 @@ export class ConversationDTO {
     message: MessageDTO | null,
     createdAt: Date,
     updatedAt: Date,
-    type: ConversationType
+    type: ConversationType,
+    avatar: string|null
   ) {
     this.id = id;
     this.participants = participants;
@@ -26,5 +28,6 @@ export class ConversationDTO {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.type = type;
+    this.avatar = avatar;
   }
 }

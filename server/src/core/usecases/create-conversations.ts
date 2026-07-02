@@ -31,7 +31,8 @@ export class CreateConversations {
       [],
       [],
       new Date(),
-      new Date()
+      new Date(),
+      null
     )
 
     await this.conversationRepository.save(newConversation);

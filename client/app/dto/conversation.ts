@@ -41,6 +41,7 @@ export interface Conversation {
     type: ConversationType;
     createdAt: Date;
     updatedAt: Date;
+    avatar: string|null;
 }
 
 export interface ConversationDTO {
