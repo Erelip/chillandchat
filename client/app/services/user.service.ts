@@ -45,4 +45,18 @@ export class UserService {
   async getAllUsersButMe() {
     return await api.get('/users');
   }
+
+  async uploadAvatar(formData: FormData) {
+    console.log(formData)
+    return await api.patch('/users/me/avatar', formData);
+  }
+
+  async updateMe(data: {
+    firstname: string;
+    lastname: string;
+    phoneNumber: string;
+    avatarUrl?: string;
+  }) {
+    return await api.patch('/users/me', data);
+  }
 }

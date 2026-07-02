@@ -46,7 +46,7 @@ export class ConversationParticipantPrismaRepository
       p.id,
       p.conversationId,
       new User(
-        p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber
+        p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber, p.user.avatar
       ),
       p.joinedAt,
     ));
@@ -66,7 +66,7 @@ export class ConversationParticipantPrismaRepository
       participant.id,
       participant.conversationId,
       new User(
-        participant.user.id, participant.user.username, participant.user.email, participant.user.password, participant.user.firstname, participant.user.lastname, participant.user.phoneNumber
+        participant.user.id, participant.user.username, participant.user.email, participant.user.password, participant.user.firstname, participant.user.lastname, participant.user.phoneNumber, participant.user.avatar
       ),
       participant.joinedAt,
     );
@@ -85,7 +85,7 @@ export class ConversationParticipantPrismaRepository
       p.id,
       p.conversationId,
       new User(
-        p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber
+        p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber, p.user.avatar
       ),
       p.joinedAt,
     ));

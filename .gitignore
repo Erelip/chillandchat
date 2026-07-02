@@ -148,3 +148,6 @@ vite.config.ts.timestamp-*
 
 # Prisma
 src/adapters/prisma/generated/
+
+# Local file
+server/uploads/avatars/*

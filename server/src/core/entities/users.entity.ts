@@ -7,6 +7,7 @@ export class User {
     public readonly password: string,
     public readonly firstname: string,
     public readonly lastname: string,
-    public readonly phoneNumber: string
+    public readonly phoneNumber: string,
+    public readonly avatar: string|null
   ) {}
 }

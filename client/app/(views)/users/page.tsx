@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { ConversationService } from '@/app/services/conversation.service';
 import { UserService } from '@/app/services/user.service';
 import { User } from '@/app/dto/conversation';
+import { environment } from '@/app/environments/environment.dev';
 
 export default function UsersPage() {
+  const path = `${environment.BACKEND_PROTOCOL}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/uploads/avatars`
   const router = useRouter();
   const conversationService = new ConversationService();
   const userService = new UserService();
@@ -37,33 +39,55 @@ export default function UsersPage() {
   }
 
   return (
-  <div className="p-3 space-y-3">
-    {users.map((user: User) => (
-      <div
-        onClick={() => toggleUser(user.id)}
-        className={`
-          p-4 rounded border cursor-pointer
-          ${
-            selectedUsers.includes(user.id)
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-200'
-          }
-        `}
-        key={user.id}
-      >
-        <h2 className="font-semibold">
-          {user.firstname} {user.lastname}
-        </h2>
+    <div className="p-3 space-y-3">
+      {users.map((user: User) => (
+        <div
+          key={user.id}
+          onClick={() => toggleUser(user.id)}
+          className={`
+            flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-colors
+            ${
+              selectedUsers.includes(user.id)
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-200 hover:bg-gray-50'
+            }
+          `}
+        >
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200">
+            {user.avatar ? (
+              <img
+                src={`${path}/${user.avatar}`}
+                alt={`${user.firstname} ${user.lastname}`}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-lg font-semibold text-gray-700">
+                {user.firstname.charAt(0).toUpperCase()}
+              </span>
+            )}
+          </div>
 
-        <p className="text-gray-600">
-          {user.email}
-        </p>
+          <div className="min-w-0 flex-1">
+            <h2 className="truncate font-semibold text-gray-900">
+              {user.firstname} {user.lastname}
+            </h2>
 
-        <p className="text-gray-600">
-          {user.phoneNumber}
-        </p>
-      </div>
-    ))}
+            <p className="truncate text-sm text-gray-500">
+              {user.email}
+            </p>
+
+            <p className="truncate text-sm text-gray-500">
+              {user.phoneNumber}
+            </p>
+          </div>
+
+          {selectedUsers.includes(user.id) && (
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">
+              ✓
+            </div>
+          )}
+        </div>
+      ))}
       <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-end">
         <button
           onClick={create}

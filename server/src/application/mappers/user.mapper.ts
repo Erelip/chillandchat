@@ -8,7 +8,8 @@ export class UserMapper {
       user.email,
       user.firstname,
       user.lastname,
-      user.phoneNumber
+      user.phoneNumber,
+      user.avatar
     );
   }
 }

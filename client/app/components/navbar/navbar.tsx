@@ -1,12 +1,13 @@
 'use client';
 
-import { MessageCircleMore, Users, LogOut } from 'lucide-react';
+import { MessageCircleMore, Users, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
   { href: '/chats', label: 'Conversations', icon: MessageCircleMore },
   { href: '/users', label: 'Utilisateurs', icon: Users },
+  { href: '/settings', label: 'Paramètres', icon: Settings },
   { href: '/auth/logout', label: 'Déconnexion', icon: LogOut },
 ];
 

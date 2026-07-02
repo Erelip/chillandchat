@@ -3,6 +3,8 @@ import { User } from "../entities/users.entity";
 export abstract class UserRepository {
   abstract save(user: User): Promise<User>;
 
+  abstract update(user: User): Promise<User>;
+
   abstract findAll(): Promise<User[]>;
 
   abstract findById(id: string): Promise<User | null>;

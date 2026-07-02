@@ -21,7 +21,27 @@ export class PrismaUserRepository
           firstname: user.firstname,
           lastname: user.lastname,
           phoneNumber: user.phoneNumber,
+          avatar: user.avatar
         },
+		});
+    const domain = UserPrismaMapper.toDomain(userPrismaEntity)
+    return domain;
+	}
+
+	async update(user: User): Promise<User> {
+		const userPrismaEntity = await this.prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        phoneNumber: user.phoneNumber,
+        avatar: user.avatar
+      },
 		});
     const domain = UserPrismaMapper.toDomain(userPrismaEntity)
     return domain;

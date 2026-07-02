@@ -3,10 +3,13 @@ import { UserRepository } from "../interfaces/user.repository.interface";
 import { hashPassword } from '../utils/password';
 import { IdGenerator } from "../interfaces/uuid-generator.interface";
 import { RegisterInput } from "../../application/dto/auth.dto";
+import { FileStorage } from "../interfaces/file-storage.interface";
+import { File } from "../../application/dto/file.dto";
 
-export class CreateUsers {
+export class UpdateUsers {
     constructor(
         private userRepository: UserRepository,
+        private fileStorage: FileStorage,
         private generator: IdGenerator
     ) {}
 
@@ -29,5 +32,27 @@ export class CreateUsers {
 
         const domain = await this.userRepository.save(createdUser);
         return domain;
+    }
+
+    async updateAvatar(userId: string, file: File): Promise<string|null> {
+        const user = await this.userRepository.findById(userId);
+        if (!user) return null;
+
+        const filename = `${this.generator.generate()}_${file.originalname}`
+        const avatarUrl = this.fileStorage.storeFile(file, filename);
+
+        const updatedUser = new User(
+            user.id,
+            user.username,
+            user.email,
+            user.password,
+            user.firstname,
+            user.lastname,
+            user.phoneNumber,
+            filename
+        )
+
+        await this.userRepository.update(updatedUser);
+        return avatarUrl;
     }
 }
