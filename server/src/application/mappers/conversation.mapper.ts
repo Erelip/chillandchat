@@ -18,7 +18,7 @@ export class ConversationMapper {
       conversation.createdAt,
       conversation.updatedAt,
       conversation.type,
-      avatar
+      conversation.avatar ? avatar : null
     )
   }
 }

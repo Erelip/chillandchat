@@ -29,7 +29,7 @@ export default function SettingsPage() {
       setFirstname(user.firstname ?? '');
       setLastname(user.lastname ?? '');
       setPhoneNumber(user.phoneNumber ?? '');
-      setAvatarPreview(user.avatar ? `${environment.BACKEND_PROTOCOL}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/uploads/avatars/${user.avatar}` : null);
+      setAvatarPreview(user.avatar ? user.avatar : null);
     }
 
     load();

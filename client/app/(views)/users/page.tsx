@@ -5,10 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ConversationService } from '@/app/services/conversation.service';
 import { UserService } from '@/app/services/user.service';
 import { User } from '@/app/dto/conversation';
-import { environment } from '@/app/environments/environment.dev';
 
 export default function UsersPage() {
-  const path = `${environment.BACKEND_PROTOCOL}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}/uploads/avatars`
   const router = useRouter();
   const conversationService = new ConversationService();
   const userService = new UserService();
@@ -56,7 +54,7 @@ export default function UsersPage() {
           <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200">
             {user.avatar ? (
               <img
-                src={`${path}/${user.avatar}`}
+                src={`${user.avatar}`}
                 alt={`${user.firstname} ${user.lastname}`}
                 className="h-full w-full object-cover"
               />
