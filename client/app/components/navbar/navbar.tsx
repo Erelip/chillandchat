@@ -17,7 +17,7 @@ export default function Sidebar() {
   if (pathname.includes('auth')) return null;
 
   return (
-    <div className="h-screen w-32 bg-gray-900 text-white flex flex-col">
+    <div className="h-screen w-24 bg-gray-900 text-white flex flex-col">
       <div className="p-6 text-xl font-bold border-b border-gray-700">
         C&C
       </div>
@@ -45,7 +45,7 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <div className="p-4 border-t border-gray-700 text-sm text-gray-500">
+      <div className="p-4 border-t border-gray-700 text-xs text-gray-500">
         © 2026 Chillandchat
       </div>
     </div>

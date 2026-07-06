@@ -51,8 +51,7 @@ export default function ChatsSidebar() {
             (conversation.type === ConversationType.DIRECT
               ? otherUser?.avatar
               : undefined);
-          console.log(conversation)
-          console.log(avatarUrl)
+
           const isActive = conversation.id === conversationId;
 
           return (
