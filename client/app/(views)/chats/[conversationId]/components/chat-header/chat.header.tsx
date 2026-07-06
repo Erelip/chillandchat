@@ -23,7 +23,7 @@ export function ChatHeader({
 
   return (
     <>
-      <div className="border-b bg-white px-6 py-4 shadow-sm">
+      <div className="border-b bg-background px-6 py-4 shadow-sm">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-900">
             {getConversationDisplayName(conversation, me)}
@@ -32,7 +32,7 @@ export function ChatHeader({
           <button
             type="button"
             onClick={() => setIsEditOpen(true)}
-            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-md p-2 text-black hover:bg-hover-icon hover:text-black"
           >
             <CircleEllipsis className="h-5 w-5" />
           </button>

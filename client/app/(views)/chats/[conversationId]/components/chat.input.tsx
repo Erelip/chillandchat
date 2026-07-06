@@ -56,8 +56,8 @@ export function ChatInput({
         </div>
       )}
 
-      <div className="border-t bg-white px-4 py-3">
-        <div className="flex items-center gap-3 rounded-full border bg-gray-50 px-4 py-2 focus-within:ring-2 focus-within:ring-black/10">
+      <div className="border-t bg-background px-4 py-3">
+        <div className="flex items-center gap-3 rounded-full border bg-[#fffbf5] px-4 py-2 focus-within:ring-2 focus-within:ring-black/10">
           <input
             value={newMessage}
             onChange={(e) => handleTyping(e.target.value)}

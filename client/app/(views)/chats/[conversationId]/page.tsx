@@ -49,7 +49,13 @@ export default function MessagesPage() {
         }}
       />
 
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      <div
+        className="relative flex-1 overflow-y-auto px-6 py-4 bg-repeat"
+        style={{
+          backgroundImage: "url('/chat-bg.png')",
+          backgroundSize: '420px',
+        }}
+      >
         <ChatMessages
           messages={messages}
           type={conversation?.type}

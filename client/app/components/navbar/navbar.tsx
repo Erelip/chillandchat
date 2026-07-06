@@ -3,6 +3,7 @@
 import { MessageCircleMore, Users, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const navItems = [
   { href: '/chats', label: 'Conversations', icon: MessageCircleMore },
@@ -17,9 +18,16 @@ export default function Sidebar() {
   if (pathname.includes('auth')) return null;
 
   return (
-    <div className="h-screen w-24 bg-gray-900 text-white flex flex-col">
-      <div className="p-6 text-xl font-bold border-b border-gray-700">
-        C&C
+    <div className="h-screen w-24 bg-primary text-white flex flex-col">
+      <div className="flex h-24 items-center justify-center">
+        <Image
+          src="/cc_c.png"
+          alt="Chillandchat"
+          width={64}
+          height={64}
+          className="object-contain"
+          priority
+        />
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {
@@ -29,23 +37,22 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex justify-center items-center
+              className={`flex justify-center items-center rounded text-white
                 ${isActive
-                  ? 'bg-gray-700 text-white font-medium'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? 'bg-carbon font-medium'
+                  : 'hover:bg-hover-icon hover:text-black'
                 }`}
             >
               <div className="flex justify-center items-center">
                 <div className="p-3">
-                <Icon className="w-5 h-5">
-                </Icon>
+                <Icon className="w-5 h-5"/>
                 </div>
               </div>
             </Link>
           );
         })}
       </nav>
-      <div className="p-4 border-t border-gray-700 text-xs text-gray-500">
+      <div className="p-4 border-t border-black text-xs text-black">
         © 2026 Chillandchat
       </div>
     </div>

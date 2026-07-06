@@ -38,7 +38,7 @@ export default function RegisterPage() {
     <>
     <div className="flex flex-col items-center justify-center min-h-screen px-4 w-full">
       <img
-        src="/logo.png"
+        src="/cc_c.png"
         alt="Logo"
         className="mb-4 w-32 h-auto"
       />
@@ -126,7 +126,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isInvalid}
-          className="w-full bg-black text-white p-2 rounded disabled:opacity-50"
+          className="w-full bg-primary text-white p-2 rounded disabled:opacity-50 hover:bg-hover"
         >
           Créer un compte
         </button>

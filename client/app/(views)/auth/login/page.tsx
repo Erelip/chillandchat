@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserService } from '@/app/services/user.service';
+import Link from 'next/link';
 
 export default function LoginPage() {
   
@@ -34,7 +35,7 @@ export default function LoginPage() {
     <>
     <div className="flex flex-col items-center justify-center min-h-screen px-4 w-full">
       <img
-        src="/logo.png"
+        src="/cc_c.png"
         alt="Logo"
         className="mb-4 w-32 h-auto"
       />
@@ -70,11 +71,10 @@ export default function LoginPage() {
             className="w-full border p-2 rounded mb-1"
           />
         </div>
-
         <button
           type="submit"
           disabled={isInvalid}
-          className="w-full bg-black text-white p-2 rounded disabled:opacity-50"
+          className="w-full bg-primary text-white p-2 rounded disabled:opacity-50 hover:bg-hover"
         >
           Se connecter
         </button>

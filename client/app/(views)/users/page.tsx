@@ -46,7 +46,7 @@ export default function UsersPage() {
             flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-colors
             ${
               selectedUsers.includes(user.id)
-                ? 'border-blue-500 bg-blue-50'
+                ? 'border-primary'
                 : 'border-gray-200 hover:bg-gray-50'
             }
           `}
@@ -80,7 +80,7 @@ export default function UsersPage() {
           </div>
 
           {selectedUsers.includes(user.id) && (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
               ✓
             </div>
           )}
@@ -90,7 +90,7 @@ export default function UsersPage() {
         <button
           onClick={create}
           disabled={selectedUsers.length === 0}
-          className="bg-black text-white px-6 py-3 rounded-lg disabled:opacity-50"
+          className="bg-primary text-white px-6 py-3 rounded-lg disabled:opacity-50"
         >
           {selectedUsers.length > 1 ? `Créer un groupe (${selectedUsers.length})` : "Envoyer un message"}
         </button>

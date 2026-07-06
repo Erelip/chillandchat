@@ -31,8 +31,8 @@ export default function ChatsSidebar() {
   }, []);
 
   return (
-    <aside className="flex w-80 shrink-0 flex-col border-r bg-white">
-      <div className="border-b p-4">
+    <aside className="flex w-80 shrink-0 flex-col border-l border-r bg-background">
+      <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-900">
           Conversations
         </h2>
@@ -60,9 +60,9 @@ export default function ChatsSidebar() {
               type="button"
               onClick={() => router.push(`/chats/${conversation.id}`)}
               className={`
-                flex w-full items-center gap-3 border-b px-4 py-3 text-left
+                flex w-full items-center gap-3 px-4 py-3 text-left
                 transition-colors
-                ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'}
+                ${isActive ? 'bg-primary' : 'hover:bg-hover'}
               `}
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200">
@@ -84,7 +84,11 @@ export default function ChatsSidebar() {
                   {name}
                 </p>
 
-                <p className="truncate text-sm text-gray-500">
+                <p
+                  className={`
+                    truncate text-sm
+                    ${isActive ? 'text-white' : ''}
+                  `}>
                   {conversation.message?.content ?? ''}
                 </p>
               </div>

@@ -39,7 +39,7 @@ export function MessageGroup({
         <div
           className={`rounded-2xl px-4 py-2 shadow-sm ${
             isMine
-              ? 'rounded-br-md bg-blue-500 text-white'
+              ? 'rounded-br-md bg-primary text-white'
               : 'rounded-bl-md bg-white text-gray-800'
           }`}
         >
@@ -65,7 +65,7 @@ export function MessageDirect({
         <div
           className={`rounded-2xl px-4 py-2 shadow-sm ${
             isMine
-              ? 'rounded-br-md bg-blue-500 text-white'
+              ? 'rounded-br-md bg-primary text-white'
               : 'rounded-bl-md bg-white text-gray-800'
           }`}
         >
