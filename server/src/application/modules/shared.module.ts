@@ -1,20 +1,20 @@
 import { Module } from "@nestjs/common";
-import { IdGenerator } from "../../core/interfaces/uuid-generator.interface";
-import { UuidGenerator } from "../../infrastructure/generator/uuid.generator";
+import { Generator } from "../../core/interfaces/generator.interface";
+import { IdGenerator } from "../../infrastructure/generator/id.generator";
 import { FileStorage } from "../../core/interfaces/file-storage.interface";
 import { LocalStorage } from "../../infrastructure/storage/local-storage/local-storage";
 
 @Module({
   providers: [
     {
-      provide: IdGenerator,
-      useClass: UuidGenerator,
+      provide: Generator,
+      useClass: IdGenerator,
     },
     {
       provide: FileStorage,
       useClass: LocalStorage,
     },
   ],
-  exports: [IdGenerator, FileStorage],
+  exports: [Generator, FileStorage],
 })
 export class SharedModule {}

@@ -5,14 +5,14 @@ import { ConversationParticipantRepository } from "../interfaces/conversation-pa
 import { ConversationParticipant } from "../entities/conversation-participant.entity";
 import { User } from "../entities/users.entity";
 import { Conversation } from "../entities/conversation.entity";
-import { IdGenerator } from "../interfaces/uuid-generator.interface";
+import { Generator } from "../interfaces/generator.interface";
 
 export class CreateConversations {
   constructor(
     private userRepository: UserRepository,
     private conversationRepository: ConversationRepository,
     private conversationParticipantRepository: ConversationParticipantRepository,
-    private idGenerator: IdGenerator
+    private generator: Generator
   ) {}
 
   async createConversations(me: string, ids: string[]): Promise<Conversation> {
@@ -25,7 +25,7 @@ export class CreateConversations {
     const users = await Promise.all(participantIds.map(id => this.userRepository.findById(id)));
 
     const newConversation = new Conversation(
-      this.idGenerator.generate(),
+      this.generator.generateUUID(),
       null,
       participantIds.length > 2 ? ConversationType.GROUP : ConversationType.DIRECT,
       [],
@@ -43,7 +43,7 @@ export class CreateConversations {
   async addParticipants(conversation: Conversation, users: User[]): Promise<void> {
     const conversationParticipants = users.map((user) => {
       const participant = new ConversationParticipant(
-        this.idGenerator.generate(),
+        this.generator.generateUUID(),
         conversation.id,
         user,
         new Date()

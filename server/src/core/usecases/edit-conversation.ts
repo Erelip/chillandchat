@@ -4,7 +4,7 @@ import { ConversationParticipant } from "../entities/conversation-participant.en
 import { ConversationParticipantRepository } from "../interfaces/conversation-participant.repository.interface";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { EditConversationDto } from "../../application/dto/edit-conversation.dto";
-import { IdGenerator } from "../interfaces/uuid-generator.interface";
+import { Generator } from "../interfaces/generator.interface";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { File } from "../../application/dto/file.dto";
 import { FileStorage } from "../interfaces/file-storage.interface";
@@ -15,7 +15,7 @@ export class EditConversations {
     private participantRepository: ConversationParticipantRepository,
     private userRepository: UserRepository,
     private fileStorage: FileStorage,
-    private idGenerator: IdGenerator
+    private generator: Generator
   ) {}
 
   async editConversation(
@@ -70,7 +70,7 @@ export class EditConversations {
     if (!user) throw new NotFoundException("User not found");
 
     const participant = new ConversationParticipant(
-      this.idGenerator.generate(), conversationId, user, new Date()
+      this.generator.generateUUID(), conversationId, user, new Date()
     )
     conversation.updatedAt = new Date();
     await this.participantRepository.save(participant);
@@ -83,10 +83,10 @@ export class EditConversations {
     const conversation = await this.conversationRepository.findById(conversationId);
     if (!conversation) return null;
 
-    const filename = `${this.idGenerator.generate()}_${file.originalname}`
-    const avatarUrl = await this.fileStorage.storeFile(file, filename);
+    const id = `${this.generator.generateInt(10000000, 99999999)}`
+    const avatarUrl = await this.fileStorage.storeFile(file, id);
 
-    conversation.avatar = filename;
+    conversation.avatar = id;
     conversation.updatedAt = new Date();
 
     this.conversationRepository.update(conversation)

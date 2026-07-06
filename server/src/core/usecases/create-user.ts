@@ -1,13 +1,13 @@
 import { User } from "../entities/users.entity";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { hashPassword } from '../utils/password';
-import { IdGenerator } from "../interfaces/uuid-generator.interface";
+import { Generator } from "../interfaces/generator.interface";
 import { RegisterInput } from "../../application/dto/auth.dto";
 
 export class CreateUsers {
     constructor(
         private userRepository: UserRepository,
-        private generator: IdGenerator
+        private generator: Generator
     ) {}
 
     async createUser(registerInput: RegisterInput) : Promise<User | null> {
@@ -17,7 +17,7 @@ export class CreateUsers {
         const hashedPassword = await hashPassword(registerInput.password);
 
         const createdUser = new User(
-            this.generator.generate(),
+            this.generator.generateUUID(),
             registerInput.username,
             registerInput.email,
             hashedPassword,

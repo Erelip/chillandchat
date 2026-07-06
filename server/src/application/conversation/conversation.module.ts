@@ -12,7 +12,7 @@ import { ConversationRepository } from '../../core/interfaces/conversation.repos
 import { MessageRepository } from '../../core/interfaces/message.repository.interface';
 import { UserRepository } from '../../core/interfaces/user.repository.interface';
 import { ConversationParticipantRepository } from '../../core/interfaces/conversation-participant.repository.interface';
-import { IdGenerator } from '../../core/interfaces/uuid-generator.interface';
+import { Generator } from '../../core/interfaces/generator.interface';
 import { ChatModule } from '../../infrastructure/websocket/chat.module';
 import { EditConversations } from '../../core/usecases/edit-conversation';
 import { FileStorage } from '../../core/interfaces/file-storage.interface';
@@ -37,11 +37,11 @@ import { FileStorage } from '../../core/interfaces/file-storage.interface';
         userRepository: UserRepository,
         conversationRepository: ConversationRepository,
         conversationParticipantRepository: ConversationParticipantRepository,
-        generator: IdGenerator,
+        generator: Generator,
       ) => {
         return new CreateConversations(userRepository, conversationRepository, conversationParticipantRepository, generator);
       },
-      inject: [UserRepository, ConversationRepository, ConversationParticipantRepository, IdGenerator],
+      inject: [UserRepository, ConversationRepository, ConversationParticipantRepository, Generator],
     },
     {
       provide: SendMessage,
@@ -70,11 +70,11 @@ import { FileStorage } from '../../core/interfaces/file-storage.interface';
         participantRepository: ConversationParticipantRepository,
         userRepository: UserRepository,
         fileStorage: FileStorage,
-        idGenerator: IdGenerator
+        idGenerator: Generator
       ) => {
         return new EditConversations(conversationRepository, participantRepository, userRepository, fileStorage, idGenerator);
       },
-      inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, FileStorage, IdGenerator],
+      inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, FileStorage, Generator],
     }
   ],
   exports: [GetConversations, CreateConversations, SendMessage, GetMessages],

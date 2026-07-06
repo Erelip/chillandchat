@@ -1,7 +1,7 @@
 import { User } from "../entities/users.entity";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { hashPassword } from '../utils/password';
-import { IdGenerator } from "../interfaces/uuid-generator.interface";
+import { Generator } from "../interfaces/generator.interface";
 import { RegisterInput } from "../../application/dto/auth.dto";
 import { FileStorage } from "../interfaces/file-storage.interface";
 import { File } from "../../application/dto/file.dto";
@@ -10,7 +10,7 @@ export class UpdateUsers {
     constructor(
         private userRepository: UserRepository,
         private fileStorage: FileStorage,
-        private generator: IdGenerator
+        private generator: Generator
     ) {}
 
     async createUser(registerInput: RegisterInput) : Promise<User | null> {
@@ -20,7 +20,7 @@ export class UpdateUsers {
         const hashedPassword = await hashPassword(registerInput.password);
 
         const createdUser = new User(
-            this.generator.generate(),
+            this.generator.generateUUID(),
             registerInput.username,
             registerInput.email,
             hashedPassword,
@@ -38,8 +38,8 @@ export class UpdateUsers {
         const user = await this.userRepository.findById(userId);
         if (!user) return null;
 
-        const filename = `${this.generator.generate()}_${file.originalname}`
-        const avatarUrl = await this.fileStorage.storeFile(file, filename);
+        const id = `${this.generator.generateInt(10000000, 99999999)}`
+        const avatarUrl = await this.fileStorage.storeFile(file, id);
 
         const updatedUser = new User(
             user.id,
@@ -49,7 +49,7 @@ export class UpdateUsers {
             user.firstname,
             user.lastname,
             user.phoneNumber,
-            filename
+            id
         )
 
         await this.userRepository.update(updatedUser);

@@ -5,7 +5,7 @@ import { GetUsers } from "../../core/usecases/get-users";
 import { UserController } from "./user.controller";
 import { SharedModule } from "../modules/shared.module";
 import { PersistenceModule } from "../modules/persistence.module";
-import { IdGenerator } from "../../core/interfaces/uuid-generator.interface";
+import { Generator } from "../../core/interfaces/generator.interface";
 import { UpdateUsers } from "../../core/usecases/update-user";
 import { FileStorage } from "../../core/interfaces/file-storage.interface";
 
@@ -23,22 +23,22 @@ import { FileStorage } from "../../core/interfaces/file-storage.interface";
       provide: CreateUsers,
       useFactory: (
         userRepository: UserRepository,
-        generator: IdGenerator,
+        generator: Generator,
       ) => {
         return new CreateUsers(userRepository, generator);
       },
-      inject: [UserRepository, IdGenerator],
+      inject: [UserRepository, Generator],
     },
     {
       provide: UpdateUsers,
       useFactory: (
         userRepository: UserRepository,
         fileStorage: FileStorage,
-        generator: IdGenerator
+        generator: Generator
       ) => {
         return new UpdateUsers(userRepository, fileStorage, generator);
       },
-      inject: [UserRepository, FileStorage, IdGenerator]
+      inject: [UserRepository, FileStorage, Generator]
     }
   ],
   exports: [GetUsers, CreateUsers, UpdateUsers],
