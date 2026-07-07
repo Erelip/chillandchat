@@ -7,7 +7,11 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { environment } from '../../../environments/environment.dev';
-import { ChatEvents } from '../../core/interfaces/chat-events.interface';
+import { ChatEvents, ChatMessageEvent } from '../../core/interfaces/chat-events.interface';
+import { ConversationRepository } from '../../core/interfaces/conversation.repository.interface';
+import { isUserInConversation } from '../../core/utils/permissions';
+import { UseGuards } from '@nestjs/common';
+import { WsAuthGuard } from '../../application/auth/ws-auth.guard';
 
 @WebSocketGateway({
   cors: {
@@ -18,12 +22,28 @@ export class ChatGateway implements ChatEvents{
   @WebSocketServer()
   private server!: Server;
 
+  constructor(
+    private readonly conversationRepository: ConversationRepository,
+  ) {}
+
+  @UseGuards(WsAuthGuard)
   @SubscribeMessage('joinConversation')
-  joinConversation(
+  async joinConversation(
     @MessageBody() conversationId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    if (!conversationId) return;
+    const userId = client.data.userId as string | undefined;
+
+    if (!userId || !conversationId) return;
+
+    const conversation = await this.conversationRepository.findById(conversationId);
+
+    try {
+      isUserInConversation(conversation, userId);
+    } catch {
+      return;
+    }
+
     client.join(`conversation:${conversationId}`);
   }
 
@@ -38,27 +58,35 @@ export class ChatGateway implements ChatEvents{
 
   @SubscribeMessage('typing')
   typing(
-    @MessageBody() data: { conversationId: string; userId: string },
+    @MessageBody() data: { conversationId: string; },
     @ConnectedSocket() client: Socket,
   ) {
+    const userId = client.data.userId as string | undefined;
+
+    if (!userId || !data.conversationId) return;
+
     client.to(`conversation:${data.conversationId}`).emit('userTyping', {
       conversationId: data.conversationId,
-      userId: data.userId,
+      userId,
     });
   }
 
   @SubscribeMessage('stopTyping')
   stopTyping(
-    @MessageBody() data: { conversationId: string; userId: string },
+    @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: Socket,
   ) {
+    const userId = client.data.userId as string | undefined;
+
+    if (!userId || !data.conversationId) return;
+
     client.to(`conversation:${data.conversationId}`).emit('userStopTyping', {
       conversationId: data.conversationId,
-      userId: data.userId,
+      userId: userId,
     });
   }
 
-  emitMessageCreated(conversationId: string, message: unknown) {
+  emitMessageCreated(conversationId: string, message: ChatMessageEvent) {
     this.server
       .to(`conversation:${conversationId}`)
       .emit('messageCreated', message);

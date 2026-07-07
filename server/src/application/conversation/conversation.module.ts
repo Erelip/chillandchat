@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CreateConversations } from '../../core/usecases/create-conversations';
-import { UsersModule } from '../user/user.module';
 import { ConversationController } from './conversation.controller';
 import { SendMessage } from '../../core/usecases/send-messages';
 import { GetConversations } from '../../core/usecases/get-conversations';
@@ -15,9 +14,10 @@ import { Generator } from '../../core/interfaces/generator.interface';
 import { EditConversations } from '../../core/usecases/edit-conversation';
 import { FileStorage } from '../../core/interfaces/file-storage.interface';
 import { ChatEvents } from '../../core/interfaces/chat-events.interface';
+import { ChatModule } from '../../infrastructure/websocket/chat.module';
 
 @Module({
-  imports: [SharedModule, UsersModule, PersistenceModule],
+  imports: [SharedModule, PersistenceModule, ChatModule],
   controllers: [ConversationController],
   providers: [
     {

@@ -5,8 +5,14 @@ class SocketService {
   private socket!: Socket;
 
   connect() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     this.socket = io(
       `${environment.BACKEND_PROTOCOL}://${environment.BACKEND_HOST}:${environment.BACKEND_PORT}`,
+      {
+        auth: { token },
+      },
     );
   }
 
@@ -19,5 +25,4 @@ class SocketService {
   }
 }
 
-export const socketService =
-  new SocketService();
+export const socketService = new SocketService();

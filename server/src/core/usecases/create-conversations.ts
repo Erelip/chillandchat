@@ -36,7 +36,7 @@ export class CreateConversations {
     )
 
     await this.conversationRepository.save(newConversation);
-    this.addParticipants(newConversation, users as User[]);
+    await this.addParticipants(newConversation, users as User[]);
     return newConversation;
   }
 

@@ -26,7 +26,6 @@ export function ChatInput({
 
     socket.emit('typing', {
       conversationId,
-      userId: me.id,
     });
 
     if (typingTimeoutRef.current) {
@@ -36,7 +35,6 @@ export function ChatInput({
     typingTimeoutRef.current = setTimeout(() => {
       socket.emit('stopTyping', {
         conversationId,
-        userId: me.id,
       });
     }, 1000);
   }
