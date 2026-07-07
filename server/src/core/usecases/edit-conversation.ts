@@ -2,12 +2,13 @@ import { ConversationRepository } from "../interfaces/conversation.repository.in
 import { Conversation } from "../entities/conversation.entity";
 import { ConversationParticipant } from "../entities/conversation-participant.entity";
 import { ConversationParticipantRepository } from "../interfaces/conversation-participant.repository.interface";
-import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { EditConversationDto } from "../../application/dto/edit-conversation.dto";
 import { Generator } from "../interfaces/generator.interface";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { FileStorage } from "../interfaces/file-storage.interface";
-import { UpdateConversationAvatarCommand } from "../models/update-conversation.command";
+import { UpdateConversationAvatarCommand, UpdateConversationInfoCommand } from "../models/update-conversation.command";
+import { isUserInConversation } from "../utils/permissions";
 
 export class EditConversations {
   constructor(
@@ -18,30 +19,30 @@ export class EditConversations {
     private generator: Generator
   ) {}
 
-  async editConversation(
-    conversationId: string,
-    dto: EditConversationDto,
-  ): Promise<Conversation> {
+  async editConversation(userId: string, conversationId: string, command: UpdateConversationInfoCommand): Promise<Conversation> {
 
     const conversation = await this.conversationRepository.findById(conversationId);
+
     if (!conversation) throw new NotFoundException("Conversation not found");
 
-    const hasName = dto.name !== undefined && dto.name.trim() !== '';
-    const hasParticipantsToRemove = dto.participantIdsToRemove?.length;
+    if (isUserInConversation(conversation, userId) == false) throw new UnauthorizedException("Not allowed.");
+
+    const hasName = command.name !== undefined && command.name.trim() !== '';
+    const hasParticipantsToRemove = command.participantIdsToRemove?.length;
 
     if (!hasName && !hasParticipantsToRemove) {
       throw new BadRequestException('Nothing to update');
     }
 
     if (hasName) {
-      conversation.name = dto.name!;
+      conversation.name = command.name!;
       conversation.updatedAt = new Date();
 
       await this.conversationRepository.update(conversation);
     }
 
     if (hasParticipantsToRemove) {
-      await this.removeParticipants(dto.participantIdsToRemove!);
+      await this.removeParticipants(command.participantIdsToRemove!);
     }
 
     return conversation;
@@ -62,12 +63,14 @@ export class EditConversations {
     return conversation;
   }
 
-  public async addParticipants(conversationId: string, participantIds: string): Promise<ConversationParticipant> {
-
+  public async addParticipants(userId: string, conversationId: string, participantIds: string): Promise<ConversationParticipant> {
     const conversation = await this.conversationRepository.findById(conversationId);
     const user = await this.userRepository.findById(participantIds);
+
     if (!conversation) throw new NotFoundException("Conversation not found");
     if (!user) throw new NotFoundException("User not found");
+
+    if (isUserInConversation(conversation, userId) == false) throw new UnauthorizedException("Not allowed.");
 
     const participant = new ConversationParticipant(
       this.generator.generateUUID(), conversationId, user, new Date()

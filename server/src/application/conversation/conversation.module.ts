@@ -57,10 +57,11 @@ import { ChatEvents } from '../../core/interfaces/chat-events.interface';
       provide: GetMessages,
       useFactory: (
         messageRepository: MessageRepository,
+        conversationRepository: ConversationRepository
       ) => {
-        return new GetMessages(messageRepository);
+        return new GetMessages(messageRepository, conversationRepository);
       },
-      inject: [MessageRepository],
+      inject: [MessageRepository, ConversationRepository],
     },
     {
       provide: EditConversations,

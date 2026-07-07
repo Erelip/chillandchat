@@ -29,10 +29,4 @@ export class AuthController {
         return this.authService.register(command);
     }
 
-    @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthGuard)
-    @Get('me')
-    getUserInfo(@Request() request) {
-        return request.user;
-    }
 }

@@ -15,7 +15,7 @@ import { ConversationParticipationMapper } from '../mappers/conversation-partici
 import { FileInterceptor } from '@nestjs/platform-express';
 import { File } from '../../core/models/file';
 import { environment } from '../../../environments/environment.dev';
-import { UpdateConversationAvatarCommand } from '../../core/models/update-conversation.command';
+import { UpdateConversationAvatarCommand, UpdateConversationInfoCommand } from '../../core/models/update-conversation.command';
 
 @Controller('conversations')
 export class ConversationController {
@@ -56,8 +56,8 @@ export class ConversationController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     @Get('/:conversationId/messages')
-    async getMessagesByConversationId(@Param('conversationId') conversationId: string) {
-        const messages = await this.getMessages.getMessagesByConversationId(conversationId);
+    async getMessagesByConversationId(@Request() request, @Param('conversationId') conversationId: string) {
+        const messages = await this.getMessages.getMessagesByConversationId(request.user.id, conversationId);
 
         return messages.map((m : Message) => MessageMapper.toDTO(m));
     }
@@ -66,7 +66,7 @@ export class ConversationController {
     @UseGuards(AuthGuard)
     @Get('/:conversationId')
     async getConversationById(@Request() request, @Param('conversationId') conversationId: string) {
-        const conversation = await this.getConversations.getConversationById(conversationId);
+        const conversation = await this.getConversations.getConversationById(request.user.id, conversationId);
         if (conversation == null) throw new UnauthorizedException("Not found");
 
         return ConversationMapper.toDTO(conversation);
@@ -76,9 +76,15 @@ export class ConversationController {
     @UseGuards(AuthGuard)
     @Patch('/:conversationId')
     async editNameConversationById(@Request() request, @Param('conversationId') conversationId: string, @Body() body: EditConversationDto) {
-        const conversation = await this.editConversations.editConversation(
+        const command = new UpdateConversationInfoCommand(
             conversationId,
-            body,
+            body.name,
+            body.participantIdsToRemove
+        )
+        const conversation = await this.editConversations.editConversation(
+            request.user.id,
+            conversationId,
+            command,
         );
 
         return ConversationMapper.toDTO(conversation);
@@ -89,6 +95,7 @@ export class ConversationController {
     @Post('/:conversationId/participants')
     async addParticipantsToConversation(@Request() request, @Param('conversationId') conversationId: string, @Body() body: { participantsToAdd: string}) {
         const participant = await this.editConversations.addParticipants(
+            request.user.id,
             conversationId,
             body.participantsToAdd,
         );

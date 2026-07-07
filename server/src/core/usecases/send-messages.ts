@@ -1,8 +1,8 @@
 import { ConversationRepository } from "../interfaces/conversation.repository.interface";
 import { MessageRepository } from "../interfaces/message.repository.interface";
 import { NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { Conversation } from "../entities/conversation.entity";
 import { ChatEvents } from "../interfaces/chat-events.interface";
+import { isUserInConversation } from "../utils/permissions";
 
 export class SendMessage {
   constructor(
@@ -14,8 +14,10 @@ export class SendMessage {
   async sendMessage(conversationId: string, senderId: string, content: string) {
     const conversation = await this.conversationRepository.findById(conversationId);
 
-    this.checkIfUserIsInConversation(conversation, senderId)
-      
+    if (conversation == null) throw new NotFoundException("Conversation not found.")
+
+    if (isUserInConversation(conversation, senderId) == false) throw new UnauthorizedException("Not allowed.");
+
     const createdMessage = await this.messageRepository.save(conversation.id, senderId, content);
     conversation.updatedAt = new Date();
 
@@ -28,18 +30,6 @@ export class SendMessage {
     })
 
     return createdMessage;
-  }
-
-  private checkIfUserIsInConversation(conversation: Conversation|null, senderId: string): asserts conversation is Conversation  {
-    if (!conversation) throw new NotFoundException("Conversation not found.");
-
-    const isParticipant = conversation.participants.some(
-      (participant) => participant.user.id === senderId,
-    );
-
-    if (!isParticipant) {
-      throw new UnauthorizedException("Not allowed.");
-    }
   }
 
 }
