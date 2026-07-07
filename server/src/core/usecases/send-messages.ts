@@ -1,14 +1,14 @@
 import { ConversationRepository } from "../interfaces/conversation.repository.interface";
 import { MessageRepository } from "../interfaces/message.repository.interface";
-import { ChatGateway } from "../../infrastructure/websocket/chat.gateway";
 import { NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Conversation } from "../entities/conversation.entity";
+import { ChatEvents } from "../interfaces/chat-events.interface";
 
 export class SendMessage {
   constructor(
     private conversationRepository: ConversationRepository,
     private messageRepository: MessageRepository,
-    private chatGateway: ChatGateway
+    private chatEvents: ChatEvents
   ) {}
 
   async sendMessage(conversationId: string, senderId: string, content: string) {
@@ -21,7 +21,7 @@ export class SendMessage {
 
     await this.conversationRepository.update(conversation);
 
-    this.chatGateway.emitMessageCreated(conversation.id, {
+    this.chatEvents.emitMessageCreated(conversation.id, {
       id: createdMessage.id,
       content: createdMessage.content,
       senderId: createdMessage.senderId,

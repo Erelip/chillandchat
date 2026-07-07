@@ -4,10 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUsers } from '../../core/usecases/create-user';
 import { comparePassword } from '../../core/utils/password';
 import {
-    RegisterInput,
     LoginInput
 } from '../dto/auth.dto'
 import { User } from '../../core/entities/users.entity';
+import { CreateUserCommand } from '../../core/models/create-user.command';
 
 type AuthOutput = {
     accessToken: string;
@@ -25,8 +25,8 @@ export class AuthService {
         return this.signIn(user);
     }
 
-    async register(input: RegisterInput) : Promise<AuthOutput | null> {
-        const user = await this.createUsers.createUser(input);
+    async register(command: CreateUserCommand) : Promise<AuthOutput | null> {
+        const user = await this.createUsers.createUser(command);
         if (!user) throw new UnauthorizedException('Already exists');
 
         return this.signIn(user);

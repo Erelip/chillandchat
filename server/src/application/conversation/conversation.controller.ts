@@ -13,8 +13,9 @@ import { ConversationParticipant } from '../../core/entities/conversation-partic
 import { EditConversationDto } from '../dto/edit-conversation.dto';
 import { ConversationParticipationMapper } from '../mappers/conversation-participation.mapper';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { File } from '../dto/file.dto';
+import { File } from '../../core/models/file';
 import { environment } from '../../../environments/environment.dev';
+import { UpdateConversationAvatarCommand } from '../../core/models/update-conversation.command';
 
 @Controller('conversations')
 export class ConversationController {
@@ -100,7 +101,9 @@ export class ConversationController {
     @UseInterceptors(FileInterceptor('avatar'))
     @Patch('/:conversationId/avatar')
     async updateAvatar(@Param('conversationId') conversationId: string ,@UploadedFile() file: File) {
-        const avatarUrl = await this.editConversations.updateAvatar(conversationId, file);
+        const command = new UpdateConversationAvatarCommand(conversationId, file);
+        const avatarUrl = await this.editConversations.updateAvatar(command);
+
         return `${environment.APP_URL}/${avatarUrl}`;
     }
 }

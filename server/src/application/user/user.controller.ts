@@ -1,13 +1,12 @@
-import { Controller, Get, HttpCode, HttpStatus, NotImplementedException, Patch, Post, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Patch, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { GetUsers } from '../../core/usecases/get-users';
 import { AuthGuard } from '../auth/auth.guard';
 import { User } from '../../core/entities/users.entity';
 import { UserMapper } from '../mappers/user.mapper';
-import { CreateUsers } from '../../core/usecases/create-user';
-import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUsers } from '../../core/usecases/update-user';
-import { File } from '../dto/file.dto';
+import { File } from '../../core/models/file';
+import { UpdateUserAvatarCommand } from '../../core/models/update-user.command';
 
 @Controller('users')
 export class UserController {
@@ -37,7 +36,9 @@ export class UserController {
     @UseInterceptors(FileInterceptor('avatar'))
     @Patch('me/avatar')
     async updateAvatar(@Request() request, @UploadedFile() file: File) {
-        const avatarUrl = await this.updateUsers.updateAvatar(request.user.id, file);
+        const command = new UpdateUserAvatarCommand(request.user.id, file)
+        const avatarUrl = await this.updateUsers.updateAvatar(command);
+
         return avatarUrl;
     }
 }

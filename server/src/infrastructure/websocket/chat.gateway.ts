@@ -7,13 +7,14 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { environment } from '../../../environments/environment.dev';
+import { ChatEvents } from '../../core/interfaces/chat-events.interface';
 
 @WebSocketGateway({
   cors: {
     origin: environment.CORS_ORIGIN,
   },
 })
-export class ChatGateway {
+export class ChatGateway implements ChatEvents{
   @WebSocketServer()
   private server!: Server;
 

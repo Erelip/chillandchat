@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards }
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { RegisterInput, LoginInput } from '../dto/auth.dto';
+import { CreateUserCommand } from '../../core/models/create-user.command';
 
 @Controller('auth')
 export class AuthController {
@@ -17,7 +18,15 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('register')
     register(@Body() input: RegisterInput) {
-        return this.authService.register(input);
+        const command = new CreateUserCommand(
+            input.username,
+            input.email,
+            input.password,
+            input.firstname,
+            input.lastname,
+            input.password
+        )
+        return this.authService.register(command);
     }
 
     @HttpCode(HttpStatus.OK)

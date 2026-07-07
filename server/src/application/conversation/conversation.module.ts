@@ -3,7 +3,6 @@ import { CreateConversations } from '../../core/usecases/create-conversations';
 import { UsersModule } from '../user/user.module';
 import { ConversationController } from './conversation.controller';
 import { SendMessage } from '../../core/usecases/send-messages';
-import { ChatGateway } from '../../infrastructure/websocket/chat.gateway';
 import { GetConversations } from '../../core/usecases/get-conversations';
 import { GetMessages } from '../../core/usecases/get-messages';
 import { SharedModule } from '../modules/shared.module';
@@ -13,12 +12,12 @@ import { MessageRepository } from '../../core/interfaces/message.repository.inte
 import { UserRepository } from '../../core/interfaces/user.repository.interface';
 import { ConversationParticipantRepository } from '../../core/interfaces/conversation-participant.repository.interface';
 import { Generator } from '../../core/interfaces/generator.interface';
-import { ChatModule } from '../../infrastructure/websocket/chat.module';
 import { EditConversations } from '../../core/usecases/edit-conversation';
 import { FileStorage } from '../../core/interfaces/file-storage.interface';
+import { ChatEvents } from '../../core/interfaces/chat-events.interface';
 
 @Module({
-  imports: [SharedModule, UsersModule, PersistenceModule, ChatModule],
+  imports: [SharedModule, UsersModule, PersistenceModule],
   controllers: [ConversationController],
   providers: [
     {
@@ -48,11 +47,11 @@ import { FileStorage } from '../../core/interfaces/file-storage.interface';
       useFactory: (
         conversationRepository: ConversationRepository,
         messageRepository: MessageRepository,
-        chatGateway: ChatGateway,
+        chatEvents: ChatEvents,
       ) => {
-        return new SendMessage(conversationRepository, messageRepository, chatGateway);
+        return new SendMessage(conversationRepository, messageRepository, chatEvents);
       },
-      inject: [ConversationRepository, MessageRepository, ChatGateway],
+      inject: [ConversationRepository, MessageRepository, ChatEvents],
     },
     {
       provide: GetMessages,
