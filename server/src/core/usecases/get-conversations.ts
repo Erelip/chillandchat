@@ -1,7 +1,6 @@
 import { ConversationRepository } from "../interfaces/conversation.repository.interface";
 import { MessageRepository } from "../interfaces/message.repository.interface";
 import { Conversation } from "../entities/conversation.entity";
-import { NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { isUserInConversation } from "../utils/permissions";
 
 export class GetConversations {
@@ -22,9 +21,7 @@ export class GetConversations {
   async getConversationById(userId: string, conversationId: string) {
     const conversation = await this.conversationRepository.findById(conversationId);
 
-    if (conversation == null) throw new NotFoundException("Conversation not found.")
-
-    if (isUserInConversation(conversation, userId) == false) throw new UnauthorizedException("Not allowed.");
+    isUserInConversation(conversation, userId);
 
     return conversation;
   }

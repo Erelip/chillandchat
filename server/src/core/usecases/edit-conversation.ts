@@ -2,13 +2,12 @@ import { ConversationRepository } from "../interfaces/conversation.repository.in
 import { Conversation } from "../entities/conversation.entity";
 import { ConversationParticipant } from "../entities/conversation-participant.entity";
 import { ConversationParticipantRepository } from "../interfaces/conversation-participant.repository.interface";
-import { BadRequestException, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { EditConversationDto } from "../../application/dto/edit-conversation.dto";
 import { Generator } from "../interfaces/generator.interface";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { FileStorage } from "../interfaces/file-storage.interface";
 import { UpdateConversationAvatarCommand, UpdateConversationInfoCommand } from "../models/update-conversation.command";
 import { isUserInConversation } from "../utils/permissions";
+import { BadRequestException, NotFoundException } from "../exceptions";
 
 export class EditConversations {
   constructor(
@@ -23,9 +22,7 @@ export class EditConversations {
 
     const conversation = await this.conversationRepository.findById(conversationId);
 
-    if (!conversation) throw new NotFoundException("Conversation not found");
-
-    if (isUserInConversation(conversation, userId) == false) throw new UnauthorizedException("Not allowed.");
+    isUserInConversation(conversation, userId);
 
     const hasName = command.name !== undefined && command.name.trim() !== '';
     const hasParticipantsToRemove = command.participantIdsToRemove?.length;
@@ -67,15 +64,15 @@ export class EditConversations {
     const conversation = await this.conversationRepository.findById(conversationId);
     const user = await this.userRepository.findById(participantIds);
 
-    if (!conversation) throw new NotFoundException("Conversation not found");
     if (!user) throw new NotFoundException("User not found");
 
-    if (isUserInConversation(conversation, userId) == false) throw new UnauthorizedException("Not allowed.");
+    isUserInConversation(conversation, userId);
 
     const participant = new ConversationParticipant(
       this.generator.generateUUID(), conversationId, user, new Date()
     )
     conversation.updatedAt = new Date();
+
     await this.participantRepository.save(participant);
     await this.conversationRepository.update(conversation);
 
