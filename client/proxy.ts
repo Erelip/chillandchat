@@ -11,7 +11,7 @@ export function proxy(req: NextRequest) {
     pathname.startsWith(route),
   );
 
-  const isAuthenticated = Boolean(accessToken && refreshToken);
+  const isAuthenticated = Boolean(accessToken || refreshToken);
 
   if (!isAuthenticated && !isPublicRoute) {
     return NextResponse.redirect(new URL('/auth/login', req.url));
