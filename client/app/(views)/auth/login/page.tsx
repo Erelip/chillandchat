@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserService } from '@/app/services/user.service';
-import Link from 'next/link';
+
+const userService = new UserService();
 
 export default function LoginPage() {
   
-  const userService = new UserService();
   const router = useRouter();
 
   const [username, setUsername] = useState('');
@@ -23,9 +23,9 @@ export default function LoginPage() {
     if (isInvalid) return;
 
     try {
-      userService.login(username, password).then(() => {
-        router.push('/chats');
-      });
+      await userService.login(username, password);
+      router.push('/chats');
+      router.refresh();
     } catch (err) {
       console.error(err);
     }

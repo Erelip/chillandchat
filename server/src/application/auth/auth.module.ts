@@ -11,7 +11,6 @@ import { environment } from '../../../environments/environment.dev';
     JwtModule.register({
       global: true,
       secret: environment.SECRET_KEY,
-      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],

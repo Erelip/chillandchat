@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { RegisterInput, LoginInput } from '../dto/auth.dto';
@@ -15,14 +15,10 @@ export class AuthController {
         @Body() input: LoginInput,
         @Res({ passthrough: true }) res: Response
     ) {
-        const token = await this.authService.authenticate(input);
+        const { accessToken, refreshToken } = await this.authService.authenticate(input);
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            path: '/',
-        });
+        this.setAccessToken(res, accessToken);
+        this.setRefreshToken(res, refreshToken);
 
         return { success: true };
 
@@ -34,26 +30,65 @@ export class AuthController {
         @Body() input: RegisterInput,
         @Res({ passthrough: true }) res: Response
     ) {
-        const token = await this.authService.register(
+        const { accessToken, refreshToken } = await this.authService.register(
             new CreateUserCommand(
                 input.username,
                 input.email,
                 input.password,
                 input.firstname,
                 input.lastname,
-                input.password
+                input.phoneNumber
             )
         );
 
-        res.cookie('token', token, {
+        this.setAccessToken(res, accessToken);
+        this.setRefreshToken(res, refreshToken);
+
+        return { success: true };
+
+    }
+
+    @Post('logout')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('token', { path: '/' });
+        res.clearCookie('refreshToken', { path: '/' });
+        return { success: true };
+    }
+
+    @Post('refresh')
+    @HttpCode(HttpStatus.OK)
+    async refresh(
+        @Req() req,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const refreshToken = req.cookies.refreshToken;
+
+        const token = await this.authService.refreshToken(refreshToken);
+
+        this.setAccessToken(res, token);
+
+        return { success: true };
+    }
+
+    private setAccessToken(res: Response, accessToken: string) {
+        res.cookie('token', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             path: '/',
+            maxAge: 15 * 60 * 1000,
         });
+    }
 
-        return { success: true };
-
+    private setRefreshToken(res: Response, refreshToken: string) {
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
     }
 
 }

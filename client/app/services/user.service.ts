@@ -30,8 +30,8 @@ export class UserService {
     return response.data;
   }
 
-  public logout() {
-    localStorage.removeItem('token');
+  async logout() {
+    return await api.post('/auth/logout');
   }
 
   async getUser() {

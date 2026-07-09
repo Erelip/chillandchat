@@ -1,18 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserService } from '@/app/services/user.service';
 
-export default function LoginPage() {
-  
-  const userService = new UserService();
+const userService = new UserService();
+
+export default function LogoutPage() {
   const router = useRouter();
 
   useEffect(() => {
-    userService.logout();
-    router.push('/auth/login');
-  })
+    async function logout() {
+      await userService.logout();
+      router.replace('/auth/login');
+      router.refresh();
+    }
 
-  return;
+    logout();
+  }, [router]);
+
+  return (
+    <div className="flex h-screen items-center justify-center text-gray-500">
+      Déconnexion...
+    </div>
+  );
 }

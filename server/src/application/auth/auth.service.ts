@@ -13,18 +13,24 @@ export class AuthService {
 
     constructor(private readonly getUsers: GetUsers, private readonly createUsers: CreateUsers, private readonly jwtService: JwtService) {}
 
-    async authenticate(input: LoginInput) : Promise<string | null> {
+    async authenticate(input: LoginInput) : Promise<{accessToken: string, refreshToken: string}> {
         const user = await this.validateUser(input);
         if (!user) throw new UnauthorizedException('Invalid credentials');
-        
-        return this.signIn(user);
+
+        return {
+            accessToken: await this.signAccessToken(user),
+            refreshToken: await this.signRefreshToken(user),
+        };
     }
 
-    async register(command: CreateUserCommand) : Promise<string | null> {
+    async register(command: CreateUserCommand) : Promise<{accessToken: string, refreshToken: string}> {
         const user = await this.createUsers.createUser(command);
         if (!user) throw new UnauthorizedException('Already exists');
 
-        return this.signIn(user);
+        return {
+            accessToken: await this.signAccessToken(user),
+            refreshToken: await this.signRefreshToken(user),
+        };
     }
 
     async validateUser(input: LoginInput) : Promise<User | null> {
@@ -37,9 +43,35 @@ export class AuthService {
         return user;
     }
 
-    async signIn(user: User) : Promise<string> {
+    async signAccessToken(user: User) : Promise<string> {
         const payload = { username: user.username, sub: user.id };
-        return await this.jwtService.signAsync(payload);
+        return this.jwtService.signAsync(
+            payload,
+            { expiresIn: '15m' },
+        );
     }
+
+    async signRefreshToken(user: User) : Promise<string> {
+        const payload = { username: user.username, sub: user.id };
+        return this.jwtService.signAsync(
+            payload,
+            { expiresIn: '7d' },
+        );
+    }
+
+
+    async refreshToken(refreshToken: string) : Promise<string> {
+        try {
+    		const payload = await this.jwtService.verify(refreshToken);
+
+            return this.jwtService.signAsync(
+                { username: payload.username, sub: payload.sub },
+                { expiresIn: '15m' },
+            );
+        } catch (error) {
+            throw new UnauthorizedException('Invalid token');
+        }
+    }
+
 
 }

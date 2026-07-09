@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const publicRoutes = ['/auth/login', '/auth/register'];
+const publicRoutes = [ '/auth/login', '/auth/register' ];
 
 export function proxy(req: NextRequest) {
-
-  const token = req.cookies.get('token')?.value;
+  const accessToken = req.cookies.get('token')?.value;
+  const refreshToken = req.cookies.get('refreshToken')?.value;
   const pathname = req.nextUrl.pathname;
 
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),
   );
 
-  if (!token && !isPublicRoute) {
+  const isAuthenticated = Boolean(accessToken && refreshToken);
+
+  if (!isAuthenticated && !isPublicRoute) {
     return NextResponse.redirect(new URL('/auth/login', req.url));
   }
 
-  if (token && isPublicRoute) {
+  if (isAuthenticated && isPublicRoute) {
     return NextResponse.redirect(new URL('/chats', req.url));
   }
 

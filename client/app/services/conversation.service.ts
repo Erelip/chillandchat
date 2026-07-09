@@ -1,4 +1,4 @@
-import { Conversation, ConversationDTO } from '../dto/conversation';
+import { ConversationDTO } from '../dto/conversation';
 import { api } from '../lib/api';
 
 export class ConversationService {
