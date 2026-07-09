@@ -50,7 +50,6 @@ export class UserService {
     firstname: string;
     lastname: string;
     phoneNumber: string;
-    avatarUrl?: string;
   }) {
     return await api.patch('/users/me', data);
   }

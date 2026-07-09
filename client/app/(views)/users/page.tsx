@@ -47,7 +47,7 @@ export default function UsersPage() {
             ${
               selectedUsers.includes(user.id)
                 ? 'border-primary'
-                : 'border-gray-200 hover:bg-gray-50'
+                : 'border-carbon hover:bg-hover-icon'
             }
           `}
         >

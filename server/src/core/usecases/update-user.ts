@@ -2,7 +2,8 @@ import { User } from "../entities/users.entity";
 import { UserRepository } from "../interfaces/user.repository.interface";
 import { Generator } from "../interfaces/generator.interface";
 import { FileStorage } from "../interfaces/file-storage.interface";
-import { UpdateUserAvatarCommand } from "../models/update-user.command";
+import { UpdateUserAvatarCommand, UpdateUserInfoCommand } from "../models/update-user.command";
+import { NotFoundException } from "../exceptions";
 
 export class UpdateUsers {
     constructor(
@@ -31,5 +32,25 @@ export class UpdateUsers {
 
         await this.userRepository.update(updatedUser);
         return avatarUrl;
+    }
+
+    async updateUser(command: UpdateUserInfoCommand): Promise<User> {
+        const user = await this.userRepository.findById(command.id);
+        if (!user) throw new NotFoundException('User not found');
+
+        const updatedUser = new User(
+            user.id,
+            user.username,
+            user.password,
+            user.email,
+            command.firstname,
+            command.lastname,
+            command.phoneNumber,
+            user.avatar
+        );
+
+        await this.userRepository.update(updatedUser);
+
+        return updatedUser;
     }
 }

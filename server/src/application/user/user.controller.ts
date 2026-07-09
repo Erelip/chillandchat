@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Patch, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Patch, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { GetUsers } from '../../core/usecases/get-users';
 import { AuthGuard } from '../auth/auth.guard';
 import { User } from '../../core/entities/users.entity';
@@ -6,7 +6,7 @@ import { UserMapper } from '../mappers/user.mapper';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUsers } from '../../core/usecases/update-user';
 import { File } from '../../core/models/file';
-import { UpdateUserAvatarCommand } from '../../core/models/update-user.command';
+import { UpdateUserAvatarCommand, UpdateUserInfoCommand } from '../../core/models/update-user.command';
 
 @Controller('users')
 export class UserController {
@@ -40,5 +40,15 @@ export class UserController {
         const avatarUrl = await this.updateUsers.updateAvatar(command);
 
         return avatarUrl;
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    @Patch('me')
+    async updateMe(@Request() request, @Body() body : { firstname: string, lastname: string, phoneNumber: string}) {
+        const command = new UpdateUserInfoCommand(request.user.id, body.firstname, body.lastname, body.phoneNumber);
+        const user = await this.updateUsers.updateUser(command);
+
+        return UserMapper.toDTO(user);
     }
 }

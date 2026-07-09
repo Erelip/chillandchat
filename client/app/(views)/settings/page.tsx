@@ -56,14 +56,13 @@ export default function SettingsPage() {
         avatarUrl = avatarRes.data.avatarUrl;
       }
 
-      // const res = await userService.updateMe({
-      //   firstname,
-      //   lastname,
-      //   phoneNumber,
-      //   avatarUrl,
-      // });
+      const res = await userService.updateMe({
+        firstname,
+        lastname,
+        phoneNumber,
+      });
 
-      // setMe(res.data);
+        setMe(res.data);
       setAvatarFile(null);
     } finally {
       setIsSaving(false);
