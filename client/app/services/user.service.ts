@@ -15,8 +15,6 @@ export class UserService {
       },
     );
 
-    localStorage.setItem('token', response.data.accessToken,);
-
     return response.data;
   }
 
@@ -28,8 +26,6 @@ export class UserService {
         password: password,
       },
     );
-
-    localStorage.setItem('token', response.data.accessToken);
 
     return response.data;
   }

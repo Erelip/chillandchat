@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from '../auth/auth.service';
-import { AuthGuard } from '../auth/auth.guard';
 import { RegisterInput, LoginInput } from '../dto/auth.dto';
 import { CreateUserCommand } from '../../core/models/create-user.command';
 
@@ -11,22 +11,49 @@ export class AuthController {
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Body() input: LoginInput) {
-        return this.authService.authenticate(input);
+    async login(
+        @Body() input: LoginInput,
+        @Res({ passthrough: true }) res: Response
+    ) {
+        const token = await this.authService.authenticate(input);
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+        });
+
+        return { success: true };
+
     }
 
-    @HttpCode(HttpStatus.OK)
+    @HttpCode(HttpStatus.CREATED)
     @Post('register')
-    register(@Body() input: RegisterInput) {
-        const command = new CreateUserCommand(
-            input.username,
-            input.email,
-            input.password,
-            input.firstname,
-            input.lastname,
-            input.password
-        )
-        return this.authService.register(command);
+    async register(
+        @Body() input: RegisterInput,
+        @Res({ passthrough: true }) res: Response
+    ) {
+        const token = await this.authService.register(
+            new CreateUserCommand(
+                input.username,
+                input.email,
+                input.password,
+                input.firstname,
+                input.lastname,
+                input.password
+            )
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+        });
+
+        return { success: true };
+
     }
 
 }

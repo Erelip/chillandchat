@@ -16,6 +16,7 @@ import { WsAuthGuard } from '../../application/auth/ws-auth.guard';
 @WebSocketGateway({
   cors: {
     origin: environment.CORS_ORIGIN,
+    credentials: true,
   },
 })
 export class ChatGateway implements ChatEvents{

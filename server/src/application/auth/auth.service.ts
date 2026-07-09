@@ -3,29 +3,24 @@ import { GetUsers } from '../../core/usecases/get-users';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUsers } from '../../core/usecases/create-user';
 import { comparePassword } from '../../core/utils/password';
-import {
-    LoginInput
-} from '../dto/auth.dto'
+import { LoginInput } from '../dto/auth.dto'
 import { User } from '../../core/entities/users.entity';
 import { CreateUserCommand } from '../../core/models/create-user.command';
 
-type AuthOutput = {
-    accessToken: string;
-};
 
 @Injectable()
 export class AuthService {
 
     constructor(private readonly getUsers: GetUsers, private readonly createUsers: CreateUsers, private readonly jwtService: JwtService) {}
 
-    async authenticate(input: LoginInput) : Promise<AuthOutput | null> {
+    async authenticate(input: LoginInput) : Promise<string | null> {
         const user = await this.validateUser(input);
         if (!user) throw new UnauthorizedException('Invalid credentials');
         
         return this.signIn(user);
     }
 
-    async register(command: CreateUserCommand) : Promise<AuthOutput | null> {
+    async register(command: CreateUserCommand) : Promise<string | null> {
         const user = await this.createUsers.createUser(command);
         if (!user) throw new UnauthorizedException('Already exists');
 
@@ -42,11 +37,9 @@ export class AuthService {
         return user;
     }
 
-    async signIn(user: User) : Promise<AuthOutput> {
+    async signIn(user: User) : Promise<string> {
         const payload = { username: user.username, sub: user.id };
-        return {
-            accessToken: await this.jwtService.signAsync(payload),
-        };
+        return await this.jwtService.signAsync(payload);
     }
 
 }

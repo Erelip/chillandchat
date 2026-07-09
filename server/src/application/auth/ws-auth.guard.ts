@@ -2,6 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
 import { GetUsers } from '../../core/usecases/get-users';
+import { UnauthorizedException } from '../../core/exceptions';
+import { parse } from 'cookie';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
@@ -12,15 +14,15 @@ export class WsAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient<Socket>();
-
-    if (client.data.userId) return true;
+    const cookieHeader = client.handshake.headers.cookie;
 
     try {
-      const token =
-        client.handshake.auth?.token ??
-        client.handshake.headers.authorization?.split(' ')[1];
+      if (!cookieHeader) throw new UnauthorizedException("Not allowed");
 
-      if (!token) return false;
+      const cookies = parse(cookieHeader);
+      const token = cookies.token;
+
+      if (!token) throw new UnauthorizedException("Not allowed");
 
       const payload = await this.jwtService.verifyAsync(token);
       const user = await this.getUsers.getUserById(payload.sub);
