@@ -1,4 +1,4 @@
 export class EditConversationDto {
-  name?: string;
-  participantIdsToRemove: string[] = [];
+	name?: string;
+	participantIdsToRemove: string[] = [];
 }

@@ -6,51 +6,52 @@ import { UpdateUserAvatarCommand, UpdateUserInfoCommand } from "../models/update
 import { NotFoundException } from "../exceptions";
 
 export class UpdateUsers {
-    constructor(
-        private userRepository: UserRepository,
-        private fileStorage: FileStorage,
-        private generator: Generator
-    ) {}
 
-    async updateAvatar(command: UpdateUserAvatarCommand): Promise<string|null> {
-        const user = await this.userRepository.findById(command.userId);
-        if (!user) return null;
+	constructor(
+		private userRepository: UserRepository,
+		private fileStorage: FileStorage,
+		private generator: Generator
+	) {}
 
-        const id = `${this.generator.generateInt(10000000, 99999999)}`
-        const avatarUrl = await this.fileStorage.storeFile(command.file, id);
+	async updateAvatar(command: UpdateUserAvatarCommand): Promise<string|null> {
+		const user = await this.userRepository.findById(command.userId);
+		if (!user) return null;
 
-        const updatedUser = new User(
-            user.id,
-            user.username,
-            user.email,
-            user.password,
-            user.firstname,
-            user.lastname,
-            user.phoneNumber,
-            id
-        )
+		const id = `${this.generator.generateInt(10000000, 99999999)}`
+		const avatarUrl = await this.fileStorage.storeFile(command.file, id);
 
-        await this.userRepository.update(updatedUser);
-        return avatarUrl;
-    }
+		const updatedUser = new User(
+			user.id,
+			user.username,
+			user.email,
+			user.password,
+			user.firstname,
+			user.lastname,
+			user.phoneNumber,
+			id
+		)
 
-    async updateUser(command: UpdateUserInfoCommand): Promise<User> {
-        const user = await this.userRepository.findById(command.id);
-        if (!user) throw new NotFoundException('User not found');
+		await this.userRepository.update(updatedUser);
+		return avatarUrl;
+	}
 
-        const updatedUser = new User(
-            user.id,
-            user.username,
-            user.password,
-            user.email,
-            command.firstname,
-            command.lastname,
-            command.phoneNumber,
-            user.avatar
-        );
+	async updateUser(command: UpdateUserInfoCommand): Promise<User> {
+		const user = await this.userRepository.findById(command.id);
+		if (!user) throw new NotFoundException('User not found');
 
-        await this.userRepository.update(updatedUser);
+		const updatedUser = new User(
+			user.id,
+			user.username,
+			user.email,
+			user.password,
+			command.firstname,
+			command.lastname,
+			command.phoneNumber,
+			user.avatar
+		);
 
-        return updatedUser;
-    }
+		await this.userRepository.update(updatedUser);
+
+		return updatedUser;
+	}
 }

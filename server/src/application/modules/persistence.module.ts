@@ -10,30 +10,30 @@ import { ConversationParticipantPrismaRepository } from "../../infrastructure/pe
 import { PrismaModule } from "../../infrastructure/persistence/prisma.module";
 
 @Module({
-  imports: [PrismaModule],
-  providers: [
-    {
-      provide: UserRepository,
-      useClass: PrismaUserRepository,
-    },
-    {
-      provide: ConversationRepository,
-      useClass: ConversationPrismaRepository,
-    },
-    {
-      provide: ConversationParticipantRepository,
-      useClass: ConversationParticipantPrismaRepository
-    },
-    {
-      provide: MessageRepository,
-      useClass: MessagePrismaRepository,
-    },
-  ],
-  exports: [
-    UserRepository,
-    ConversationRepository,
-    ConversationParticipantRepository,
-    MessageRepository,
-  ],
+	imports: [PrismaModule],
+	providers: [
+		{
+			provide: UserRepository,
+			useClass: PrismaUserRepository,
+		},
+		{
+			provide: ConversationRepository,
+			useClass: ConversationPrismaRepository,
+		},
+		{
+			provide: ConversationParticipantRepository,
+			useClass: ConversationParticipantPrismaRepository
+		},
+		{
+			provide: MessageRepository,
+			useClass: MessagePrismaRepository,
+		},
+	],
+	exports: [
+		UserRepository,
+		ConversationRepository,
+		ConversationParticipantRepository,
+		MessageRepository,
+	],
 })
 export class PersistenceModule {}

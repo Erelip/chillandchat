@@ -4,13 +4,13 @@ import { randomUUID, randomInt } from "crypto";
 
 @Injectable()
 export class IdGenerator
-  implements Generator {
+	implements Generator {
 
-  generateUUID(): string {
-    return randomUUID();
-  }
+	generateUUID(): string {
+		return randomUUID();
+	}
 
-  generateInt(min: number, max: number): number {
-    return randomInt(min, max);
-  }
+	generateInt(min: number, max: number): number {
+		return randomInt(min, max);
+	}
 }

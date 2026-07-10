@@ -6,20 +6,20 @@ import { File } from "../../../core/models/file";
 
 @Injectable()
 export class LocalStorage
-    implements FileStorage {
+	implements FileStorage {
 
-    async storeFile(file: File, filename: string): Promise<string> {
-        const filepath = `./uploads/avatars/${filename}`
-        const uploadDir = path.join(process.cwd(), 'uploads', 'avatars');
+	async storeFile(file: File, filename: string): Promise<string> {
+		const filepath = `./uploads/avatars/${filename}`
+		const uploadDir = path.join(process.cwd(), 'uploads', 'avatars');
 
-        await fs.promises.mkdir(uploadDir, { recursive: true });
+		await fs.promises.mkdir(uploadDir, { recursive: true });
 
-        await fs.promises.writeFile(
-            path.join(uploadDir, filename),
-            file.buffer,
-        );
-        
-        return filepath;
-    }
+		await fs.promises.writeFile(
+			path.join(uploadDir, filename),
+			file.buffer,
+		);
+		
+		return filepath;
+	}
 
 }

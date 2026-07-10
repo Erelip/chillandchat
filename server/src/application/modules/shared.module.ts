@@ -5,16 +5,16 @@ import { FileStorage } from "../../core/interfaces/file-storage.interface";
 import { LocalStorage } from "../../infrastructure/storage/local-storage/local-storage";
 
 @Module({
-  providers: [
-    {
-      provide: Generator,
-      useClass: IdGenerator,
-    },
-    {
-      provide: FileStorage,
-      useClass: LocalStorage,
-    },
-  ],
-  exports: [Generator, FileStorage],
+	providers: [
+		{
+			provide: Generator,
+			useClass: IdGenerator,
+		},
+		{
+			provide: FileStorage,
+			useClass: LocalStorage,
+		},
+	],
+	exports: [Generator, FileStorage],
 })
 export class SharedModule {}

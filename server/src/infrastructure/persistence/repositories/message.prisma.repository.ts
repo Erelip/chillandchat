@@ -5,11 +5,11 @@ import { Message } from '../../../core/entities/message.entity';
 
 @Injectable()
 export class MessagePrismaRepository
-  implements MessageRepository {
+	implements MessageRepository {
 
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+	constructor(
+		private readonly prisma: PrismaService,
+	) {}
 
 	async save(conversationId: string, senderId: string, content: string): Promise<Message> {
 		const createdMessage = await this.prisma.message.create({
@@ -20,27 +20,27 @@ export class MessagePrismaRepository
 				},
 		});
 		return new Message(
-      createdMessage.id,
-      createdMessage.conversationId,
-      createdMessage.senderId,
-      createdMessage.content,
-      createdMessage.createdAt
-    );
+			createdMessage.id,
+			createdMessage.conversationId,
+			createdMessage.senderId,
+			createdMessage.content,
+			createdMessage.createdAt
+		);
 	}
 
-  async findByConversationId(conversationId: string): Promise<Message[]> {
-    const createdMessage = await this.prisma.message.findMany({
-      where: {
-        conversationId,
-      },
-    });
-    return createdMessage.map((message) => new Message(
-      message.id,
-      message.conversationId,
-      message.senderId,
-      message.content,
-      message.createdAt
-    ));
-  }
+	async findByConversationId(conversationId: string): Promise<Message[]> {
+		const createdMessage = await this.prisma.message.findMany({
+			where: {
+				conversationId,
+			},
+		});
+		return createdMessage.map((message) => new Message(
+			message.id,
+			message.conversationId,
+			message.senderId,
+			message.content,
+			message.createdAt
+		));
+	}
 
 }

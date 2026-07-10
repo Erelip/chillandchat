@@ -3,19 +3,19 @@ import { ConversationType } from "../enum/conversation.enum"
 import { ConversationParticipant } from "./conversation-participant.entity";
 
 export class Conversation {
-  constructor(
-    public readonly id: string,
-    public name: string | null,
-    public readonly type: ConversationType,
-    public participants: ConversationParticipant[],
-    public readonly messages: Message[],
-    public readonly createdAt: Date,
-    public updatedAt: Date,
-    public avatar: string|null
-  ) {}
+	constructor(
+		public readonly id: string,
+		public name: string | null,
+		public readonly type: ConversationType,
+		public participants: ConversationParticipant[],
+		public readonly messages: Message[],
+		public readonly createdAt: Date,
+		public updatedAt: Date,
+		public avatar: string|null
+	) {}
 
-  public addParticipants(participants : ConversationParticipant[]) {
-    this.participants.push(...participants);
-    return this.participants;
-  }
+	public addParticipants(participants : ConversationParticipant[]) {
+		this.participants.push(...participants);
+		return this.participants;
+	}
 }

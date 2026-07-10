@@ -10,88 +10,88 @@ import { isUserInConversation } from "../utils/permissions";
 import { BadRequestException, NotFoundException } from "../exceptions";
 
 export class EditConversations {
-  constructor(
-    private conversationRepository: ConversationRepository,
-    private participantRepository: ConversationParticipantRepository,
-    private userRepository: UserRepository,
-    private fileStorage: FileStorage,
-    private generator: Generator
-  ) {}
+	constructor(
+		private conversationRepository: ConversationRepository,
+		private participantRepository: ConversationParticipantRepository,
+		private userRepository: UserRepository,
+		private fileStorage: FileStorage,
+		private generator: Generator
+	) {}
 
-  async editConversation(userId: string, conversationId: string, command: UpdateConversationInfoCommand): Promise<Conversation> {
+	async editConversation(userId: string, conversationId: string, command: UpdateConversationInfoCommand): Promise<Conversation> {
 
-    const conversation = await this.conversationRepository.findById(conversationId);
+		const conversation = await this.conversationRepository.findById(conversationId);
 
-    isUserInConversation(conversation, userId);
+		isUserInConversation(conversation, userId);
 
-    const hasName = command.name !== undefined && command.name.trim() !== '';
-    const hasParticipantsToRemove = command.participantIdsToRemove?.length;
+		const hasName = command.name !== undefined && command.name.trim() !== '';
+		const hasParticipantsToRemove = command.participantIdsToRemove?.length;
 
-    if (!hasName && !hasParticipantsToRemove) {
-      throw new BadRequestException('Nothing to update');
-    }
+		if (!hasName && !hasParticipantsToRemove) {
+			throw new BadRequestException('Nothing to update');
+		}
 
-    if (hasName) {
-      conversation.name = command.name!;
-      conversation.updatedAt = new Date();
+		if (hasName) {
+			conversation.name = command.name!;
+			conversation.updatedAt = new Date();
 
-      await this.conversationRepository.update(conversation);
-    }
+			await this.conversationRepository.update(conversation);
+		}
 
-    if (hasParticipantsToRemove) {
-      await this.removeParticipants(command.participantIdsToRemove!);
-    }
+		if (hasParticipantsToRemove) {
+			await this.removeParticipants(command.participantIdsToRemove!);
+		}
 
-    return conversation;
-  }
+		return conversation;
+	}
 
-  private async removeParticipants(participantIds: string[]) {
-    await Promise.all(
-      participantIds.map((id) =>
-        this.participantRepository.removeById(id),
-      ),
-    );
-  }
+	private async removeParticipants(participantIds: string[]) {
+		await Promise.all(
+			participantIds.map((id) =>
+				this.participantRepository.removeById(id),
+			),
+		);
+	}
 
-  async editName(conversation: Conversation, name: string) {
-    conversation.name = name;
-    conversation.updatedAt = new Date();
-    await this.conversationRepository.update(conversation);
-    return conversation;
-  }
+	async editName(conversation: Conversation, name: string) {
+		conversation.name = name;
+		conversation.updatedAt = new Date();
+		await this.conversationRepository.update(conversation);
+		return conversation;
+	}
 
-  public async addParticipants(userId: string, conversationId: string, participantIds: string): Promise<ConversationParticipant> {
-    const conversation = await this.conversationRepository.findById(conversationId);
-    const user = await this.userRepository.findById(participantIds);
+	public async addParticipants(userId: string, conversationId: string, participantIds: string): Promise<ConversationParticipant> {
+		const conversation = await this.conversationRepository.findById(conversationId);
+		const user = await this.userRepository.findById(participantIds);
 
-    if (!user) throw new NotFoundException("User not found");
+		if (!user) throw new NotFoundException("User not found");
 
-    isUserInConversation(conversation, userId);
+		isUserInConversation(conversation, userId);
 
-    const participant = new ConversationParticipant(
-      this.generator.generateUUID(), conversationId, user, new Date()
-    )
-    conversation.updatedAt = new Date();
+		const participant = new ConversationParticipant(
+			this.generator.generateUUID(), conversationId, user, new Date()
+		)
+		conversation.updatedAt = new Date();
 
-    await this.participantRepository.save(participant);
-    await this.conversationRepository.update(conversation);
+		await this.participantRepository.save(participant);
+		await this.conversationRepository.update(conversation);
 
-    return participant;
-  }
+		return participant;
+	}
 
-  public async updateAvatar(command: UpdateConversationAvatarCommand): Promise<string|null> {
-    const conversation = await this.conversationRepository.findById(command.conversationId);
-    if (!conversation) return null;
+	public async updateAvatar(command: UpdateConversationAvatarCommand): Promise<string|null> {
+		const conversation = await this.conversationRepository.findById(command.conversationId);
+		if (!conversation) return null;
 
-    const id = `${this.generator.generateInt(10000000, 99999999)}`
-    const avatarUrl = await this.fileStorage.storeFile(command.file, id);
+		const id = `${this.generator.generateInt(10000000, 99999999)}`
+		const avatarUrl = await this.fileStorage.storeFile(command.file, id);
 
-    conversation.avatar = id;
-    conversation.updatedAt = new Date();
+		conversation.avatar = id;
+		conversation.updatedAt = new Date();
 
-    this.conversationRepository.update(conversation)
+		this.conversationRepository.update(conversation)
 
-    return avatarUrl;
-  }
+		return avatarUrl;
+	}
 
 }

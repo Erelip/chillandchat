@@ -3,17 +3,18 @@ import { ConversationRepository } from "../interfaces/conversation.repository.in
 import { isUserInConversation } from "../utils/permissions";
 
 export class GetMessages {
-  constructor(
-    private messageRepository: MessageRepository,
-    private conversationRepository: ConversationRepository
-  ) {}
 
-  async getMessagesByConversationId(userId: string, conversationId: string) {
-    const conversation = await this.conversationRepository.findById(conversationId);
+	constructor(
+		private messageRepository: MessageRepository,
+		private conversationRepository: ConversationRepository
+	) {}
 
-    isUserInConversation(conversation, userId);
+	async getMessagesByConversationId(userId: string, conversationId: string) {
+		const conversation = await this.conversationRepository.findById(conversationId);
 
-    return await this.messageRepository.findByConversationId(conversationId);
-  }
+		isUserInConversation(conversation, userId);
+
+		return await this.messageRepository.findByConversationId(conversationId);
+	}
 
 }

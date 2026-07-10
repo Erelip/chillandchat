@@ -6,18 +6,18 @@ import { UsersModule } from '../../application/user/user.module';
 import { WsAuthGuard } from '../../application/auth/ws-auth.guard';
 
 @Module({
-  imports: [
-    PersistenceModule,
-    UsersModule,
-  ],
-  providers: [
-    ChatGateway,
-    WsAuthGuard,
-    {
-      provide: ChatEvents,
-      useExisting: ChatGateway,
-    },
-  ],
-  exports: [ChatEvents, UsersModule],
+	imports: [
+		PersistenceModule,
+		UsersModule,
+	],
+	providers: [
+		ChatGateway,
+		WsAuthGuard,
+		{
+			provide: ChatEvents,
+			useExisting: ChatGateway,
+		},
+	],
+	exports: [ChatEvents, UsersModule],
 })
 export class ChatModule {}

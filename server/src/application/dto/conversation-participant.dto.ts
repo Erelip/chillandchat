@@ -1,17 +1,17 @@
 import { UserDTO } from "./user.dto";
 
 export class ConversationParticipantDTO {
-  id: string;
-  user: UserDTO
-  joinedAt: Date;
+	id: string;
+	user: UserDTO
+	joinedAt: Date;
 
-  constructor(
-    id: string,
-    user: UserDTO,
-    joinedAt: Date
-  ) {
-    this.id = id;
-    this.user = user;
-    this.joinedAt = joinedAt;
-  }
+	constructor(
+		id: string,
+		user: UserDTO,
+		joinedAt: Date
+	) {
+		this.id = id;
+		this.user = user;
+		this.joinedAt = joinedAt;
+	}
 }

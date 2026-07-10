@@ -8,8 +8,8 @@ import { ChatModule } from './infrastructure/websocket/chat.module';
 import { UsersModule } from './application/user/user.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, UsersModule, ConversationModule, ChatModule],
-  controllers: [AppController],
-  providers: [AppService],
+	imports: [PrismaModule, AuthModule, UsersModule, ConversationModule, ChatModule],
+	controllers: [AppController],
+	providers: [AppService],
 })
 export class AppModule {}

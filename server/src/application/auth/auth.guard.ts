@@ -4,26 +4,30 @@ import { GetUsers } from '../../core/usecases/get-users';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-	constructor(private readonly jwtService: JwtService, private readonly getUser: GetUsers) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-  	const token = request.cookies?.token;
+	constructor(
+		private readonly jwtService: JwtService,
+		private readonly getUser: GetUsers
+	) {}
 
-    if (!token) {
-      throw new UnauthorizedException('Invalid token format');
-    }
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		const request = context.switchToHttp().getRequest();
+		const token = request.cookies?.token;
 
-	try {
-		const tokenPayload = await this.jwtService.verify(token);
-		const user = await this.getUser.getUserById(tokenPayload.sub);
+		if (!token) {
+			throw new UnauthorizedException('Invalid token format');
+		}
 
-		if (!user) throw new UnauthorizedException('Invalid token');
-		request.user = user;
+		try {
+			const tokenPayload = await this.jwtService.verify(token);
+			const user = await this.getUser.getUserById(tokenPayload.sub);
 
-		return true;
-	} catch (error) {
-		throw new UnauthorizedException('Invalid token');
+			if (!user) throw new UnauthorizedException('Invalid token');
+			request.user = user;
+
+			return true;
+		} catch (error) {
+			throw new UnauthorizedException('Invalid token');
+		}
 	}
-  }
 }

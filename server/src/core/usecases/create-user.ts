@@ -5,29 +5,30 @@ import { Generator } from "../interfaces/generator.interface";
 import { CreateUserCommand } from "../models/create-user.command";
 
 export class CreateUsers {
-    constructor(
-        private userRepository: UserRepository,
-        private generator: Generator
-    ) {}
 
-    async createUser(command: CreateUserCommand) : Promise<User | null> {
-        const user = await this.userRepository.findByEmail(command.email);
-        if (user) return null;
+	constructor(
+		private userRepository: UserRepository,
+		private generator: Generator
+	) {}
 
-        const hashedPassword = await hashPassword(command.password);
+	async createUser(command: CreateUserCommand) : Promise<User | null> {
+		const user = await this.userRepository.findByEmail(command.email);
+		if (user) return null;
 
-        const createdUser = new User(
-            this.generator.generateUUID(),
-            command.username,
-            command.email,
-            hashedPassword,
-            command.firstname,
-            command.lastname,
-            command.phoneNumber,
-            null
-        )
+		const hashedPassword = await hashPassword(command.password);
 
-        const domain = await this.userRepository.save(createdUser);
-        return domain;
-    }
+		const createdUser = new User(
+			this.generator.generateUUID(),
+			command.username,
+			command.email,
+			hashedPassword,
+			command.firstname,
+			command.lastname,
+			command.phoneNumber,
+			null
+		)
+
+		const domain = await this.userRepository.save(createdUser);
+		return domain;
+	}
 }

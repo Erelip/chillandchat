@@ -7,31 +7,32 @@ import { parse } from 'cookie';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly getUsers: GetUsers,
-  ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const client = context.switchToWs().getClient<Socket>();
-    const cookieHeader = client.handshake.headers.cookie;
+	constructor(
+		private readonly jwtService: JwtService,
+		private readonly getUsers: GetUsers,
+	) {}
 
-    try {
-      if (!cookieHeader) throw new UnauthorizedException("Not allowed");
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		const client = context.switchToWs().getClient<Socket>();
+		const cookieHeader = client.handshake.headers.cookie;
 
-      const cookies = parse(cookieHeader);
-      const token = cookies.token;
+		try {
+			if (!cookieHeader) throw new UnauthorizedException("Not allowed");
 
-      if (!token) throw new UnauthorizedException("Not allowed");
+			const cookies = parse(cookieHeader);
+			const token = cookies.token;
 
-      const payload = await this.jwtService.verifyAsync(token);
-      const user = await this.getUsers.getUserById(payload.sub);
-      if (!user) return false;
+			if (!token) throw new UnauthorizedException("Not allowed");
 
-      client.data.userId = user.id;
-      return true;
-    } catch {
-      return false;
-    }
-  }
+			const payload = await this.jwtService.verifyAsync(token);
+			const user = await this.getUsers.getUserById(payload.sub);
+			if (!user) return false;
+
+			client.data.userId = user.id;
+			return true;
+		} catch {
+			return false;
+		}
+	}
 }

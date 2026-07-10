@@ -6,14 +6,14 @@ import { UsersModule } from '../user/user.module';
 import { environment } from '../../../environments/environment.dev';
 
 @Module({
-  imports: [
-    UsersModule,
-    JwtModule.register({
-      global: true,
-      secret: environment.SECRET_KEY,
-    }),
-  ],
-  controllers: [AuthController],
-  providers: [AuthService],
+	imports: [
+		UsersModule,
+		JwtModule.register({
+			global: true,
+			secret: environment.SECRET_KEY,
+		}),
+	],
+	controllers: [AuthController],
+	providers: [AuthService],
 })
 export class AuthModule {}

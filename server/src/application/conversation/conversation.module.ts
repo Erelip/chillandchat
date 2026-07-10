@@ -17,67 +17,67 @@ import { ChatEvents } from '../../core/interfaces/chat-events.interface';
 import { ChatModule } from '../../infrastructure/websocket/chat.module';
 
 @Module({
-  imports: [SharedModule, PersistenceModule, ChatModule],
-  controllers: [ConversationController],
-  providers: [
-    {
-      provide: GetConversations,
-      useFactory: (
-        conversationRepository: ConversationRepository,
-        messageRepository: MessageRepository
-      ) => {
-        return new GetConversations(conversationRepository, messageRepository);
-      },
-      inject: [ConversationRepository, MessageRepository],
-    },
-    {
-      provide: CreateConversations,
-      useFactory: (
-        userRepository: UserRepository,
-        conversationRepository: ConversationRepository,
-        conversationParticipantRepository: ConversationParticipantRepository,
-        generator: Generator,
-      ) => {
-        return new CreateConversations(userRepository, conversationRepository, conversationParticipantRepository, generator);
-      },
-      inject: [UserRepository, ConversationRepository, ConversationParticipantRepository, Generator],
-    },
-    {
-      provide: SendMessage,
-      useFactory: (
-        conversationRepository: ConversationRepository,
-        messageRepository: MessageRepository,
-        chatEvents: ChatEvents,
-      ) => {
-        return new SendMessage(conversationRepository, messageRepository, chatEvents);
-      },
-      inject: [ConversationRepository, MessageRepository, ChatEvents],
-    },
-    {
-      provide: GetMessages,
-      useFactory: (
-        messageRepository: MessageRepository,
-        conversationRepository: ConversationRepository
-      ) => {
-        return new GetMessages(messageRepository, conversationRepository);
-      },
-      inject: [MessageRepository, ConversationRepository],
-    },
-    {
-      provide: EditConversations,
-      useFactory: (
-        conversationRepository: ConversationRepository,
-        participantRepository: ConversationParticipantRepository,
-        userRepository: UserRepository,
-        fileStorage: FileStorage,
-        idGenerator: Generator
-      ) => {
-        return new EditConversations(conversationRepository, participantRepository, userRepository, fileStorage, idGenerator);
-      },
-      inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, FileStorage, Generator],
-    }
-  ],
-  exports: [GetConversations, CreateConversations, SendMessage, GetMessages],
-})  
+	imports: [SharedModule, PersistenceModule, ChatModule],
+	controllers: [ConversationController],
+	providers: [
+		{
+			provide: GetConversations,
+			useFactory: (
+				conversationRepository: ConversationRepository,
+				messageRepository: MessageRepository
+			) => {
+				return new GetConversations(conversationRepository, messageRepository);
+			},
+			inject: [ConversationRepository, MessageRepository],
+		},
+		{
+			provide: CreateConversations,
+			useFactory: (
+				userRepository: UserRepository,
+				conversationRepository: ConversationRepository,
+				conversationParticipantRepository: ConversationParticipantRepository,
+				generator: Generator,
+			) => {
+				return new CreateConversations(userRepository, conversationRepository, conversationParticipantRepository, generator);
+			},
+			inject: [UserRepository, ConversationRepository, ConversationParticipantRepository, Generator],
+		},
+		{
+			provide: SendMessage,
+			useFactory: (
+				conversationRepository: ConversationRepository,
+				messageRepository: MessageRepository,
+				chatEvents: ChatEvents,
+			) => {
+				return new SendMessage(conversationRepository, messageRepository, chatEvents);
+			},
+			inject: [ConversationRepository, MessageRepository, ChatEvents],
+		},
+		{
+			provide: GetMessages,
+			useFactory: (
+				messageRepository: MessageRepository,
+				conversationRepository: ConversationRepository
+			) => {
+				return new GetMessages(messageRepository, conversationRepository);
+			},
+			inject: [MessageRepository, ConversationRepository],
+		},
+		{
+			provide: EditConversations,
+			useFactory: (
+				conversationRepository: ConversationRepository,
+				participantRepository: ConversationParticipantRepository,
+				userRepository: UserRepository,
+				fileStorage: FileStorage,
+				idGenerator: Generator
+			) => {
+				return new EditConversations(conversationRepository, participantRepository, userRepository, fileStorage, idGenerator);
+			},
+			inject: [ConversationRepository, ConversationParticipantRepository, UserRepository, FileStorage, Generator],
+		}
+	],
+	exports: [GetConversations, CreateConversations, SendMessage, GetMessages],
+})	
 
 export class ConversationModule {}

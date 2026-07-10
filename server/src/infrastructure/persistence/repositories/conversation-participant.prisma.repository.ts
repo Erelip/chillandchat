@@ -6,11 +6,11 @@ import { User } from '../../../core/entities/users.entity';
 
 @Injectable()
 export class ConversationParticipantPrismaRepository
-  implements ConversationParticipantRepository {
+	implements ConversationParticipantRepository {
 
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+	constructor(
+		private readonly prisma: PrismaService,
+	) {}
 
 	async save(participant: ConversationParticipant): Promise<void> {
 		await this.prisma.conversationParticipant.create({
@@ -19,9 +19,9 @@ export class ConversationParticipantPrismaRepository
 				userId: participant.user.id,
 				joinedAt: participant.joinedAt,
 			},
-      include: {
-        user: true
-      }
+			include: {
+				user: true
+			}
 		});
 	}
 
@@ -35,67 +35,67 @@ export class ConversationParticipantPrismaRepository
 		});
 	}
 
-  async findAll(): Promise<ConversationParticipant[]> {
-    const participants = await this.prisma.conversationParticipant.findMany({
-      include: {
-        user: true
-      }
-    });
+	async findAll(): Promise<ConversationParticipant[]> {
+		const participants = await this.prisma.conversationParticipant.findMany({
+			include: {
+				user: true
+			}
+		});
 
-    return participants.map((p) => new ConversationParticipant(
-      p.id,
-      p.conversationId,
-      new User(
-        p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber, p.user.avatar
-      ),
-      p.joinedAt,
-    ));
-  }
+		return participants.map((p) => new ConversationParticipant(
+			p.id,
+			p.conversationId,
+			new User(
+				p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber, p.user.avatar
+			),
+			p.joinedAt,
+		));
+	}
 
-  async findById(id: string): Promise<ConversationParticipant | null> {
-    const participant = await this.prisma.conversationParticipant.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        user: true
-      }
-    });
-    if (!participant) return null;
-    return new ConversationParticipant(
-      participant.id,
-      participant.conversationId,
-      new User(
-        participant.user.id, participant.user.username, participant.user.email, participant.user.password, participant.user.firstname, participant.user.lastname, participant.user.phoneNumber, participant.user.avatar
-      ),
-      participant.joinedAt,
-    );
-  }
+	async findById(id: string): Promise<ConversationParticipant | null> {
+		const participant = await this.prisma.conversationParticipant.findUnique({
+			where: {
+				id,
+			},
+			include: {
+				user: true
+			}
+		});
+		if (!participant) return null;
+		return new ConversationParticipant(
+			participant.id,
+			participant.conversationId,
+			new User(
+				participant.user.id, participant.user.username, participant.user.email, participant.user.password, participant.user.firstname, participant.user.lastname, participant.user.phoneNumber, participant.user.avatar
+			),
+			participant.joinedAt,
+		);
+	}
 
-  async findByParticipantId(participantId: string): Promise<ConversationParticipant[]> {
-    const participants = await this.prisma.conversationParticipant.findMany({
-      where: {
-        userId: participantId,
-      },
-      include: {
-        user: true
-      }
-    });
-    return participants.map((p) => new ConversationParticipant(
-      p.id,
-      p.conversationId,
-      new User(
-        p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber, p.user.avatar
-      ),
-      p.joinedAt,
-    ));
-  }
+	async findByParticipantId(participantId: string): Promise<ConversationParticipant[]> {
+		const participants = await this.prisma.conversationParticipant.findMany({
+			where: {
+				userId: participantId,
+			},
+			include: {
+				user: true
+			}
+		});
+		return participants.map((p) => new ConversationParticipant(
+			p.id,
+			p.conversationId,
+			new User(
+				p.user.id, p.user.username, p.user.email, p.user.password, p.user.firstname, p.user.lastname, p.user.phoneNumber, p.user.avatar
+			),
+			p.joinedAt,
+		));
+	}
 
-  async removeById(participantId: string): Promise<void> {
-    await this.prisma.conversationParticipant.delete({
-      where: {
-        id: participantId
-      }
-    })
-  }
+	async removeById(participantId: string): Promise<void> {
+		await this.prisma.conversationParticipant.delete({
+			where: {
+				id: participantId
+			}
+		})
+	}
 }

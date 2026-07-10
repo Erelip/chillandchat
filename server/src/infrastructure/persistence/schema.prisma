@@ -1,70 +1,71 @@
 generator client {
-  provider   = "prisma-client"
-  output     = "./generated"
+	provider	 = "prisma-client"
+	output		 = "./generated"
 }
 
 datasource db {
-  provider = "postgresql"
+	provider = "postgresql"
 }
 
 enum ConversationType {
-  DIRECT
-  GROUP
+	DIRECT
+	GROUP
 }
 
 model User {
-  id            String   @id @default(uuid())
-  username      String   @unique
-  email         String   @unique
-  password      String
-  firstname     String
-  lastname      String
-  phoneNumber   String
-  avatar        String?
-  createdAt     DateTime @default(now())
+	id						String	 @id @default(uuid())
+	username			String	 @unique
+	email					String	 @unique
+	password			String
+	firstname			String
+	lastname			String
+	phoneNumber		String
+	avatar				String?
+	createdAt			DateTime @default(now())
 
-  conversations ConversationParticipant[]
-  messages      Message[]
+	conversations ConversationParticipant[]
+	messages			Message[]
 
-  @@map("user")
+	@@map("user")
 }
 
 model Conversation {
-  id            String   @id @default(uuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+	id						String	 @id @default(uuid())
+	createdAt		 	DateTime @default(now())
+	updatedAt		 	DateTime @updatedAt
 
-  name          String?
-  avatar        String?
-  type          ConversationType @default(DIRECT)
-  participants  ConversationParticipant[]
-  messages      Message[]
+	name					String?
+	avatar				String?
 
-  @@map("conversation")
+	type					ConversationType @default(DIRECT)
+	participants	ConversationParticipant[]
+	messages			Message[]
+
+	@@map("conversation")
 }
 
 model ConversationParticipant {
-  id             String       @id @default(uuid())
-  conversationId String
-  userId         String
-  joinedAt       DateTime     @default(now())
+	id						 String			 	@id @default(uuid())
+	conversationId String
+	userId				 String
+	joinedAt			 DateTime		 	@default(now())
 
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
-  user           User         @relation(fields: [userId], references: [id])
+	conversation	 Conversation @relation(fields: [conversationId], references: [id])
+	user					 User				 	@relation(fields: [userId], references: [id])
 
-  @@unique([conversationId, userId])
-  @@map("conversation_participant")
+	@@unique([conversationId, userId])
+	@@map("conversation_participant")
 }
 
 model Message {
-  id             String       @id @default(uuid())
-  conversationId String
-  senderId       String
-  content        String
-  createdAt      DateTime     @default(now())
+	id							String			@id @default(uuid())
+	conversationId	String
+	senderId				String
+	content					String
+	createdAt				DateTime		@default(now())
 
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
-  sender         User         @relation(fields: [senderId], references: [id])
+	conversation	 Conversation	@relation(fields: [conversationId], references: [id])
+	sender				 User					@relation(fields: [senderId], references: [id])
 
-  @@map("message")
+	@@map("message")
 }

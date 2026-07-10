@@ -8,50 +8,51 @@ import { Conversation } from "../entities/conversation.entity";
 import { Generator } from "../interfaces/generator.interface";
 
 export class CreateConversations {
-  constructor(
-    private userRepository: UserRepository,
-    private conversationRepository: ConversationRepository,
-    private conversationParticipantRepository: ConversationParticipantRepository,
-    private generator: Generator
-  ) {}
 
-  async createConversations(me: string, ids: string[]): Promise<Conversation> {
-    const participantIds = [me, ...ids];
+	constructor(
+		private userRepository: UserRepository,
+		private conversationRepository: ConversationRepository,
+		private conversationParticipantRepository: ConversationParticipantRepository,
+		private generator: Generator
+	) {}
 
-    if (participantIds.length < 2) {
-        throw new Error("At least two user IDs are required to create a conversation.");
-    }
+	async createConversations(me: string, ids: string[]): Promise<Conversation> {
+		const participantIds = [me, ...ids];
 
-    const users = await Promise.all(participantIds.map(id => this.userRepository.findById(id)));
+		if (participantIds.length < 2) {
+				throw new Error("At least two user IDs are required to create a conversation.");
+		}
 
-    const newConversation = new Conversation(
-      this.generator.generateUUID(),
-      null,
-      participantIds.length > 2 ? ConversationType.GROUP : ConversationType.DIRECT,
-      [],
-      [],
-      new Date(),
-      new Date(),
-      null
-    )
+		const users = await Promise.all(participantIds.map(id => this.userRepository.findById(id)));
 
-    await this.conversationRepository.save(newConversation);
-    await this.addParticipants(newConversation, users as User[]);
-    return newConversation;
-  }
+		const newConversation = new Conversation(
+			this.generator.generateUUID(),
+			null,
+			participantIds.length > 2 ? ConversationType.GROUP : ConversationType.DIRECT,
+			[],
+			[],
+			new Date(),
+			new Date(),
+			null
+		)
 
-  async addParticipants(conversation: Conversation, users: User[]): Promise<void> {
-    const conversationParticipants = users.map((user) => {
-      const participant = new ConversationParticipant(
-        this.generator.generateUUID(),
-        conversation.id,
-        user,
-        new Date()
-      )
-      return participant;
-    });
-    conversation.addParticipants(conversationParticipants);
-    await this.conversationParticipantRepository.saveMany(conversationParticipants);
-  }
+		await this.conversationRepository.save(newConversation);
+		await this.addParticipants(newConversation, users as User[]);
+		return newConversation;
+	}
+
+	async addParticipants(conversation: Conversation, users: User[]): Promise<void> {
+		const conversationParticipants = users.map((user) => {
+			const participant = new ConversationParticipant(
+				this.generator.generateUUID(),
+				conversation.id,
+				user,
+				new Date()
+			)
+			return participant;
+		});
+		conversation.addParticipants(conversationParticipants);
+		await this.conversationParticipantRepository.saveMany(conversationParticipants);
+	}
 
 }

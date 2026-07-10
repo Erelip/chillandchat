@@ -4,29 +4,30 @@ import { ChatEvents } from "../interfaces/chat-events.interface";
 import { isUserInConversation } from "../utils/permissions";
 
 export class SendMessage {
-  constructor(
-    private conversationRepository: ConversationRepository,
-    private messageRepository: MessageRepository,
-    private chatEvents: ChatEvents
-  ) {}
 
-  async sendMessage(conversationId: string, senderId: string, content: string) {
-    const conversation = await this.conversationRepository.findById(conversationId);
+	constructor(
+		private conversationRepository: ConversationRepository,
+		private messageRepository: MessageRepository,
+		private chatEvents: ChatEvents
+	) {}
 
-    isUserInConversation(conversation, senderId);
+	async sendMessage(conversationId: string, senderId: string, content: string) {
+		const conversation = await this.conversationRepository.findById(conversationId);
 
-    const createdMessage = await this.messageRepository.save(conversation.id, senderId, content);
-    conversation.updatedAt = new Date();
+		isUserInConversation(conversation, senderId);
 
-    await this.conversationRepository.update(conversation);
+		const createdMessage = await this.messageRepository.save(conversation.id, senderId, content);
+		conversation.updatedAt = new Date();
 
-    this.chatEvents.emitMessageCreated(conversation.id, {
-      id: createdMessage.id,
-      content: createdMessage.content,
-      senderId: createdMessage.senderId,
-    })
+		await this.conversationRepository.update(conversation);
 
-    return createdMessage;
-  }
+		this.chatEvents.emitMessageCreated(conversation.id, {
+			id: createdMessage.id,
+			content: createdMessage.content,
+			senderId: createdMessage.senderId,
+		})
+
+		return createdMessage;
+	}
 
 }

@@ -1,13 +1,13 @@
 import { Conversation } from "../entities/conversation.entity";
 
 export abstract class ConversationRepository {
-  abstract save(conversation: Conversation): Promise<void>;
+	abstract save(conversation: Conversation): Promise<void>;
 
-  abstract update(conversation: Conversation): Promise<void>;
+	abstract update(conversation: Conversation): Promise<void>;
 
-  abstract findAll(): Promise<Conversation[]>;
+	abstract findAll(): Promise<Conversation[]>;
 
-  abstract findById(id: string): Promise<Conversation | null>;
+	abstract findById(id: string): Promise<Conversation | null>;
 
-  abstract findByParticipantId(participantId: string): Promise<Conversation[]>;
+	abstract findByParticipantId(participantId: string): Promise<Conversation[]>;
 }

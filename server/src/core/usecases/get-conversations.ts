@@ -4,34 +4,35 @@ import { Conversation } from "../entities/conversation.entity";
 import { isUserInConversation } from "../utils/permissions";
 
 export class GetConversations {
-  constructor(
-    private conversationRepository: ConversationRepository,
-    private messageRepository: MessageRepository,
-  ) {}
 
-  async getConversationsByUserId(userId: string) {
-    const conversations = await this.conversationRepository.findByParticipantId(userId);
+	constructor(
+		private conversationRepository: ConversationRepository,
+		private messageRepository: MessageRepository,
+	) {}
 
-    return conversations.map((c: Conversation) => {
-        c.participants = c.participants.filter((p) => p.user.id !== userId)
-        return c;
-    })
-  }
+	async getConversationsByUserId(userId: string) {
+		const conversations = await this.conversationRepository.findByParticipantId(userId);
 
-  async getConversationById(userId: string, conversationId: string) {
-    const conversation = await this.conversationRepository.findById(conversationId);
+		return conversations.map((c: Conversation) => {
+				c.participants = c.participants.filter((p) => p.user.id !== userId)
+				return c;
+		})
+	}
 
-    isUserInConversation(conversation, userId);
+	async getConversationById(userId: string, conversationId: string) {
+		const conversation = await this.conversationRepository.findById(conversationId);
 
-    return conversation;
-  }
+		isUserInConversation(conversation, userId);
 
-  async getMessagesByConversationId(conversationId: string) {
-    return await this.messageRepository.findByConversationId(conversationId);
-  }
+		return conversation;
+	}
 
-  async getConversations() {
-    return await this.conversationRepository.findAll();
-  }
+	async getMessagesByConversationId(conversationId: string) {
+		return await this.messageRepository.findByConversationId(conversationId);
+	}
+
+	async getConversations() {
+		return await this.conversationRepository.findAll();
+	}
 
 }
