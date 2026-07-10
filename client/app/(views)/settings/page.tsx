@@ -62,7 +62,7 @@ export default function SettingsPage() {
         phoneNumber,
       });
 
-        setMe(res.data);
+      setMe(res.data);
       setAvatarFile(null);
     } finally {
       setIsSaving(false);
@@ -78,80 +78,77 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl p-6">
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900">
-        Paramètres
-      </h1>
+    <div className="mx-auto max-w-2xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Paramètres
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Modifiez vos informations personnelles.
+        </p>
+      </div>
 
-      <div className="rounded-xl border bg-white p-6 shadow-sm">
-        <div className="mb-6 flex flex-col items-center">
-          <div className="relative">
-            {avatarPreview ? (
-              <img
-                src={avatarPreview}
-                alt="Avatar"
-                className="h-24 w-24 rounded-full object-cover"
+      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+        <div className="bg-primary px-6 py-8 text-white">
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              {avatarPreview ? (
+                <img
+                  src={avatarPreview}
+                  alt="Avatar"
+                  className="h-28 w-28 rounded-full border-4 border-white object-cover shadow-md"
+                />
+              ) : (
+                <div className="flex h-28 w-28 items-center justify-center rounded-full border-4 border-white bg-white/20 text-4xl font-bold text-white shadow-md">
+                  {firstname.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute bottom-1 right-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white shadow hover:bg-gray-800"
+              >
+                <Camera className="h-4 w-4" />
+              </button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleAvatarChange(file);
+                }}
               />
-            ) : (
-              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gray-200 text-3xl font-semibold text-gray-700">
-                {firstname.charAt(0).toUpperCase()}
-              </div>
-            )}
+            </div>
 
+            <h2 className="mt-4 text-xl font-semibold">
+              {me.firstname} {me.lastname}
+            </h2>
+
+            <p className="text-sm text-white/80">
+              Cliquez sur l’icône pour changer votre avatar
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-5 p-6">
+          <Input label="Prénom" value={firstname} onChange={setFirstname} />
+          <Input label="Nom" value={lastname} onChange={setLastname} />
+          <Input label="Téléphone" value={phoneNumber} onChange={setPhoneNumber} />
+
+          <div className="flex justify-end pt-4">
             <button
               type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border border-white bg-gray-900 text-white shadow hover:bg-gray-800"
+              onClick={handleSave}
+              disabled={isSaving}
+              className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <Camera className="h-4 w-4" />
+              {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
             </button>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleAvatarChange(file);
-              }}
-            />
           </div>
-
-          <p className="mt-3 text-sm text-gray-500">
-            Cliquez sur l’icône pour changer votre avatar
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <Input
-            label="Prénom"
-            value={firstname}
-            onChange={setFirstname}
-          />
-
-          <Input
-            label="Nom"
-            value={lastname}
-            onChange={setLastname}
-          />
-
-          <Input
-            label="Téléphone"
-            value={phoneNumber}
-            onChange={setPhoneNumber}
-          />
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving}
-            className="rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-800 disabled:opacity-50"
-          >
-            {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
-          </button>
         </div>
       </div>
     </div>
@@ -169,7 +166,7 @@ function Input({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700">
+      <label className="mb-1.5 block text-sm font-medium text-gray-700">
         {label}
       </label>
 
@@ -177,7 +174,7 @@ function Input({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-900"
+        className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
     </div>
   );
