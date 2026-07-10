@@ -3,8 +3,12 @@ import { Generator } from "../../core/interfaces/generator.interface";
 import { IdGenerator } from "../../infrastructure/generator/id.generator";
 import { FileStorage } from "../../core/interfaces/file-storage.interface";
 import { LocalStorage } from "../../infrastructure/storage/local-storage/local-storage";
+import { SecurityModule } from "../../infrastructure/security/security.module";
 
 @Module({
+	imports: [
+		SecurityModule
+	],
 	providers: [
 		{
 			provide: Generator,
@@ -13,8 +17,8 @@ import { LocalStorage } from "../../infrastructure/storage/local-storage/local-s
 		{
 			provide: FileStorage,
 			useClass: LocalStorage,
-		},
+		}
 	],
-	exports: [Generator, FileStorage],
+	exports: [Generator, FileStorage, SecurityModule],
 })
 export class SharedModule {}

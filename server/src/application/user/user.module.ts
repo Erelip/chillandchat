@@ -8,6 +8,7 @@ import { PersistenceModule } from "../modules/persistence.module";
 import { Generator } from "../../core/interfaces/generator.interface";
 import { UpdateUsers } from "../../core/usecases/update-user";
 import { FileStorage } from "../../core/interfaces/file-storage.interface";
+import { PasswordHasher } from "../../core/interfaces/password-hasher.interface";
 
 @Module({
 	imports: [SharedModule, PersistenceModule],
@@ -23,11 +24,12 @@ import { FileStorage } from "../../core/interfaces/file-storage.interface";
 			provide: CreateUsers,
 			useFactory: (
 				userRepository: UserRepository,
+				passwordHasher: PasswordHasher,
 				generator: Generator,
 			) => {
-				return new CreateUsers(userRepository, generator);
+				return new CreateUsers(userRepository, passwordHasher, generator);
 			},
-			inject: [UserRepository, Generator],
+			inject: [UserRepository, PasswordHasher, Generator],
 		},
 		{
 			provide: UpdateUsers,

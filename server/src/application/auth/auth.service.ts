@@ -2,10 +2,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { GetUsers } from '../../core/usecases/get-users';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUsers } from '../../core/usecases/create-user';
-import { comparePassword } from '../../core/utils/password';
 import { LoginInput } from '../dto/auth.dto'
 import { User } from '../../core/entities/users.entity';
 import { CreateUserCommand } from '../../core/models/create-user.command';
+import { PasswordHasher } from '../../core/interfaces/password-hasher.interface';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +13,8 @@ export class AuthService {
 	constructor(
 		private readonly getUsers: GetUsers,
 		private readonly createUsers: CreateUsers,
-		private readonly jwtService: JwtService
+		private readonly jwtService: JwtService,
+		private readonly passwordHasher: PasswordHasher
 	) {}
 
 	async authenticate(input: LoginInput) : Promise<{accessToken: string, refreshToken: string}> {
@@ -40,7 +41,7 @@ export class AuthService {
 		const user = await this.getUsers.getUserByUsername(input.username);
 		if (!user) return null;
 
-		const isValid = await comparePassword(input.password, user.password);
+		const isValid = await this.passwordHasher.compare(input.password, user.password);
 		if (!isValid) return null;
 
 		return user;
