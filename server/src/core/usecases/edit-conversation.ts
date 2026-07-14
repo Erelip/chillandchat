@@ -83,7 +83,7 @@ export class EditConversations {
 		const conversation = await this.conversationRepository.findById(command.conversationId);
 		if (!conversation) return null;
 
-		const id = `${this.generator.generateInt(10000000, 99999999)}`
+		const id = `${this.generator.generateInt(10000000, 99999999)}${command.file.extention}`
 		const avatarUrl = await this.fileStorage.storeFile(command.file, id);
 
 		conversation.avatar = id;

@@ -9,13 +9,13 @@ import { MessageMapper } from '../mappers/message.mapper';
 import { ConversationMapper } from '../mappers/conversation.mapper';
 import { Conversation } from '../../core/entities/conversation.entity';
 import { EditConversations } from '../../core/usecases/edit-conversation';
-import { ConversationParticipant } from '../../core/entities/conversation-participant.entity';
 import { EditConversationDto } from '../dto/edit-conversation.dto';
 import { ConversationParticipationMapper } from '../mappers/conversation-participation.mapper';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { File } from '../../core/models/file';
 import { environment } from '../../../environments/environment.dev';
 import { UpdateConversationAvatarCommand, UpdateConversationInfoCommand } from '../../core/models/update-conversation.command';
+import { extname } from 'path';
 
 @Controller('conversations')
 export class ConversationController {
@@ -109,6 +109,9 @@ export class ConversationController {
 	@Patch('/:conversationId/avatar')
 	async updateAvatar(@Param('conversationId') conversationId: string ,@UploadedFile() file: File) {
 		const command = new UpdateConversationAvatarCommand(conversationId, file);
+		const extension = extname(file.originalname).toLowerCase();
+		file.extention = extension;
+
 		const avatarUrl = await this.editConversations.updateAvatar(command);
 
 		return `${environment.APP_URL}/${avatarUrl}`;

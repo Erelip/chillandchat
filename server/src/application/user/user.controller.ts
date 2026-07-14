@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUsers } from '../../core/usecases/update-user';
 import { File } from '../../core/models/file';
 import { UpdateUserAvatarCommand, UpdateUserInfoCommand } from '../../core/models/update-user.command';
+import { extname } from 'path';
 
 @Controller('users')
 export class UserController {
@@ -36,6 +37,9 @@ export class UserController {
 	@UseInterceptors(FileInterceptor('avatar'))
 	@Patch('me/avatar')
 	async updateAvatar(@Request() request, @UploadedFile() file: File) {
+		const extension = extname(file.originalname).toLowerCase();
+		file.extention = extension;
+
 		const command = new UpdateUserAvatarCommand(request.user.id, file)
 		const avatarUrl = await this.updateUsers.updateAvatar(command);
 

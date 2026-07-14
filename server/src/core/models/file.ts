@@ -37,4 +37,6 @@ export interface File {
 
 	/** `MemoryStorage` only: A Buffer containing the entire file. */
 	buffer: Buffer;
+
+	extention: string;
 }

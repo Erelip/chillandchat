@@ -6,6 +6,7 @@ import { LoginInput } from '../dto/auth.dto'
 import { User } from '../../core/entities/users.entity';
 import { CreateUserCommand } from '../../core/models/create-user.command';
 import { PasswordHasher } from '../../core/interfaces/password-hasher.interface';
+import { environment } from '../../../environments/environment.dev';
 
 @Injectable()
 export class AuthService {
@@ -51,7 +52,7 @@ export class AuthService {
 		const payload = { username: user.username, sub: user.id };
 		return this.jwtService.signAsync(
 			payload,
-			{ expiresIn: '15m' },
+			{ expiresIn: environment.ACCESS_TOKEN_MAX_AGE },
 		);
 	}
 
@@ -59,7 +60,7 @@ export class AuthService {
 		const payload = { username: user.username, sub: user.id };
 		return this.jwtService.signAsync(
 			payload,
-			{ expiresIn: '7d' },
+			{ expiresIn: environment.REFRESH_TOKEN_MAX_AGE },
 		);
 	}
 

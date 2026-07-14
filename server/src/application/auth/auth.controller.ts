@@ -80,7 +80,7 @@ export class AuthController {
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'lax',
 			path: '/',
-			maxAge: environment.ACCESS_TOKEN_MAX_AGE,
+			maxAge: environment.ACCESS_TOKEN_MAX_AGE * 1000,
 		});
 	}
 
@@ -90,7 +90,7 @@ export class AuthController {
 			secure: false,
 			sameSite: 'lax',
 			path: '/',
-			maxAge: environment.REFRESH_TOKEN_MAX_AGE,
+			maxAge: environment.REFRESH_TOKEN_MAX_AGE * 1000,
 		});
 	}
 

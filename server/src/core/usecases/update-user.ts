@@ -17,7 +17,7 @@ export class UpdateUsers {
 		const user = await this.userRepository.findById(command.userId);
 		if (!user) return null;
 
-		const id = `${this.generator.generateInt(10000000, 99999999)}`
+		const id = `${this.generator.generateInt(10000000, 99999999)}${command.file.extention}`
 		const avatarUrl = await this.fileStorage.storeFile(command.file, id);
 
 		const updatedUser = new User(
