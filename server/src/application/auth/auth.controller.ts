@@ -77,8 +77,8 @@ export class AuthController {
 	private setAccessToken(res: Response, accessToken: string) {
 		res.cookie('token', accessToken, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			sameSite: 'lax',
+			secure: true,
+			sameSite: 'none',
 			path: '/',
 			maxAge: environment.ACCESS_TOKEN_MAX_AGE * 1000,
 		});
@@ -87,8 +87,8 @@ export class AuthController {
 	private setRefreshToken(res: Response, refreshToken: string) {
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
-			secure: false,
-			sameSite: 'lax',
+			secure: true,
+			sameSite: 'none',
 			path: '/',
 			maxAge: environment.REFRESH_TOKEN_MAX_AGE * 1000,
 		});
