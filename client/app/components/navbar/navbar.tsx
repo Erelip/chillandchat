@@ -12,14 +12,33 @@ const navItems = [
   { href: '/auth/logout', label: 'Déconnexion', icon: LogOut },
 ];
 
-export default function Sidebar() {
+export default function Navbar() {
   const pathname = usePathname();
 
   if (pathname.includes('auth')) return null;
 
   return (
-    <div className="h-screen w-24 bg-primary text-white flex flex-col">
-      <div className="flex h-24 items-center justify-center">
+    <aside
+      className="
+        fixed bottom-0 left-0 z-50
+        flex w-full flex-row
+        bg-primary text-white
+
+        min-[450px]:static
+        min-[450px]:w-24
+        min-[450px]:flex-col
+      "
+    >
+      {/* Logo */}
+      <div
+        className="
+          hidden
+          min-[450px]:flex
+          min-[450px]:h-24
+          min-[450px]:items-center
+          min-[450px]:justify-center
+        "
+      >
         <Image
           src="/cc_c.png"
           alt="Chillandchat"
@@ -29,32 +48,62 @@ export default function Sidebar() {
           priority
         />
       </div>
-      <nav className="flex-1 p-4 space-y-1">
+
+      {/* Navigation */}
+      <nav
+        className="
+          flex flex-1 items-center justify-around
+          px-2
+
+          min-[450px]:block
+          min-[450px]:space-y-1
+          min-[450px]:p-4
+        "
+      >
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex justify-center items-center rounded text-white
-                ${isActive
-                  ? 'bg-carbon font-medium'
-                  : 'hover:bg-hover-icon hover:text-black'
-                }`}
+              aria-label={item.label}
+              className={`
+                flex items-center justify-center rounded
+                text-white transition-colors
+
+                ${
+                  isActive
+                    ? 'bg-carbon font-medium'
+                    : 'hover:bg-hover-icon hover:text-black'
+                }
+
+                min-[450px]:w-full
+              `}
             >
-              <div className="flex justify-center items-center">
-                <div className="p-3">
-                <Icon className="w-5 h-5"/>
-                </div>
+              <div className="flex items-center justify-center p-3">
+                <Icon className="h-5 w-5" />
               </div>
             </Link>
           );
         })}
       </nav>
-      <div className="p-4 border-t border-black text-xs text-black">
+
+      {/* Copyright */}
+      <div
+        className="
+          hidden
+          min-[450px]:block
+          min-[450px]:border-t
+          min-[450px]:border-black
+          min-[450px]:p-4
+          min-[450px]:text-xs
+          min-[450px]:text-black
+        "
+      >
         © 2026 Chillandchat
       </div>
-    </div>
+    </aside>
   );
 }
