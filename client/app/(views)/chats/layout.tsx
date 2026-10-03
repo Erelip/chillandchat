@@ -1,5 +1,6 @@
 import ChatsSidebar from './sidebar/chats-sidebar';
 import { ChatsProvider } from './contexts/chat.context';
+import ChatsResponsiveLayout from './chats-reponsive-layout';
 
 export default function ChatsLayout({
   children,
@@ -8,8 +9,11 @@ export default function ChatsLayout({
 }) {
   return (
     <ChatsProvider>
-        <ChatsSidebar />
-        <main className="min-w-0 flex-1">{children}</main>
+      <ChatsResponsiveLayout
+        sidebar={<ChatsSidebar />}
+      >
+        {children}
+      </ChatsResponsiveLayout>
     </ChatsProvider>
   );
 }

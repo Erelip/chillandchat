@@ -25,7 +25,6 @@ export default function LoginPage() {
     try {
       await userService.login(username, password);
       router.push('/chats');
-      router.refresh();
     } catch (err) {
       console.error(err);
     }

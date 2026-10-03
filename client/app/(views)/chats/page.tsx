@@ -1,6 +1,6 @@
 export default function ChatsPage() {
   return (
-    <div className="flex h-full flex-1 items-center justify-center bg-repeat"
+    <div className="hidden h-full flex-1 items-center justify-center bg-repeat min-[700px]:flex"
         style={{
           backgroundImage: "url('/chat-bg.png')",
           backgroundSize: '420px',

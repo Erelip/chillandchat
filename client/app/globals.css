@@ -8,6 +8,12 @@
   --color-carbon: #1A1F16;
 }
 
+@theme {
+  --spacing-nav: 44px;
+  --spacing-input: 79px;
+  --spacing-header: 69px;
+}
+
 /* 
 :root {
   --background: #ffffff;

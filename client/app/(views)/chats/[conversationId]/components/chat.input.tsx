@@ -16,7 +16,7 @@ export function ChatInput({
   const conversationService = new ConversationService();
   const [newMessage, setNewMessage] = useState('');
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   function handleTyping(value: string) {
     setNewMessage(value);
 
@@ -63,7 +63,7 @@ export function ChatInput({
             onKeyDown={(e) => {
               if (e.key === 'Enter') sendMessage();
             }}
-            className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-gray-400"
+            className="flex-1 bg-transparent px-2 py-2 text-base outline-none placeholder:text-gray-400"
           />
 
           <button

@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ConversationService } from '@/app/services/conversation.service';
-import { Conversation, ConversationType } from '@/app/dto/conversation';
+import { ConversationType, User } from '@/app/dto/conversation';
 import { getConversationDisplayName } from '@/app/helpers/conversation.helper';
 import { UserService } from '@/app/services/user.service';
-import { User } from '@/app/dto/conversation';
 import { useChats } from '../contexts/chat.context';
 
 const userService = new UserService();
@@ -14,7 +12,10 @@ const userService = new UserService();
 export default function ChatsSidebar() {
   const { conversations } = useChats();
   const router = useRouter();
-  const { conversationId } = useParams<{ conversationId?: string }>();
+  const { conversationId } = useParams<{
+    conversationId?: string;
+  }>();
+
   const [me, setMe] = useState<User>();
 
   useEffect(() => {
@@ -23,15 +24,26 @@ export default function ChatsSidebar() {
         const response = await userService.getUser();
         setMe(response.data);
       } catch (err) {
-        console.error('Failed to load conversations:', err);
+        console.error('Failed to load user:', err);
       }
     }
 
     load();
   }, []);
 
+  const hasSelectedConversation = Boolean(conversationId);
+
   return (
-    <aside className="flex w-80 shrink-0 flex-col border-l border-r bg-background">
+    <aside
+      className={`
+        shrink-0 flex-col border-l border-r bg-background
+        ${
+          hasSelectedConversation
+            ? 'hidden min-[700px]:flex min-[700px]:w-80'
+            : 'flex w-full min-[700px]:w-80'
+        }
+      `}
+    >
       <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-900">
           Conversations
@@ -43,8 +55,11 @@ export default function ChatsSidebar() {
           const name = me
             ? getConversationDisplayName(conversation, me)
             : '';
+
           const otherUser =
-            conversation.participants.find((p) => p.user.id !== me?.id)?.user;
+            conversation.participants.find(
+              (p) => p.user.id !== me?.id,
+            )?.user;
 
           const avatarUrl =
             conversation.avatar ??
@@ -58,11 +73,17 @@ export default function ChatsSidebar() {
             <button
               key={conversation.id}
               type="button"
-              onClick={() => router.push(`/chats/${conversation.id}`)}
+              onClick={() =>
+                router.push(`/chats/${conversation.id}`)
+              }
               className={`
                 flex w-full items-center gap-3 px-4 py-3 text-left
                 transition-colors
-                ${isActive ? 'bg-primary' : 'hover:bg-hover'}
+                ${
+                  isActive
+                    ? 'bg-primary'
+                    : 'hover:bg-hover'
+                }
               `}
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200">
@@ -87,8 +108,9 @@ export default function ChatsSidebar() {
                 <p
                   className={`
                     truncate text-sm
-                    ${isActive ? 'text-white' : ''}
-                  `}>
+                    ${isActive ? 'text-white' : 'text-gray-500'}
+                  `}
+                >
                   {conversation.message?.content ?? ''}
                 </p>
               </div>

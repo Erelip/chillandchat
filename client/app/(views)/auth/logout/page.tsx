@@ -12,8 +12,7 @@ export default function LogoutPage() {
   useEffect(() => {
     async function logout() {
       await userService.logout();
-      router.replace('/auth/login');
-      router.refresh();
+      router.push('/auth/login');
     }
 
     logout();
