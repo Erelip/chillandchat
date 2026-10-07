@@ -3,6 +3,7 @@ import { UserRepository } from "../interfaces/user.repository.interface";
 import { Generator } from "../interfaces/generator.interface";
 import { CreateUserCommand } from "../models/create-user.command";
 import { PasswordHasher } from "../interfaces/password-hasher.interface";
+import { UnauthorizedException } from "../exceptions";
 
 export class CreateUsers {
 
@@ -12,21 +13,20 @@ export class CreateUsers {
 		private generator: Generator
 	) {}
 
-	async createUser(command: CreateUserCommand) : Promise<User | null> {
+	async createUser(command: CreateUserCommand) : Promise<User> {
 		const user = await this.userRepository.findByEmail(command.email);
-		if (user) return null;
-
-		const hashedPassword = await this.passwordHasher.hash(command.password);
+		if (user) throw new UnauthorizedException("Already exists");
 
 		const createdUser = new User(
 			this.generator.generateUUID(),
 			command.username,
 			command.email,
-			hashedPassword,
+			command.password ? await this.passwordHasher.hash(command.password) : null,
 			command.firstname,
 			command.lastname,
 			command.phoneNumber,
-			null
+			null,
+			command.provider
 		)
 
 		const domain = await this.userRepository.save(createdUser);

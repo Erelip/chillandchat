@@ -7,6 +7,7 @@ import { User } from '../../core/entities/users.entity';
 import { CreateUserCommand } from '../../core/models/create-user.command';
 import { PasswordHasher } from '../../core/interfaces/password-hasher.interface';
 import { environment } from '../../../environments/environment.dev';
+import { IdentityProvider } from '../../core/interfaces/identity-provider.interface';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
 		private readonly getUsers: GetUsers,
 		private readonly createUsers: CreateUsers,
 		private readonly jwtService: JwtService,
-		private readonly passwordHasher: PasswordHasher
+		private readonly passwordHasher: PasswordHasher,
+		private readonly identityProvider: IdentityProvider
 	) {}
 
 	async authenticate(input: LoginInput) : Promise<{accessToken: string, refreshToken: string}> {
@@ -29,20 +31,23 @@ export class AuthService {
 	}
 
 	async register(command: CreateUserCommand) : Promise<{accessToken: string, refreshToken: string}> {
-		const user = await this.createUsers.createUser(command);
-		if (!user) throw new UnauthorizedException('Already exists');
+		try {
+			const user = await this.createUsers.createUser(command);
 
-		return {
-			accessToken: await this.signAccessToken(user),
-			refreshToken: await this.signRefreshToken(user),
-		};
+			return {
+				accessToken: await this.signAccessToken(user),
+				refreshToken: await this.signRefreshToken(user),
+			};
+		} catch {
+			throw new UnauthorizedException('Already exists');
+		}
 	}
 
 	async validateUser(input: LoginInput) : Promise<User | null> {
 		const user = await this.getUsers.getUserByUsername(input.username);
 		if (!user) return null;
 
-		const isValid = await this.passwordHasher.compare(input.password, user.password);
+		const isValid = await this.passwordHasher.compare(input.password, user.password!);
 		if (!isValid) return null;
 
 		return user;
@@ -76,6 +81,33 @@ export class AuthService {
 		} catch (error) {
 			throw new UnauthorizedException('Invalid token');
 		}
+	}
+
+	async getAuthorizationUrlFromIdentityProvider(state: string) : Promise<string> {
+		return this.identityProvider.getAuthorizationUrl(state);
+	}
+
+	async authenticateUsingGoogle(code: string) {
+		const identity = await this.identityProvider.authenticate(code);
+		var user = await this.getUsers.getUserByEmail(identity.email);
+		const command = new CreateUserCommand(
+			identity.firstName ? identity.firstName : identity.email,
+			identity.email,
+			user?.password ?? null,
+			identity.firstName ? identity.firstName : null,
+			identity.lastName ? identity.lastName : null,
+			null,
+			'google'
+		)
+
+		if (user == null) {
+			user = await this.createUsers.createUser(command);
+		}
+
+		return {
+			accessToken: await this.signAccessToken(user),
+			refreshToken: await this.signRefreshToken(user),
+		};
 	}
 
 }

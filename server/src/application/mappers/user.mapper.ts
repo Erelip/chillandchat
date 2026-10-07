@@ -12,7 +12,8 @@ export class UserMapper {
 			user.firstname,
 			user.lastname,
 			user.phoneNumber,
-			user.avatar ? avatar : null
+			user.avatar ? avatar : null,
+			user.provider
 		);
 	}
 }

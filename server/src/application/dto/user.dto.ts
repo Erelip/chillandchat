@@ -1,18 +1,20 @@
 export class UserDTO {
 	id: string | null;
 	email: string;
-	firstname: string;
-	lastname: string;
-	phoneNumber: string;
+	firstname: string|null;
+	lastname: string|null;
+	phoneNumber: string|null;
 	avatar: string|null;
+	provider: string|null;
 
 	constructor(
 		id: string | null,
 		email: string,
-		firstname: string,
-		lastname: string,
-		phoneNumber: string,
-		avatar: string|null
+		firstname: string|null,
+		lastname: string|null,
+		phoneNumber: string|null,
+		avatar: string|null,
+		provider: string|null
 	) {
 		this.id = id;
 		this.email = email;
@@ -20,5 +22,6 @@ export class UserDTO {
 		this.lastname = lastname;
 		this.phoneNumber = phoneNumber;
 		this.avatar = avatar;
+		this.provider = provider;
 	}
 }

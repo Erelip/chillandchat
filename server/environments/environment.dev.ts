@@ -7,4 +7,7 @@ export const environment = {
     APP_URL: `${process.env.BACKEND_PROTOCOL}://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}`,
     ACCESS_TOKEN_MAX_AGE: 1 * 60 * 60,
     REFRESH_TOKEN_MAX_AGE: 7 * 24 * 60 * 60,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_CLIENT_CALLBACK_URL: process.env.GOOGLE_CLIENT_CALLBACK_URL,
 };

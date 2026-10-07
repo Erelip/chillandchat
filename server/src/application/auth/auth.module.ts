@@ -8,6 +8,7 @@ import { SharedModule } from '../modules/shared.module';
 import { GetUsers } from '../../core/usecases/get-users';
 import { CreateUsers } from '../../core/usecases/create-user';
 import { PasswordHasher } from '../../core/interfaces/password-hasher.interface';
+import { IdentityProvider } from '../../core/interfaces/identity-provider.interface';
 
 @Module({
 	imports: [
@@ -26,11 +27,12 @@ import { PasswordHasher } from '../../core/interfaces/password-hasher.interface'
 				getUsers: GetUsers,
 				createUsers: CreateUsers,
 				jwtService: JwtService,
-				passwordHasher: PasswordHasher
+				passwordHasher: PasswordHasher,
+				identityProvider: IdentityProvider
 			) => {
-				return new AuthService(getUsers, createUsers, jwtService, passwordHasher)
+				return new AuthService(getUsers, createUsers, jwtService, passwordHasher, identityProvider)
 			},
-			inject: [GetUsers, CreateUsers, JwtService, PasswordHasher]
+			inject: [GetUsers, CreateUsers, JwtService, PasswordHasher, IdentityProvider]
 		}
 	],
 	exports: [AuthService],

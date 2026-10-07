@@ -1,9 +1,11 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req, Request, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { RegisterInput, LoginInput } from '../dto/auth.dto';
 import { CreateUserCommand } from '../../core/models/create-user.command';
 import { environment } from '../../../environments/environment.dev';
+import { UnauthorizedException } from '../../core/exceptions';
+import { randomBytes } from 'crypto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,7 +42,8 @@ export class AuthController {
 				input.password,
 				input.firstname,
 				input.lastname,
-				input.phoneNumber
+				input.phoneNumber,
+				null
 			)
 		);
 
@@ -72,6 +75,51 @@ export class AuthController {
 		this.setAccessToken(res, token);
 
 		return { success: true };
+	}
+
+	@Get('google')
+	async google(@Res() res: Response) {
+		const state = randomBytes(32).toString('hex');
+
+		const url =
+			await this.authService.getAuthorizationUrlFromIdentityProvider(state);
+
+		res.cookie('oauth_state', state, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+			path: '/auth/google',
+			maxAge: 10 * 60 * 1000,
+		})
+
+		return res.redirect(url);
+	}
+
+	@Get('google/callback')
+	async googleCallback(
+		@Query('code') code: string,
+		@Query('state') state: string,
+		@Req() req,
+		@Res() res: Response,
+	) {
+		const storedState = req.cookies.oauth_state;
+
+		if (!storedState || storedState !== state) {
+			throw new UnauthorizedException(
+				'Invalid OAuth state',
+			);
+		}
+
+		res.clearCookie('oauth_state', {
+			path: '/auth/google',
+		});
+
+		const { accessToken, refreshToken } = await this.authService.authenticateUsingGoogle(code);
+
+		this.setAccessToken(res, accessToken);
+		this.setRefreshToken(res, refreshToken);
+
+		return res.redirect(`${environment.CORS_ORIGIN}/auth/login`);
 	}
 
 	private setAccessToken(res: Response, accessToken: string) {

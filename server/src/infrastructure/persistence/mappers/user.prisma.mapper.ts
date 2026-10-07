@@ -14,7 +14,8 @@ export class UserPrismaMapper {
 			raw.firstname,
 			raw.lastname,
 			raw.phoneNumber,
-			raw.avatar
+			raw.avatar,
+			raw.provider
 		);
 	}
 

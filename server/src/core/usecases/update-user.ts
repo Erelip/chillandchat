@@ -28,7 +28,8 @@ export class UpdateUsers {
 			user.firstname,
 			user.lastname,
 			user.phoneNumber,
-			id
+			id,
+			user.provider
 		)
 
 		await this.userRepository.update(updatedUser);
@@ -47,7 +48,8 @@ export class UpdateUsers {
 			command.firstname,
 			command.lastname,
 			command.phoneNumber,
-			user.avatar
+			user.avatar,
+			user.provider
 		);
 
 		await this.userRepository.update(updatedUser);
