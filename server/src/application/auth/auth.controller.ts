@@ -70,9 +70,12 @@ export class AuthController {
 	) {
 		const refreshToken = req.cookies.refreshToken;
 
-		const token = await this.authService.refreshToken(refreshToken);
-
-		this.setAccessToken(res, token);
+		try {
+			const token = await this.authService.refreshToken(refreshToken);
+			this.setAccessToken(res, token);
+		} catch {
+			throw new UnauthorizedException('Invalid refresh token');
+		}
 
 		return { success: true };
 	}
@@ -119,7 +122,7 @@ export class AuthController {
 		this.setAccessToken(res, accessToken);
 		this.setRefreshToken(res, refreshToken);
 
-		return res.redirect(`${environment.CORS_ORIGIN}/auth/login`);
+		return res.redirect(`${environment.CORS_ORIGIN}/chats`);
 	}
 
 	private setAccessToken(res: Response, accessToken: string) {

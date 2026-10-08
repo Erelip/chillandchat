@@ -20,30 +20,17 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (!originalRequest) {
-      return Promise.reject(error);
-    }
-
-    const isRefreshRequest =
-      originalRequest.url?.includes('/auth/refresh');
-
-    const isLogoutRequest =
-      originalRequest.url?.includes('/auth/logout');
-
     if (
       error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !isRefreshRequest &&
-      !isLogoutRequest
+      !originalRequest._retry
     ) {
       originalRequest._retry = true;
 
       try {
         await api.post('/auth/refresh');
         return api(originalRequest);
-      } catch (refreshError) {
+      } catch {
         window.location.href = '/auth/login';
-        return Promise.reject(refreshError);
       }
     }
 
